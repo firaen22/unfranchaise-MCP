@@ -6,3 +6,13 @@ session*
 node_modules/
 dist/
 .DS_Store
+.review-gate/plan-*/
+.review-gate/luna-*/
+.review-gate/*-pre-*/
+.review-gate/grok-r*/
+.review-gate/sol-r*/
+.review-gate/files-r*/
+.review-gate/pr-r*.diff
+.review-gate/brief-r*.md
+.review-gate/sol-prompt-r*.md
+.review-gate/PLAN-grok-draft.md

@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+echo "[pre-commit] npm test"
+npm test
+
+if [[ "${UNF_SKIP_FABLE:-0}" != "1" ]] && [[ -x "$ROOT/.review-gate/run-fable-precommit.sh" ]]; then
+  echo "[pre-commit] Fable final gate (medium thinking)"
+  bash "$ROOT/.review-gate/run-fable-precommit.sh"
+fi
+
+if [[ "${UNF_SKIP_REVIEW:-0}" == "1" ]]; then
+  echo "[pre-commit] UNF_SKIP_REVIEW=1 — sol/grok gate skipped"
+  exit 0
+fi
+
+if [[ ! -x "$ROOT/.review-gate/run-review-round.sh" ]]; then
+  echo "[pre-commit] review gate script missing"
+  exit 1
+fi
+
+ROUND="pre-$(date +%Y%m%d-%H%M%S)"
+export UNF_PRECOMMIT=1
+echo "[pre-commit] sol6.1 + grok review ($ROUND) — set UNF_SKIP_REVIEW=1 to skip"
+bash "$ROOT/.review-gate/run-review-round.sh" "$ROUND"
+
+SOL_OUT=$(ls "$ROOT/.review-gate/sol-$ROUND"/*-out.txt 2>/dev/null | head -1)
+GROK_OUT=$(ls "$ROOT/.review-gate/grok-$ROUND"/*-out.txt 2>/dev/null | head -1)
+
+block=0
+for f in "$SOL_OUT" "$GROK_OUT"; do
+  [[ -f "$f" ]] || { echo "Missing reviewer output: $f"; block=1; continue; }
+  if grep -qiE 'Critical|High.*finding|NO-GO|FIX required|must not ship' "$f"; then
+    echo "Reviewer blocked commit — see $f"
+    block=1
+  fi
+done
+
+if [[ "$block" -eq 1 ]]; then
+  echo "Commit blocked. Fix findings or UNF_SKIP_REVIEW=1 (emergency only)."
+  exit 1
+fi
+
+echo "[pre-commit] reviewers clean (heuristic pass)"

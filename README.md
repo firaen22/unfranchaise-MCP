@@ -37,6 +37,50 @@ See [FINDINGS.md](./FINDINGS.md) for URLs, fields, and calculation rules.
 ## Status
 
 - [x] Signed-in site map (order + IBV/BV + Form 1000)
+- [x] MCP / CLI v0 (`npm test`, 10 tools; review **r3**: sol PROCEED + grok PROCEED, medium effort)
 - [ ] Checkout / bill-ship field map
 - [ ] Network XHR capture (browser tool could not intercept)
-- [ ] MCP / CLI implementation
+
+## MCP setup
+
+```bash
+cd /Users/yauch/Documents/unfranchaise
+npm install
+npm test
+```
+
+**Session cookie (never commit):** after logging in at hk.unfranchise.com, set either:
+
+- `export UNF_COOKIE='CFID=…; CFTOKEN=…; …'`, or
+- `export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie`
+
+**Cursor / Claude MCP** (`mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "unfranchaise-hk": {
+      "command": "node",
+      "args": ["/Users/yauch/Documents/unfranchaise/server.js"]
+    }
+  }
+}
+```
+
+**CLI:** `node cli.js unf_volume_explain` or `node cli.js unf_search_products '{"keyword":"omega"}'`
+
+**Model effort:** all `dispatch.py` / codex / grok / agy runs in this repo use **medium** only (see `.review-gate/dispatch-medium.sh`).
+
+**Review gate (sol 6.1 + grok):** `.review-gate/run-review-round.sh r1`
+
+**Planners (5 subs):** `.review-gate/run-planners.sh` · **Luna cowork:** `.review-gate/run-luna-cowork.sh r1`
+
+**Pre-commit (optional, local only — does not change your global git config):**
+
+```bash
+git config core.hooksPath .githooks   # you run this once if you want hooks
+UNF_SKIP_REVIEW=1 git commit …        # skip slow sol/grok dispatch
+UNF_SKIP_FABLE=1 git commit …         # skip Fable final gate (emergency only)
+```
+
+Default hook runs `npm test` then dispatches **gpt-6.1-sol** and **grok-4.7** on MCP sources unless `UNF_SKIP_REVIEW=1`.

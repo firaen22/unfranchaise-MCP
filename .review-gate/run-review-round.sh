@@ -9,15 +9,23 @@ export UNF_DISPATCH_EFFORT=medium
 ROUND="${1:-r1}"
 mkdir -p "$GATE/files-$ROUND" "$GATE/sol-$ROUND" "$GATE/grok-$ROUND"
 
-FILES=(package.json server.js cli.js pure-smoke.mjs lib/urls.js lib/volume.js lib/client.js lib/tools.js lib/confirm.js lib/validate.js)
+FILES=(
+  package.json server.js cli.js pure-smoke.mjs
+  lib/urls.js lib/volume.js lib/client.js lib/tools.js lib/confirm.js lib/validate.js
+  lib/parse-forms.js lib/parse-checkout.js lib/network-patterns.js lib/billship-fixtures.js lib/redact.js
+  scripts/capture-session.mjs scripts/capture-xhr-playwright.mjs
+  CHECKOUT.md NETWORK.md README.md .gitignore
+  fixtures/checkout-billship.synthetic.html fixtures/checkout-billship.parsed.json
+)
 rm -rf "$GATE/files-$ROUND"
-mkdir -p "$GATE/files-$ROUND/lib"
+mkdir -p "$GATE/files-$ROUND/lib" "$GATE/files-$ROUND/scripts" "$GATE/files-$ROUND/fixtures"
 for f in "${FILES[@]}"; do
-  if [[ "$f" == lib/* ]]; then
-    cp "$REPO/$f" "$GATE/files-$ROUND/$f"
-  else
-    cp "$REPO/$f" "$GATE/files-$ROUND/"
-  fi
+  case "$f" in
+    lib/*) cp "$REPO/$f" "$GATE/files-$ROUND/$f" ;;
+    scripts/*) cp "$REPO/$f" "$GATE/files-$ROUND/$f" ;;
+    fixtures/*) cp "$REPO/$f" "$GATE/files-$ROUND/$f" ;;
+    *) cp "$REPO/$f" "$GATE/files-$ROUND/" ;;
+  esac
 done
 
 (cd "$REPO" && git diff --no-color HEAD -- "${FILES[@]}" 2>/dev/null; git diff --no-color --cached -- "${FILES[@]}" 2>/dev/null) \
@@ -31,9 +39,9 @@ cat > "$GATE/brief-$ROUND.md" <<EOF
 
 Read-only security + correctness review of the Unfranchise HK MCP (Node stdio, cookie auth).
 
-Scope: server.js, cli.js, lib/*.js, pure-smoke.mjs — session cookie handling, dry-run gates, no credential logging.
+Scope: server.js, cli.js, lib/*.js, capture scripts, pure-smoke.mjs — session cookie handling, dry-run gates, checkout read-only tools, no credential logging in fixtures/capture output.
 
-Threat focus: cookie leakage in logs/errors, accidental live mutations without confirm, SSRF via user-controlled URLs.
+Threat focus: cookie leakage in logs/errors, accidental live mutations without confirm, SSRF via user-controlled URLs, PII in captured HTML/logs.
 
 Consensus: **PROCEED** or **approve with nits** with zero High/Critical in scope.
 
@@ -44,6 +52,11 @@ cat "$GATE/brief-$ROUND.md" > "$GATE/sol-prompt-$ROUND.md"
 echo "" >> "$GATE/sol-prompt-$ROUND.md"
 echo "## FINDINGS.md excerpt (rules)" >> "$GATE/sol-prompt-$ROUND.md"
 head -80 "$REPO/FINDINGS.md" >> "$GATE/sol-prompt-$ROUND.md"
+if rg -n '^## Gaps' "$REPO/FINDINGS.md" >/dev/null 2>&1; then
+  echo "" >> "$GATE/sol-prompt-$ROUND.md"
+  echo "## FINDINGS.md Gaps" >> "$GATE/sol-prompt-$ROUND.md"
+  awk '/^## Gaps/{p=1} p' "$REPO/FINDINGS.md" >> "$GATE/sol-prompt-$ROUND.md"
+fi
 
 F_LIST=()
 for f in "${FILES[@]}"; do

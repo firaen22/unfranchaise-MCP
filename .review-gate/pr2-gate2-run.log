@@ -1,0 +1,37 @@
+{"name": "unf-pr2-gate2-sol", "tool": "codex", "model": "gpt-6.1-sol", "cap": 1800, "pong": false, "status": "PASS", "rc": 0, "elapsed": 168.0, "out_bytes": 3401, "err_bytes": 104946, "served_model": "gpt-6.1-sol", "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate", "effort_applied": true}
+PASS
+{"name": "unf-pr2-gate2-grok", "tool": "grok", "model": "grok-4.7", "cap": 1800, "pong": false, "status": "PASS", "rc": 0, "elapsed": 445.7, "out_bytes": 4715, "err_bytes": 0, "served_model": "grok-4.7-build", "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate/grok-pr2-gate2", "effort_applied": true}
+PASS
+=== pr2-gate2 review complete ===
+--- sol ---
+**Verdict: HOLD — zero-High gate not met.** [verified: offline reproductions] Two High and two Medium findings remain in `files-pr2-gate2/`. Review is **single-lens**; no live authenticated requests or filesystem writes were performed.
+
+**Findings — Critical → Nits**
+
+1. **High — Session tokens escape through MCP/CLI responses.** [verified: mocked redirects through real `callTool` → `unfFetch` path] A same-host redirect containing synthetic `CFID`/`CFTOKEN` values exposed those values in search, product, cart, and Form 1000 tool results. Checkout’s top-level URL correctly redacted them. Other results serialize raw URLs at [tools.js:219](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate2/lib/tools.js:219), with sibling sites at lines 225, 230, 259, and 265. Redact every outbound URL, including search-result links and confirmed cart-add URLs, before serialization.
+
+2. **High — Checkout parsing bypasses token redaction in `dataActions`.** [verified: real parser and capture execution with memory-only writes] [parse-forms.js:61](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate2/lib/parse-forms.js:61) copies `data-action` unchanged. A synthetic `orders.unfBillShip&CFID=SYNTHETIC_TOKEN` survived in all three captured JSON files. The same parser feeds live checkout tool responses. Redact this field before returning or saving it.
+
+3. **Medium — Captures retain names and addresses.** [verified: synthetic capture] A name and address in ordinary HTML text survived [capture-session.mjs:28](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate2/scripts/capture-session.mjs:28). A saved-address option label also survived in parsed JSON through [parse-forms.js:32](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate2/lib/parse-forms.js:32). Input-value redaction worked, but it does not cover these locations. Prefer an allowlisted structural capture over retaining page text; scrub personal option labels.
+
+4. **Medium — Browser capture enforces hostname and method, not the intended transport/action boundary.** [verified: executed actual route callback with synthetic requests] [capture-xhr-playwright.mjs:50](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate2/scripts/capture-xhr-playwright.mjs:50) allowed HTTP, HTTPS port 444, and GET `shopping.unfUpdateCart`. Cookies created at line 23 have no `secure: true`. Require HTTPS/default port, secure cookies, and an explicit read-action policy. [unverified] No live cookie transmission or cart mutation was attempted; actual site behavior and HSTS protection are unknown.
+
+**Verification and suggested tests**
+
+[verified: exit 0] `pure-smoke.mjs` reported `pure-smoke: ok 12 tools`. Additional checks passed for off-host redirect blocking, strict boolean confirmation, invalid quantities, and checkout using GET.
+--- grok ---
+I'll read the brief and follow its instructions.
+The brief is a read-only security review of the Unfranchise MCP. I'll inspect the in-scope files next.
+I'll read the server, CLI, library, capture scripts, and smoke tests for cookie handling, dry-run gates, and URL checks.
+**Verdict: approve with nits.** No Critical, High, or Medium findings in `server.js`, `cli.js`, `lib/*.js`, `scripts/capture-session.mjs`, `scripts/capture-xhr-playwright.mjs`, or `pure-smoke.mjs`.
+
+Session cookies stay out of tool status and error text. The only live mutation is `unf_cart_add`, and it posts only when `confirm === true`. Checkout mapping and both capture scripts are GET-only. `unfFetch` allows only `https://hk.unfranchise.com` on port 443, including redirect hops. `fixtures/captured/` is gitignored.
+
+## Findings
+
+### Critical
+None.
+
+### High
+None.
+

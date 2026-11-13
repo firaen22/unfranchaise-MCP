@@ -1,0 +1,20 @@
+**Verdict: HOLD — one High finding blocks PROCEED/approve with nits.** [verified: local reproductions below] Review is `single-lens`; live site behavior remains unverified.
+
+**Findings, Critical → Nits**
+
+1. **High — URL redaction fails open and exposes session tokens.** [verified: real redactor and browser-capture script executed with in-memory stubs]  
+   In [redact.js:16](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate4/lib/redact.js:16), an already-decoded query key is decoded again. For `?%25=x&%43FID=TOKEN_SENTINEL`, decoding `%` throws; the fallback returns the encoded token unchanged. The sentinel survived into `xhr-log.json` output. Handle malformed keys individually and never fall back to unsanitized input.
+
+2. **Medium — capture output retains PII and some token representations.** [verified: capture script executed with synthetic HTML and intercepted writes]  
+   [capture-session.mjs:28](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate4/scripts/capture-session.mjs:28) retained recipient name/address text, an `<option value>` containing address data, and `var CFID = "SESSION_SENTINEL"`. Parsed JSON also retained recipient text through [parse-forms.js:65](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate4/lib/parse-forms.js:65). Prefer structural, allowlisted capture output. [unverified] Whether current live pages contain those exact representations is unknown.
+
+3. **Medium — browser capture does not enforce a read-only action allowlist.** [verified: actual route handler with stubbed requests]  
+   [capture-xhr-playwright.mjs:71](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate4/scripts/capture-xhr-playwright.mjs:71) blocks three action patterns but permits arbitrary other same-host GETs. [unverified] No live mutation was demonstrated; GET alone cannot establish that an unreviewed action is read-only.
+
+**Suggested tests**
+
+- [verified: missing from smoke coverage] Add capture-output assertions for encoded/malformed query keys, inline scripts, option values, free-text addresses, and URL-carried PII.
+- [verified: local checks passed] Preserve the dry-run confirmation matrix, invalid-quantity rejection, and external-redirect test.
+- [suggested] Exercise browser routing against an explicit read-only allowlist and verify unknown actions are rejected.
+
+[verified: exit 0] `pure-smoke.mjs` passed with cookie variables unset: **12 tools**. Adversarial checks confirmed zero requests for dry-runs/invalid quantities and blocked an external redirect before a second fetch. No files or external state were changed.

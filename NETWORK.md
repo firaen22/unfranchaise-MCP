@@ -5,8 +5,9 @@
 | Item | State |
 |------|--------|
 | Document navigation (`index.cfm?action=`) | **Confirmed** in [FINDINGS.md](./FINDINGS.md) |
-| Checkout bill-ship field map | **Parser + synthetic fixture**; **live HTML** via `npm run capture` when cookie set |
-| Async XHR / fetch | **Class documented** below; **per-request log** from `fixtures/captured/network-log.json` after capture |
+| Checkout bill-ship field map | **Parser + synthetic fixture**; **live names** after successful `npm run capture` |
+| Document GET log | `fixtures/captured/network-log.json` from `npm run capture` (gitignored) |
+| Async XHR / fetch | **Class documented** below; **per-request log** in `fixtures/captured/xhr-log.json` via `npm run capture:xhr` |
 
 ## Primary transport
 
@@ -34,7 +35,7 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 npm run capture
 ```
 
-Outputs under `fixtures/captured/` (gitignored): redacted HTML, parsed field JSON, `network-log.json`.
+Outputs under `fixtures/captured/` (gitignored): token- and text-input-redacted HTML, parsed field JSON, `network-log.json`. XHR capture is separate (`xhr-log.json`).
 
 ## Inferred checkout POST targets (verify on capture)
 

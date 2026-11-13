@@ -1,0 +1,37 @@
+{"name": "unf-pr2-gate3-sol", "tool": "codex", "model": "gpt-6.1-sol", "cap": 1800, "pong": false, "status": "PASS", "rc": 0, "elapsed": 186.8, "out_bytes": 2669, "err_bytes": 102942, "served_model": "gpt-6.1-sol", "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate", "effort_applied": true}
+PASS
+{"name": "unf-pr2-gate3-grok", "tool": "grok", "model": "grok-4.7", "cap": 1800, "pong": false, "status": "PASS", "rc": 0, "elapsed": 382.4, "out_bytes": 3982, "err_bytes": 0, "served_model": "grok-4.7-build", "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate/grok-pr2-gate3", "effort_applied": true}
+PASS
+=== pr2-gate3 review complete ===
+--- sol ---
+**Verdict: HOLD.** [verified: adversarial execution] One High and one Medium finding prevent PROCEED or approve-with-nits. Review is **single-lens**; live account behavior remains [unverified].
+
+**Findings, High → Nits**
+
+1. **High — encoded session tokens bypass redaction and reach MCP output/logs.** [verified: mocked redirect through real `callTool('unf_cart_view')`] A same-origin redirect containing `%43FID=SYNTHETIC_ID&%43FTOKEN=SYNTHETIC_TOKEN` returned both values unchanged to the MCP consumer. URL parsing recognizes these as `CFID` and `CFTOKEN`, but the regex in [redact.js](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate3/lib/redact.js:3) misses encoded names. The executed XHR capture also retained an encoded token. Parse and sanitize URL parameters structurally, including encoded names.
+
+2. **Medium — captured HTML and request URLs retain personal information.** [verified: both capture scripts executed with synthetic responses/browser mocks and writes intercepted in memory] Names and addresses survived in HTML text and `<option>` labels; query-string email addresses survived XHR logging, including an aborted external request. JavaScript JSON session values also survived HTML redaction. See [HTML capture](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate3/scripts/capture-session.mjs:28) and [XHR logging](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate3/scripts/capture-xhr-playwright.mjs:78). Prefer saving a sanitized structural field map and allowlisted URL metadata.
+
+[verified: execution, exit 0] `pure-smoke.mjs` passed. Additional checks confirmed zero fetches for five nonliteral/absent confirmations and six invalid quantities; rejection of five disallowed URL forms; an off-host redirect stopped before forwarding cookies; and checkout mapping issued exactly one GET while omitting input values. These checks do not establish live server read-only behavior.
+
+**Suggested tests**
+
+- [verified: currently failing security expectations] Add encoded `CFID`/`CFTOKEN` redirect cases through `callTool` and both capture paths; assert neither secret survives.
+- [verified: currently failing privacy expectations] Assert removal of names/addresses in text, options, script JSON, and query strings.
+- [verified: missing from current smoke coverage] Persist the exercised confirmation, quantity, and redirect tests; add empty/oversized cookies and redirect-hop exhaustion.
+--- grok ---
+**Verdict: approve with nits.** Critical: 0. High: 0. In-scope cookie handling, dry-run gating, checkout reads, and SSRF host pinning hold.
+
+Reviewed `server.js`, `cli.js`, `pure-smoke.mjs`, `lib/*.js`, and `scripts/capture-session.mjs` / `scripts/capture-xhr-playwright.mjs` (repo root `unfranchaise`).
+
+## Findings
+
+### Critical
+None.
+
+### High
+None.
+
+### Medium
+None.
+

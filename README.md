@@ -49,7 +49,7 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 | `unf_cart_view` | GET | Cart totals |
 | `unf_cart_add` | POST if `confirm: true` | Default dry-run |
 | `unf_form1000_status` | GET | Quarter list + summary |
-| `unf_checkout_billship_map` | GET* | Bill/ship forms (*or synthetic if no cookie) |
+| `unf_checkout_billship_map` | GET* | Bill/ship forms (*live → captured → synthetic) |
 | `unf_network_patterns` | — | Navigation / XHR pattern doc + capture paths |
 
 ## Safety defaults
@@ -68,8 +68,8 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 
 - [x] FINDINGS: orders, IBV/BV, Form 1000
 - [x] MCP / CLI v0 (`npm test`, 12 tools)
-- [x] Checkout / bill-ship field map ([CHECKOUT.md](./CHECKOUT.md); live via `npm run capture`)
-- [x] Network XHR capture ([NETWORK.md](./NETWORK.md); `npm run capture` / `npm run capture:xhr`)
+- [x] Checkout / bill-ship field map ([CHECKOUT.md](./CHECKOUT.md); parsers + capture scripts in tree; live names verified via operator checklist)
+- [x] Network XHR capture ([NETWORK.md](./NETWORK.md); document log + optional Playwright `capture:xhr`)
 - [ ] Reports placement, `form1000_draft`, cart update
 
 ## Maintainer scripts

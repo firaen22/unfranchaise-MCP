@@ -1,0 +1,50 @@
+The brief is a read-only security review of the Unfranchise MCP. I'll read the in-scope sources next and write the verdict from that code.
+**Verdict: PROCEED (approve with nits).** No Critical, High, or Medium findings in scope.
+
+The stdio server and CLI call the same `callTool` path. The session cookie stays in the `Cookie` header. Live cart add is the only mutating tool, and it runs only when `confirm === true`. Checkout mapping and both capture scripts are GET-only. Redirects are confined to `https://hk.unfranchise.com`.
+
+## Critical
+
+None.
+
+## High
+
+None.
+
+## Medium
+
+None.
+
+## Low
+
+1. **Capture HTML redaction misses common secret and address shapes.** `scripts/capture-session.mjs` redacts `CFID` / `CFTOKEN` / `JSESSIONID` only when written as `NAME=value`, then redacts `value="..."` only for double-quoted `type` in `text|tel|email|password|search` when `type` comes before `value`. A ColdFusion hidden field such as `<input type="hidden" name="CFTOKEN" value="...">`, a textarea, an input with no `type`, or `value` before `type` is stored as-is under `fixtures/captured/*.html`. Emails and phone-like numbers are scrubbed. Names and street addresses in element text are not. Parsed JSON from `parseFormFields` does not copy text, hidden, or password values (passwords are `{ redacted: true }`). `fixtures/captured/` is gitignored (`.gitignore` line 20), and the script does not print the cookie or the HTML to stdout.
+
+2. **Session tokens in URLs are echoed on some paths and not others.** `scripts/capture-xhr-playwright.mjs` rewrites `CFID`, `CFTOKEN`, and `JSESSIONID` query values before writing `xhr-log.json`. `scripts/capture-session.mjs` stores `result.url` in `network-log.json` with no rewrite. `parseSearchResults` in `lib/client.js` returns the raw `href`, so `unf_search_products` will print a `CFTOKEN` if the catalog page puts one on product links. `unfFetch` also returns the final URL after redirects (`postUrl` on a confirmed cart add).
+
+3. **Playwright capture can downgrade cookie flags and will run site script.** `cookieHeaderToPlaywright` sets `domain` and `path` only, so the copy is not `HttpOnly` or `Secure`. Page script on `hk.unfranchise.com` can read `document.cookie`. `page.goto` follows redirects in the browser (the cookie is still scoped to that host) and does not cancel non-GET XHR. `postData` is forced to `null`, so bodies are not written. An on-load POST on cart, bill-ship, or express-pay would run without `confirm: true`. `npm run capture` cannot POST: it only calls `getAction`.
+
+## Nits
+
+- `requireConfirm` / `DryRunError` in `lib/confirm.js` are covered by `pure-smoke.mjs` and unused by `unf_cart_add`. That tool uses its own `args.confirm !== true` check and returns a dry-run payload before any `unfFetch`. A thrown `DryRunError` would fall through `publicErrorMessage` as a generic `isError`.
+- `login_required` is `/permissionViolation|unfLogin/i` on `$.text()`, which includes script text. An inline script that names `unfLogin` makes `unf_checkout_billship_map` report `loginRequired` and makes `capture-session` skip writing `bill_ship`. Attributes are not part of `.text()`, so a normal login link does not match. Empty-cart detection matches the FINDINGS copy `你的購物車是空的`.
+- `<select>` option values and labels (80 characters) are returned to the tool and written to `bill_ship.json`. A saved-address or masked-card option would show up there. Checkbox and radio controls also copy their `value` attribute.
+- An empty `UNF_COOKIE_FILE` throws `Session cookie is empty` from `unf_session_status` instead of `{ configured: false }`. The file mode is not checked. `cookieStatus` returns length only, which is fine.
+- `assertUnfUrl` allows userinfo on the allowed host (`https://user:pass@hk.unfranchise.com/`). The request still goes to that host. Redirect bodies are not size-capped.
+- Form 1000 constants `maxPersonalConsumptionPerOrderHkd`, `personalUseMaxFraction`, and `retailMinFraction` are not applied by `form1000QualifyingOrders`. The implemented check is count of positive totals ≥ 2 and sum ≥ HK$1500.
+
+## What held up
+
+- `loadSessionCookie` accepts `UNF_COOKIE` or `UNF_COOKIE_FILE`, then `assertValidCookie` rejects empty values, CR/LF/NUL, and cookies longer than 16384 characters. `unf_session_status` does not return the cookie. `UNF_BAD_COOKIE` / `UNF_NO_COOKIE` messages are fixed strings. Other errors go through `publicErrorMessage`, which replaces messages that look like cookie or invalid-header failures.
+- `unfFetch` uses `redirect: 'manual'` (max 8 hops). Every hop must be `https:`, hostname `hk.unfranchise.com`, and port empty or `443`, so the cookie is not sent to another host. Tool fetches use `actionUrl` (`https://hk.unfranchise.com/index.cfm?...`) or that same allowlist. `unf_url_build` and `unf_report_url` do not fetch. Query values are set with `URLSearchParams`.
+- `unf_cart_add` with `confirm` omitted, `false`, or the string `"true"` returns `dryRun: true` and does not call `fetch`. `confirm: true` POSTs `prdCode`, `prdQty1`, and `autoShipSelected=0` to the product URL. No checkout, payment, or Form 1000 submit tool exists. 301/302/303 after POST switch to GET and drop the body. 307/308 can replay the POST, still only on the allowed host.
+- Committed fixtures are synthetic field names only. `pure-smoke.mjs` checks the cart-add dry-run, the synthetic bill-ship map (`live: false`), and `orders.unfBillShip` in the network pattern table.
+
+## Suggested tests
+
+- Allowlist: reject `http://hk.unfranchise.com`, `https://hk.unfranchise.com.evil.com`, `https://evil.com`, `https://hk.unfranchise.com:8443`, `https://127.0.0.1`, and a protocol-relative redirect `//evil.com`. Accept `https://hk.unfranchise.com` and port `443`. Assert the next `fetch` is never called for a rejected `Location`.
+- Hop limit: eight same-host 302s end in `Too many redirects` and never leave the host. A 302 POST becomes a GET with no body. A 307 POST stays a POST.
+- Dry-run matrix: `unf_cart_add` with no `confirm`, `confirm: false`, `confirm: "true"`, and `confirm: 1` does not call `fetch`. `confirm: true` calls `fetch` twice (GET then POST). Invalid `qty` throws before `fetch`.
+- Cookie output: set `UNF_COOKIE` to a known secret and assert `unf_session_status`, a forced `UNF_BAD_COOKIE`, and a mocked `fetch` rejection whose message contains that secret all omit the secret. CR/LF cookies throw.
+- Redaction fixture: HTML with hidden `CFTOKEN`, `<textarea>` address, `<input value="Ada" type="text">`, and `<input name="shipAddress1" value="1 Queen St">` must not contain those secrets after `redactHtml`. `network-log` URLs must redact `CFID` the same way `xhr-log` does.
+- Search href: fixture `<a href="...?skuID=HK1&CFTOKEN=SECRET">` must not appear in `unf_search_products` output.
+- Capture blockers: fixture HTML with `你的購物車是空的` or visible `permissionViolation` exits `bill_ship` without writing `bill_ship.html` / `bill_ship.json`. A page whose only `unfLogin` is an `href` still writes the file.

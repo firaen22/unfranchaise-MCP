@@ -1,0 +1,21 @@
+{
+  "source": "fixtures/checkout-billship.synthetic.html",
+  "note": "Baseline map until fixtures/captured/bill_ship.json exists",
+  "stepHints": ["shipping", "pickup", "payment"],
+  "fields": [
+    "pickUpOrder",
+    "billSameAsShip",
+    "shipFirstName",
+    "shipLastName",
+    "shipAddress1",
+    "shipAddress2",
+    "shipCity",
+    "shipRegion",
+    "shipPostalCode",
+    "shipPhone",
+    "shipCountry",
+    "payMethod",
+    "orderStep",
+    "continueCheckout"
+  ]
+}

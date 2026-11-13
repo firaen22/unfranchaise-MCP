@@ -1,0 +1,41 @@
+I'll read the brief and follow its instructions.
+The brief is a read-only security review of the Unfranchise MCP. I'll inspect the in-scope files next.
+I'll read the server, CLI, library, capture scripts, and smoke tests for cookie handling, dry-run gates, and URL checks.
+**Verdict: approve with nits.** No Critical, High, or Medium findings in `server.js`, `cli.js`, `lib/*.js`, `scripts/capture-session.mjs`, `scripts/capture-xhr-playwright.mjs`, or `pure-smoke.mjs`.
+
+Session cookies stay out of tool status and error text. The only live mutation is `unf_cart_add`, and it posts only when `confirm === true`. Checkout mapping and both capture scripts are GET-only. `unfFetch` allows only `https://hk.unfranchise.com` on port 443, including redirect hops. `fixtures/captured/` is gitignored.
+
+## Findings
+
+### Critical
+None.
+
+### High
+None.
+
+### Medium
+None.
+
+### Low
+
+1. **Final URLs and catalog links are not redacted except on checkout.** `unf_search_products`, `unf_get_product`, `unf_cart_view`, `unf_form1000_status`, and the confirmed `unf_cart_add` result return `url` / `postUrl` from `unfFetch` as-is. `parseSearchResults` also returns raw `href`. `unf_checkout_billship_map` does call `redactSessionTokensInUrl`. `cli.js` prints that JSON to stdout. If ColdFusion echoes `CFID`, `CFTOKEN`, or `JSESSIONID` on a redirect or product link, the session id lands in the MCP transcript and the terminal. `parseDataActionLinks` copies `data-action` with no redact, and capture writes that into `bill_ship.json`.
+
+2. **A confirmed cart POST can be replayed on 307/308.** In `lib/client.js`, 303 and 301/302 after POST are turned into GET and the body is dropped. 307 and 308 keep the method and the body, then follow the `Location` if it is still `hk.unfranchise.com`. A redirect off the product URL can repeat `prdCode` / `prdQty1` against another action. This happens only after `confirm === true`.
+
+3. **Capture HTML still holds some PII.** `redactHtml` strips those three session tokens, hidden/text/tel/email/password/search input values, textareas, emails, and phone-like strings. The phone pattern needs at least nine digits or separators, so a continuous 8-digit Hong Kong number such as `91234567` is left in place. Visible names, street addresses, `<option>` text, and `<script>` blobs are not scrubbed. `fixtures/captured/` is gitignored, so this stays on disk rather than in git. Parsed checkout JSON omits text-input values, but select labels (80 characters) are kept.
+
+### Nits
+
+1. **`requireConfirm` is not on the live path.** `unf_cart_add` uses its own `args.confirm !== true` check. `"true"` does not post. The helper and the tool can drift later.
+2. **Empty-cart handling differs.** `capture-session.mjs` exits 1 on `login_required`, `empty_cart`, or zero fields before writing `bill_ship`. The MCP tool only special-cases `login_required`. A live GET that bounces to the cart still returns `source: "network"`.
+3. **`capture-xhr-playwright.mjs` allows any GET whose hostname is `hk.unfranchise.com`.** The protocol and port are not checked. Non-GET requests are aborted, and post bodies are not logged.
+4. **`redactSessionTokensInUrl` only rewrites tokens after `?`, `&`, or `;`.** A `#CFID=…` fragment is unchanged. `redactSessionTokensInText` is stricter and is what the HTML capture uses.
+5. **`pure-smoke.mjs` does not lock the fallback or the network boundary.** The fetch stub wraps only the dry-run `unf_cart_add` call. There is no assertion for `confirm: "true"`, captured-fixture vs synthetic fallback, `assertUnfUrl` rejects, or redirect redaction.
+
+## Suggested tests
+
+- With `globalThis.fetch` throwing, `unf_cart_add` stays dry-run for omitted `confirm`, `false`, and `"true"`, and calls fetch only for boolean `true`.
+- Reject `http://hk.unfranchise.com`, `https://hk.unfranchise.com:8443`, `https://evil.com`, and `https://hk.unfranchise.com.evil.com` in `assertUnfUrl`. A same-host 302 from POST becomes GET with no body. A 307 to another host throws and does not call fetch again.
+- `redactSessionTokensInUrl` and search `href`s replace `CFID`, `CFTOKEN`, and `JSESSIONID`, including `;JSESSIONID=` path form. Tool JSON from search, cart, product, form 1000, and cart-add does not contain a fixture token.
+- `unf_checkout_billship_map` with no cookie and a temporary `fixtures/captured/bill_ship.json` returns `source: "captured_fixture"`. `useFixture: true` stays `synthetic_fixture` even if that file exists. A live HTML fixture with an empty-cart body sets `empty_cart` and does not claim a bill/ship form.
+- `redactHtml` removes an 8-digit local phone, an email, a hidden `CFTOKEN` value, and a name in a text input. `parseDataActionLinks` does not echo `CFID=secret`.

@@ -1,0 +1,37 @@
+**Verdict: approve with nits.** Critical: 0. High: 0. In-scope cookie handling, dry-run gating, checkout reads, and SSRF host pinning hold.
+
+Reviewed `server.js`, `cli.js`, `pure-smoke.mjs`, `lib/*.js`, and `scripts/capture-session.mjs` / `scripts/capture-xhr-playwright.mjs` (repo root `unfranchaise`).
+
+## Findings
+
+### Critical
+None.
+
+### High
+None.
+
+### Medium
+None.
+
+### Low
+1. **Captured HTML still keeps visible PII.** `redactHtml` strips `CFID` / `CFTOKEN` / `JSESSIONID`, input and textarea values, emails, and phone-like digit runs. Names, street lines, `<option>` text, placeholders, and script blobs that are not `TOKEN=` stay in `fixtures/captured/*.html`. `dataActions[].text` (60 characters) is also stored in `bill_ship.json` and can be returned by `unf_checkout_billship_map`. Boundary that holds: `fixtures/captured/` is gitignored, and the MCP parser does not copy text-input values (hidden/password redacted; checkbox/radio and select value/label forced to `[REDACTED]`).
+2. **Bill/ship capture can treat a redirect as success.** Empty cart (`empty_cart`) and `fieldCount === 0` abort before `bill_ship.json` is written. The script never checks that the final URL action is `orders.unfBillShip`. A redirect to a non-empty cart (or any other same-host page that still has forms) is saved as `bill_ship.html` / `.json` and the process can still exit 0 for that step. `express.unfExpressPay` is still fetched afterward.
+
+### Nits
+1. Capture `main().catch` logs raw `e.message`. MCP/CLI use `publicErrorMessage`; these scripts do not. A library error that echoes a header would hit the terminal (not the tool result, not git).
+2. `xhr-log.json` redacts session tokens only. Other query values are stored as-is (`postData` is always null). Non-GET requests and `unfUpdateCart` / `unfPayment` / `unfBillShipUpdate` are aborted, and the host must be `https://hk.unfranchise.com` with port 443 or empty.
+3. `requireConfirm` is not what `unf_cart_add` uses. The tool gate is the stricter `args.confirm !== true`, so `"true"` / `1` stay dry-run. The helper and the tool can drift later.
+4. `pure-smoke.mjs` covers synthetic `useFixture`, one dry-run cart add, and `CFID` redaction only. It does not cover the captured-fixture fallback, the host allowlist, or a non-boolean `confirm`.
+
+## What held
+- Cookie is env or file only. `unf_session_status` returns `configured` and length, not the value. CR/LF and oversize cookies are rejected. Tool payloads go through `redactToolPayload`.
+- The only POST is `unf_cart_add`, and only when `confirm === true`. Checkout map, Form 1000, cart view, search, and product are GET. Capture document flow uses `getAction` (GET). Playwright aborts every non-GET.
+- Fetch and redirect targets must be `https://hk.unfranchise.com` (no other port). User-built actions stay on that origin via `actionUrl`. No tool fetches an arbitrary URL. Redirect errors do not echo the URL.
+- Committed fixtures are synthetic. No session cookie in those files.
+
+## Suggested tests
+- `assertUnfUrl` rejects `https://evil.example`, `https://hk.unfranchise.com.evil.example`, `http://hk.unfranchise.com`, userinfo hosts, and non-443 ports. A 302 `Location` to another host throws `UNF_BAD_URL` and does not call `fetch` again.
+- `unf_cart_add` with `confirm` omitted, `false`, `"true"`, and `1` does not call `fetch`. Only `true` does.
+- `publicErrorMessage` on `TypeError: invalid header value … <cookie>` does not contain the cookie. Capture catch paths should use the same helper.
+- With no cookie and a temp `fixtures/captured/bill_ship.json`, `unf_checkout_billship_map` returns `source: captured_fixture`. `useFixture: true` still returns `synthetic_fixture` even if that file exists.
+- Capture: final URL whose `action` is not `orders.unfBillShip` exits non-zero and does not write `bill_ship.json`. Fixture HTML with a visible address, an 8-digit phone, and `CFID=` in a query and in a path `;jsessionid=` has no raw token or phone after `redactHtml`.

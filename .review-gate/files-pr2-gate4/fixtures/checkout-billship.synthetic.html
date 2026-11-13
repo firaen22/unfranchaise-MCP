@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>帳單及送貨資料 | 超連鎖</title></head>
+<body>
+<p>Synthetic fixture for parser tests — field names are illustrative until live capture overwrites.</p>
+<form name="billShipForm" method="post" action="index.cfm?action=orders.unfBillShip" data-action="orders.unfBillShip">
+  <input type="checkbox" name="pickUpOrder" value="1" id="pickUpOrder" />
+  <label for="pickUpOrder">是的，我要自行提取貨件</label>
+  <input type="checkbox" name="billSameAsShip" value="1" checked />
+  <input type="text" name="shipFirstName" required />
+  <input type="text" name="shipLastName" required />
+  <input type="text" name="shipAddress1" required />
+  <input type="text" name="shipAddress2" />
+  <input type="text" name="shipCity" required />
+  <select name="shipRegion">
+    <option value="HK">香港</option>
+    <option value="KLN">九龍</option>
+  </select>
+  <input type="text" name="shipPostalCode" />
+  <input type="tel" name="shipPhone" required />
+  <select name="shipCountry">
+    <option value="HK">香港</option>
+    <option value="TW">台灣</option>
+  </select>
+  <select name="payMethod">
+    <option value="cardOnFile">信用卡（檔案）</option>
+    <option value="newCard">新信用卡</option>
+    <option value="accountCredit">帳戶結餘</option>
+  </select>
+  <input type="hidden" name="orderStep" value="billShip" />
+  <button type="submit" name="continueCheckout" data-action="orders.unfBillShip">繼續</button>
+</form>
+<a href="#" data-action="shopping.unfViewCart">返回購物車</a>
+</body>
+</html>

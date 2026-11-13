@@ -17,6 +17,7 @@ import { cookieStatus } from './lib/client.js';
 import { parseCheckoutPage } from './lib/parse-checkout.js';
 import fs from 'node:fs';
 import path from 'node:path';
+import { redactSessionTokensInUrl } from './lib/redact.js';
 
 assert.match(actionUrl(Actions.ordering), /action=shopping\.unfOrdering/);
 assert.match(Actions.product('HK1410IBV'), /skuID=HK1410IBV/);
@@ -90,5 +91,19 @@ assert.equal(billParsed.live, false);
 const net = await callTool('unf_network_patterns', {});
 const netParsed = JSON.parse(net.content[0].text);
 assert.ok(netParsed.navigation.checkout_entry?.action === 'orders.unfBillShip');
+
+assert.match(
+  redactSessionTokensInUrl('https://hk.unfranchise.com/index.cfm?CFID=secret&action=x'),
+  /CFID=\[REDACTED\]/,
+);
+assert.doesNotMatch(redactSessionTokensInUrl('https://hk.unfranchise.com/?CFID=secret'), /secret/);
+assert.doesNotMatch(
+  redactSessionTokensInUrl('https://hk.unfranchise.com/?%43FID=enc&%43FTOKEN=tok2'),
+  /enc|tok2/,
+);
+assert.doesNotMatch(
+  redactSessionTokensInUrl('https://hk.unfranchaise.com/?%25=x&%43FID=TOKEN_SENTINEL'),
+  /TOKEN_SENTINEL/,
+);
 
 console.log('pure-smoke: ok', TOOL_DEFINITIONS.length, 'tools');

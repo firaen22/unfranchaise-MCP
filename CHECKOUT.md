@@ -10,9 +10,17 @@
 
 See [NETWORK.md](./NETWORK.md) for transport notes and capture commands.
 
-## Field map (synthetic baseline)
+## Data source precedence (`unf_checkout_billship_map`)
 
-Live field names should match after `npm run capture` with a valid cookie. HK pickup policy: select pickup in **Shipping Address** (manual Ch. 15).
+1. **live** — GET `orders.unfBillShip` when `UNF_COOKIE` / `UNF_COOKIE_FILE` is set  
+2. **captured_fixture** — `fixtures/captured/bill_ship.json` (local only, gitignored)  
+3. **synthetic_fixture** — `fixtures/checkout-billship.synthetic.html` + `.parsed.json` (CI / offline)
+
+Capture requires a **non-empty cart**; otherwise ColdFusion returns cart/empty state and `npm run capture` exits before writing `bill_ship.json`.
+
+## Field map — synthetic baseline (not a live capture)
+
+Illustrative names from `fixtures/checkout-billship.synthetic.html`. Replace the table only after a capture whose `stepHints` omit `login_required` and `empty_cart`. HK pickup policy: select pickup in **Shipping Address** (manual Ch. 15).
 
 | Field / control | Type | Role |
 |-----------------|------|------|

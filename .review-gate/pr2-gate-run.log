@@ -1,0 +1,37 @@
+{"name": "unf-pr2-gate-sol", "tool": "codex", "model": "gpt-6.1-sol", "cap": 1800, "pong": false, "status": "PASS", "rc": 0, "elapsed": 114.3, "out_bytes": 3049, "err_bytes": 90951, "served_model": "gpt-6.1-sol", "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate", "effort_applied": true}
+PASS
+{"name": "unf-pr2-gate-grok", "tool": "grok", "model": "grok-4.7", "cap": 1800, "pong": false, "status": "PASS", "rc": 0, "elapsed": 461.9, "out_bytes": 7005, "err_bytes": 0, "served_model": "grok-4.7-build", "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate/grok-pr2-gate", "effort_applied": true}
+PASS
+=== pr2-gate review complete ===
+--- sol ---
+**Verdict: HOLD — zero-High gate not met.** [verified: synthetic reproductions] Session tokens can survive into capture logs and checkout tool output. Review is **single-lens**; live account behavior was not tested.
+
+**Findings, highest severity first**
+
+1. **High — session credentials survive in URLs and parsed forms.** [verified: in-memory execution] [`capture-session.mjs:39`](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate/scripts/capture-session.mjs:39) logs `result.url` unchanged. A mocked redirect URL containing `CFID=SENTINEL_SESSION` retained that token. Separately, [`parse-forms.js:44`](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate/lib/parse-forms.js:44) preserves form actions containing session query parameters; these reach captured JSON and checkout MCP/CLI responses. Redact sensitive URL parameters consistently before persistence or return.
+
+2. **Medium — HTML and parsed-field redaction misses PII and tokens.** [verified: execution of the extracted redactor and real parser] [`capture-session.mjs:15`](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate/scripts/capture-session.mjs:15) retained sentinel values in single-quoted inputs, inputs with `value` before `type`, hidden inputs, textareas, and ordinary page text. [`parse-forms.js:26`](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate/lib/parse-forms.js:26) also retained select labels/values and radio values. Capture a structural allowlist instead of relying on these regexes to sanitize authenticated HTML.
+
+3. **Medium — browser capture does not enforce read-only requests.** [verified: static inspection] [`capture-xhr-playwright.mjs:49–64`](/Users/yauch/Documents/unfranchaise/.review-gate/files-pr2-gate/scripts/capture-xhr-playwright.mjs:49) opens authenticated checkout pages with JavaScript enabled and only observes requests. Page scripts can issue POSTs without a confirmation gate. The timeout fallback also repeats navigation. Add request interception that blocks unapproved methods and destinations. [unverified] No actual live mutation was demonstrated.
+
+**Verification**
+
+[verified: execution, exit 0] `pure-smoke.mjs` reported `ok 12 tools`. Additional mocked checks confirmed:
+
+- Nonliteral confirmations caused zero fetches; literal `true` produced GET then POST.
+--- grok ---
+The brief is a read-only security review of the Unfranchise MCP. I'll read the in-scope sources next and write the verdict from that code.
+**Verdict: PROCEED (approve with nits).** No Critical, High, or Medium findings in scope.
+
+The stdio server and CLI call the same `callTool` path. The session cookie stays in the `Cookie` header. Live cart add is the only mutating tool, and it runs only when `confirm === true`. Checkout mapping and both capture scripts are GET-only. Redirects are confined to `https://hk.unfranchise.com`.
+
+## Critical
+
+None.
+
+## High
+
+None.
+
+## Medium
+

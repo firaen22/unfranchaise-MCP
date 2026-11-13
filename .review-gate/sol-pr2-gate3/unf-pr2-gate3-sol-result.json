@@ -1,0 +1,17 @@
+{
+ "name": "unf-pr2-gate3-sol",
+ "tool": "codex",
+ "model": "gpt-6.1-sol",
+ "cap": 1800,
+ "pong": false,
+ "status": "PASS",
+ "rc": 0,
+ "elapsed": 186.8,
+ "out_bytes": 2669,
+ "err_bytes": 102942,
+ "served_model": "gpt-6.1-sol",
+ "out": "/Users/yauch/Documents/unfranchaise/.review-gate/sol-pr2-gate3/unf-pr2-gate3-sol-out.txt",
+ "err": "/Users/yauch/Documents/unfranchaise/.review-gate/sol-pr2-gate3/unf-pr2-gate3-sol-err.txt",
+ "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate",
+ "effort_applied": true
+}

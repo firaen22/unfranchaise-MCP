@@ -7,9 +7,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSessionCookie } from '../lib/client.js';
 import { actionUrl } from '../lib/urls.js';
+import { redactSessionTokensInUrl } from '../lib/redact.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.join(__dirname, '..', 'fixtures', 'captured');
+const ALLOWED_HOST = 'hk.unfranchise.com';
 
 function cookieHeaderToPlaywright(cookieStr) {
   return cookieStr.split(';').map((part) => {
@@ -18,7 +20,7 @@ function cookieHeaderToPlaywright(cookieStr) {
     const name = part.slice(0, idx).trim();
     const value = part.slice(idx + 1).trim();
     if (!name) return null;
-    return { name, value, domain: 'hk.unfranchise.com', path: '/' };
+    return { name, value, domain: 'hk.unfranchise.com', path: '/', secure: true, sameSite: 'Lax' };
   }).filter(Boolean);
 }
 
@@ -45,14 +47,49 @@ async function main() {
   const context = await browser.newContext();
   await context.addCookies(cookieHeaderToPlaywright(cookieStr));
   const page = await context.newPage();
+  await page.route('**/*', (route) => {
+    const req = route.request();
+    if (req.method() !== 'GET') {
+      route.abort();
+      return;
+    }
+    let parsed;
+    try {
+      parsed = new URL(req.url());
+    } catch {
+      route.abort();
+      return;
+    }
+    if (parsed.protocol !== 'https:' || parsed.hostname !== ALLOWED_HOST) {
+      route.abort();
+      return;
+    }
+    if (parsed.port && parsed.port !== '443') {
+      route.abort();
+      return;
+    }
+    const action = parsed.searchParams.get('action') ?? '';
+    if (/\.(unfUpdateCart|unfPayment|unfBillShipUpdate)/i.test(action)) {
+      route.abort();
+      return;
+    }
+    route.continue();
+  });
   page.on('request', (req) => {
     const type = req.resourceType();
     if (!['xhr', 'fetch', 'document'].includes(type)) return;
+    let parsed;
+    try {
+      parsed = new URL(req.url());
+    } catch {
+      return;
+    }
+    if (parsed.hostname !== ALLOWED_HOST) return;
     log.push({
       type,
       method: req.method(),
-      url: req.url(),
-      postData: req.postData()?.slice(0, 500) || null,
+      url: redactSessionTokensInUrl(req.url()),
+      postData: null,
     });
   });
   for (const url of urls) {

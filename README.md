@@ -106,7 +106,7 @@ See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product tot
 - [x] Form 1000 dry-run receipt optimiser (two receipts ≥ HKD 1,500) and quarter-window file
 - [x] Reports placement — URL helpers only (`unf_placement_forms_url`; no submit)
 
-**Not in v0 (see [FINDINGS.md § Gaps](./FINDINGS.md)):** payment/submit/checkout POST helpers, live placement assign, committed XHR log artifact.
+**Not in v0 (see [FINDINGS.md § Gaps](./FINDINGS.md)):** payment/submit/checkout POST MCP tools, live placement assign, live `orders.unfBillShipUpdate` / `unfOrderReview` / `unfPayment` (documented as unverified in [NETWORK.md](./NETWORK.md)). Add a redacted `fixtures/captured/xhr-log.json` only from a good signed-in `npm run capture:xhr` run — never from a login wall.
 
 ## Maintainer scripts
 

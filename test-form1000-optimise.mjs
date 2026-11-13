@@ -16,8 +16,14 @@ function skusOf(lines) {
   return lines.map((line) => line.sku);
 }
 
-function assertDisjoint(result) {
-  const used = new Map();
+function assertDisjoint(result, sourceRows) {
+  const expected = new Map();
+  for (const row of sourceRows) {
+    if (String(row.alreadyPlaced ?? '').trim().toLowerCase() === 'true') continue;
+    const key = `${row.orderNumber ?? ''}|${row.sku ?? ''}`;
+    expected.set(key, (expected.get(key) ?? 0) + Number(row.qty ?? 0));
+  }
+  const actual = new Map();
   for (const [name, block] of [
     ['receipt1', result.receipt1],
     ['receipt2', result.receipt2],
@@ -25,16 +31,11 @@ function assertDisjoint(result) {
   ]) {
     for (const line of block.lines) {
       const key = `${line.orderNumber}|${line.sku}`;
-      const previous = used.get(key);
-      if (previous && !line.personalUse) {
-        const qty = (used.get(`${key}:qty`) ?? 0) + line.qty;
-        used.set(`${key}:qty`, qty);
-      }
-      used.set(key, (used.get(key) ?? 0) + 1);
-      used.set(`${key}:qty`, (used.get(`${key}:qty`) ?? 0) + line.qty);
+      actual.set(key, (actual.get(key) ?? 0) + line.qty);
       assert.ok(name);
     }
   }
+  assert.deepEqual(actual, expected);
 }
 
 assert.throws(() => parseCsv('line,"1500'), /unclosed quoted field/i);
@@ -102,6 +103,74 @@ for (const total of [shipped.receipt1.productTotalHkd, shipped.receipt2.productT
   assert.notEqual(total, 1800);
   assert.notEqual(total, 5800);
 }
+
+const tieRows = [
+  ...Array.from({ length: 6 }, (_, i) => ({
+    sku: `H${i}`,
+    qty: 1,
+    lineProductTotalHkd: 4000,
+    alreadyPlaced: false,
+  })),
+  ...Array.from({ length: 3 }, (_, i) => ({
+    sku: `M${i}`,
+    qty: 1,
+    lineProductTotalHkd: 500,
+    alreadyPlaced: false,
+  })),
+  ...Array.from({ length: 4 }, (_, i) => ({
+    sku: `L${i}`,
+    qty: 1,
+    lineProductTotalHkd: 1500,
+    alreadyPlaced: false,
+  })),
+];
+const tieBreak = optimiseForm1000(tieRows);
+assert.equal(tieBreak.feasible, true);
+assert.equal(tieBreak.receipt1.lines.length + tieBreak.receipt2.lines.length, 2);
+assert.deepEqual(
+  new Set([...tieBreak.receipt1.lines, ...tieBreak.receipt2.lines].map((line) => line.sku)),
+  new Set(['L0', 'L1']),
+);
+
+const solTie15 = [
+  10_000,
+  10_000,
+  10_000,
+  10_000,
+  10_000,
+  10_000,
+  10_000,
+  500,
+  500,
+  1500,
+  1500,
+  700,
+  900,
+  1100,
+];
+const solTie15Result = optimiseForm1000(
+  solTie15.map((amount, index) => ({
+    sku: `T${index}`,
+    qty: 1,
+    lineProductTotalHkd: amount,
+    alreadyPlaced: false,
+  })),
+);
+assert.equal(solTie15Result.feasible, true);
+assert.equal(solTie15Result.receipt1.lines.length + solTie15Result.receipt2.lines.length, 2);
+
+const sol14 = [700, 450, 850, 150, 650, 350, 450, 500, 200, 100, 450, 850, 100, 650];
+const sol14Result = optimiseForm1000(
+  sol14.map((amount, index) => ({
+    sku: `P${index}`,
+    qty: 1,
+    lineProductTotalHkd: amount,
+    alreadyPlaced: false,
+  })),
+);
+assert.equal(sol14Result.feasible, true);
+assert.equal(sol14Result.assignment, 'exact');
+assert.equal(sol14Result.receipt1.lines.length + sol14Result.receipt2.lines.length, 4);
 
 const exact = optimiseForm1000(
   [1100, 1000, 900, 600, 500, 400, 300].map((amount, index) => ({
@@ -187,7 +256,7 @@ function independentBestSum(amounts) {
   return best;
 }
 
-const wideAmounts = Array.from({ length: 13 }, (_, index) => 100 + index * 50);
+const wideAmounts = Array.from({ length: 15 }, (_, index) => 100 + index * 50);
 const wide = optimiseForm1000(
   wideAmounts.map((amount, index) => ({
     sku: `S${index}`,
@@ -240,19 +309,26 @@ assert.equal(exampleQuarters.quarters.length >= 2, true);
 assert.doesNotMatch(JSON.stringify(exampleQuarters), /@/);
 assert.throws(() => recordQuarter('fixtures/form1000-quarters.example.json', '01/01/2026-31/03/2026'), /example/);
 
-const quarterDir = fs.mkdtempSync(path.join(os.tmpdir(), 'unf-quarters-'));
+const quarterDir = path.join('fixtures', 'captured', 'quarters-test');
+fs.mkdirSync(quarterDir, { recursive: true });
 const quarterFile = path.join(quarterDir, 'quarters.json');
-recordQuarter(quarterFile, '01/01/2026-31/03/2026');
-recordQuarter(quarterFile, '01/01/2026-31/03/2026');
-const savedQuarters = loadQuarters(quarterFile);
-assert.equal(savedQuarters.example, false);
-assert.equal(savedQuarters.quarters.length, 1);
-assert.equal(savedQuarters.quarters[0].quarterDate, '01/01/2026-31/03/2026');
-fs.writeFileSync(
-  path.join(quarterDir, 'bad.json'),
-  JSON.stringify({ ...savedQuarters, customerName: 'hidden' }),
-);
-assert.throws(() => loadQuarters(path.join(quarterDir, 'bad.json')), /unsupported field/);
+try {
+  recordQuarter(quarterFile, '01/01/2026-31/03/2026');
+  recordQuarter(quarterFile, '01/01/2026-31/03/2026');
+  const savedQuarters = loadQuarters(quarterFile);
+  assert.equal(savedQuarters.example, false);
+  assert.equal(savedQuarters.quarters.length, 1);
+  assert.equal(savedQuarters.quarters[0].quarterDate, '01/01/2026-31/03/2026');
+  fs.writeFileSync(
+    path.join(quarterDir, 'bad.json'),
+    JSON.stringify({ ...savedQuarters, customerName: 'hidden' }),
+  );
+  assert.throws(() => loadQuarters(path.join(quarterDir, 'bad.json')), /unsupported field/);
+  assert.throws(() => recordQuarter('/tmp/quarters.json', '01/01/2026-31/03/2026'), /repository root/);
+  assert.throws(() => recordQuarter('fixtures/server.js', '01/01/2026-31/03/2026'), /\.json/);
+} finally {
+  fs.rmSync(quarterDir, { recursive: true, force: true });
+}
 
 let fetched = false;
 const previousFetch = globalThis.fetch;
@@ -335,7 +411,7 @@ assert.equal(recordCli.status, 0, recordCli.stderr);
 assert.match(recordCli.stdout, /30 June 2026, 11:59 pm US Eastern/);
 assert.equal(loadQuarters(path.join(quarterDir, 'cli.json')).quarters[0].end, '2026-06-30');
 
-assertDisjoint(example);
+assertDisjoint(example, loadSheetFromFile('fixtures/form1000-sheet.example.csv'));
 assert.doesNotMatch(fs.readFileSync('FORM1000.md', 'utf8'), /002|003/);
 assert.match(fs.readFileSync('FORM1000.md', 'utf8'), /銷售收據輸入/);
 assert.match(fs.readFileSync('FORM1000.md', 'utf8'), /moe\.unfMOEPCSelectU/);

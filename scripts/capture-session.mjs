@@ -66,18 +66,13 @@ async function main() {
     await captureStep(step);
   }
   const logPath = path.join(outDir, 'network-log.json');
-  fs.writeFileSync(
-    logPath,
-    JSON.stringify(
-      redactToolPayload({
-        capturedAt: new Date().toISOString(),
-        steps: networkLog,
-        xhrNote: 'Document GET fetches only; async XHR via npm run capture:xhr → xhr-log.json',
-      }),
-      null,
-      2,
-    ),
-  );
+  const logPayload = redactToolPayload({
+    capturedAt: new Date().toISOString(),
+    steps: networkLog,
+    xhrNote: 'Document GET fetches only; async XHR via npm run capture:xhr → xhr-log.json',
+  });
+  assertCaptureJsonSafe(logPayload);
+  fs.writeFileSync(logPath, `${JSON.stringify(logPayload, null, 2)}\n`);
   console.log(`[capture] network log → ${logPath}`);
   if (exitCode) process.exit(exitCode);
 }

@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSessionCookie } from '../lib/client.js';
 import { actionUrl } from '../lib/urls.js';
-import { redactSessionTokensInUrl } from '../lib/redact.js';
+import { assertCaptureJsonSafe, redactSessionTokensInUrl } from '../lib/redact.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.join(__dirname, '..', 'fixtures', 'captured');
@@ -116,10 +116,9 @@ async function main() {
   await browser.close();
   fs.mkdirSync(outDir, { recursive: true });
   const out = path.join(outDir, 'xhr-log.json');
-  fs.writeFileSync(
-    out,
-    JSON.stringify({ capturedAt: new Date().toISOString(), requests: log }, null, 2),
-  );
+  const payload = { capturedAt: new Date().toISOString(), requests: log };
+  assertCaptureJsonSafe(payload);
+  fs.writeFileSync(out, `${JSON.stringify(payload, null, 2)}\n`);
   console.log(`[capture:xhr] ${log.length} requests → ${out}`);
 }
 

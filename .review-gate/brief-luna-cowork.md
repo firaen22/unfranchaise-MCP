@@ -1,17 +1,17 @@
-# Luna 5.6 — MCP polish (main)
+# Luna 5.6 — fox-fix-gate implementation
 
-**Goals:** Documentation and pure URL helpers only. No new network mutations.
+Read `.review-gate/PLAN-fox-fix.md` in repo root (copied as `00-PLAN.md` if present).
 
-**Tasks:**
+Implement P0–P3 only. No new MCP tools. Match existing code style.
 
-1. Add **`unf_placement_forms_url`** (pure): build URLs for placement-related actions from FINDINGS — at minimum `forms.unfBVIBVPlacement`, `forms.unfBVIBVAutoPlacementUpdate`, `forms.unfBVIBVDesignationU` / `forms.unfIBVDesignationU` (pick names from FINDINGS.md API table). Optional `target` enum in schema. No fetch.
+**P0** `lib/validate.js` + `lib/client.js`: read-only redirect **allowlist** (lowercase `action`), block `shopping.unfUpdateCart` and AJAX/mutation actions.
 
-2. **README.md** — Add tool row; update intro line to mention 17 tools; mark roadmap **Reports placement** as URL helpers only (read FINDINGS, no submit).
+**P1** `lib/redact.js`, `scripts/capture-session.mjs`: `shpPhone` in PII list; scan all session token params in `assertCaptureJsonSafe`; `assertCaptureJsonSafe` on network-log write.
 
-3. **package.json** — description one line mentioning Form 1000 optimiser + placement URLs.
+**P2** `lib/form1000-sheet.js` / `form1000-quarters.js`: quarter paths must end with `.json`; reject basenames `server.js`, `package.json`, `cli.js`; symlink `lstat` + `realpath` per path component.
 
-4. **pure-smoke.mjs** — Assert new tool exists and returns hk.unfranchise.com URL without network.
+**P3** `test-form1000-optimise.mjs`: make `assertDisjoint` verify quantities conserved.
 
-5. `npm test` exit 0.
+**Tests:** `pure-smoke.mjs` — redirect block cases; `npm test` exit 0.
 
-Do not change bill-ship live fixtures, optimiser logic, or capture scripts except if a one-line comment is needed.
+Do not change unrelated files.

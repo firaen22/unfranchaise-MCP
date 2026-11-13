@@ -9,7 +9,14 @@ import {
   MONTHLY_IBV_CAP_MA_SA,
 } from './lib/volume.js';
 import { DryRunError, requireConfirm } from './lib/confirm.js';
-import { assertValidCookie, parseLocaleNumber, parsePositiveIntQty, publicErrorMessage } from './lib/validate.js';
+import {
+  assertSafePostRedirect,
+  assertSafeReadRedirect,
+  assertValidCookie,
+  parseLocaleNumber,
+  parsePositiveIntQty,
+  publicErrorMessage,
+} from './lib/validate.js';
 import { parseCartSummary } from './lib/client.js';
 import { load as loadCheerio } from 'cheerio';
 import { callTool, TOOL_DEFINITIONS } from './lib/tools.js';
@@ -242,6 +249,29 @@ assert.doesNotMatch(fs.readFileSync('fixtures/checkout-express-pay.live.redacted
 
 assert.equal(checkoutMapBlocker(parseCheckoutPage(loadCheerio('<html><body>main.unfLogin permissionViolation</body></html>'))), 'login_required');
 assert.equal(checkoutMapBlocker(parseCheckoutPage(loadCheerio('<html><body>你的購物車是空的</body></html>'))), 'empty_cart');
+assert.equal(
+  checkoutMapBlocker(parseCheckoutPage(loadCheerio('<form><input name="keyword"></form>'))),
+  'not_checkout_form',
+);
+assert.throws(
+  () => assertSafeReadRedirect('https://hk.unfranchise.com/index.cfm?action=forms.unf1000Assign'),
+  /read-only redirect/,
+);
+assert.throws(
+  () => assertSafePostRedirect('https://hk.unfranchise.com/index.cfm?action=orders.unfBillShip'),
+  /POST redirect/,
+);
+assert.doesNotThrow(() =>
+  assertSafeReadRedirect('https://hk.unfranchise.com/index.cfm?action=orders.unfBillShip'),
+);
+assert.throws(
+  () => assertSafeReadRedirect('https://hk.unfranchise.com/index.cfm?action=shopping.unfUpdateCart'),
+  /read-only redirect/,
+);
+assert.throws(
+  () => assertSafeReadRedirect('https://hk.unfranchise.com/index.cfm?action=FORMS.UNF1000ASSIGN'),
+  /read-only redirect/,
+);
 assert.equal(capturedBillShipUsable({ stepHints: ['login_required'], fieldCount: 3, forms: [] }), false);
 assert.equal(
   capturedBillShipUsable({
@@ -314,7 +344,7 @@ assert.doesNotMatch(
   /enc|tok2/,
 );
 assert.doesNotMatch(
-  redactSessionTokensInUrl('https://hk.unfranchaise.com/?%25=x&%43FID=TOKEN_SENTINEL'),
+  redactSessionTokensInUrl('https://hk.unfranchise.com/?%25=x&%43FID=TOKEN_SENTINEL'),
   /TOKEN_SENTINEL/,
 );
 assert.doesNotMatch(
@@ -351,14 +381,39 @@ assert.doesNotMatch(
 );
 assert.doesNotMatch(redactSessionTokensInText('var CFID = "SESSION_SENTINEL";'), /SESSION_SENTINEL/);
 assert.doesNotMatch(
-  redactSessionTokensInUrl('https://hk.unfranchaise.com/index.cfm#email=EMAIL_CANARY'),
+  redactSessionTokensInUrl('https://hk.unfranchise.com/index.cfm#email=EMAIL_CANARY'),
   /EMAIL_CANARY/,
 );
 assert.doesNotMatch(
   publicErrorMessage(new Error('failed https://hk.unfranchise.com/?CFID=SECRET')),
   /SECRET/,
 );
+assert.equal(publicErrorMessage(new Error('qty must be a positive integer')), 'qty must be a positive integer');
+assert.doesNotMatch(redactSessionTokensInUrl('https://hk.unfranchise.com/?cf_clearance=LEAK'), /LEAK/);
+assert.match(checkout.title, /^checkout:/);
 assert.doesNotThrow(() => assertCaptureJsonSafe({ action: 'orders.unfBillShip', url: 'https://x/?CFID=[REDACTED]' }));
+assert.throws(
+  () =>
+    assertCaptureJsonSafe({
+      url: 'https://hk.unfranchise.com/?specShipInstruction1=PII_CANARY',
+    }),
+  /delivery-instruction/,
+);
+assert.throws(
+  () =>
+    assertCaptureJsonSafe({
+      url: 'https://hk.unfranchise.com/?CFID=[REDACTED]&CFTOKEN=SYNTHETIC',
+    }),
+  /session token/,
+);
+assert.doesNotMatch(
+  redactSessionTokensInUrl('https://hk.unfranchise.com/?shpPhone=91234567'),
+  /91234567/,
+);
+assert.doesNotMatch(
+  redactSessionTokensInUrl('https://hk.unfranchise.com/?specShipInstruction1=PII_CANARY'),
+  /PII_CANARY/,
+);
 
 const dataActions = parseDataActionLinks(
   loadCheerio('<a data-action="orders.unfBillShip&CFID=leak">Continue</a>'),

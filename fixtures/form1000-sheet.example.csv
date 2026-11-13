@@ -1,0 +1,8 @@
+orderDate,orderNumber,sku,productName,qty,unitProductAmountHkd,lineProductTotalHkd,alreadyPlaced,allowSplit,personalUse,shippingHkd,taxHkd,feeHkd,costHkd,retailHkd
+2026-01-15,SYN-8101,HK-SYN-SERUM,Synthetic Serum,2,400,800,false,false,false,40,0,0,300,999
+2026-01-16,SYN-8104,HK-SYN-OIL,Synthetic Oil,1,700,700,false,false,false,20,0,0,,
+2026-01-20,SYN-8105,HK-SYN-CREAM,Synthetic Cream,1,500,500,false,false,false,15,0,0,,
+2026-02-02,SYN-8106,HK-SYN-TONER,Synthetic Toner,1,900,900,false,false,false,25,0,0,,
+2026-02-03,SYN-8107,HK-SYN-MIST,Synthetic Mist,1,600,600,false,false,false,10,0,0,,
+2026-02-10,SYN-8108,HK-SYN-SOAP,Synthetic Soap,1,120,120,false,false,false,8,0,0,,
+2026-01-08,SYN-PLACED,HK-SYN-OLD,Already Placed Sample,1,2000,2000,true,false,false,0,0,0,,

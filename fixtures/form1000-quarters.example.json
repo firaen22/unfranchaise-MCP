@@ -1,0 +1,22 @@
+{
+  "schema": "unf-form1000-quarters-v1",
+  "example": true,
+  "deadlineRule": "last day of the quarter, 11:59 pm US Eastern",
+  "note": "Synthetic example only. Not a live account, not a personal balance, and not an order list.",
+  "quarters": [
+    {
+      "quarterDate": "01/01/2026-31/03/2026",
+      "start": "2026-01-01",
+      "end": "2026-03-31",
+      "deadline": "2026-03-31T23:59:00-04:00",
+      "deadlineLabel": "31 March 2026, 11:59 pm US Eastern"
+    },
+    {
+      "quarterDate": "01/04/2026-30/06/2026",
+      "start": "2026-04-01",
+      "end": "2026-06-30",
+      "deadline": "2026-06-30T23:59:00-04:00",
+      "deadlineLabel": "30 June 2026, 11:59 pm US Eastern"
+    }
+  ]
+}

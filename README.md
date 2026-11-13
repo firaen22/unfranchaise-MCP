@@ -35,6 +35,16 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 
 **CLI:** `node cli.js unf_volume_explain` · `node cli.js unf_search_products '{"keyword":"omega"}'`
 
+**Form 1000 receipts (dry-run, no submit):**
+
+```bash
+npm run form1000:optimise -- fixtures/form1000-sheet.example.csv
+node cli.js form1000-optimise fixtures/form1000-sheet.example.csv
+node cli.js form1000-quarters read
+```
+
+See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product total each. Shipping, tax, and fees are not counted.
+
 ## Tools (v0)
 
 | Tool | Network | Notes |
@@ -50,6 +60,8 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 | `unf_cart_add` | POST if `confirm: true` | Default dry-run |
 | `unf_cart_update` | POST if `confirm: true` | Qty or remove line; default dry-run |
 | `unf_form1000_draft` | — | Markdown checklist (no network) |
+| `unf_form1000_optimise` | — | Two local receipts ≥ HKD 1,500 product each. No assign, submit, or place-order |
+| `unf_form1000_quarters` | — | Read/record quarter windows and the US Eastern deadline. Example fixture has no personal balances |
 | `unf_form1000_status` | GET | Quarter list + summary |
 | `unf_checkout_billship_map` | GET* | Bill/ship map. Offline baseline is the 13 Nov 2026 redacted browser capture, not the synthetic fixture. Login-wall and empty-cart HTML are not the map |
 | `unf_network_patterns` | — | Navigation / XHR pattern doc + capture paths |
@@ -57,6 +69,7 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 ## Safety defaults
 
 - Live **cart add** only when `confirm === true` (JSON boolean, not `"true"`).
+- The Form 1000 receipt optimiser has no confirm path. It never assigns, submits, or places an order. `confirm` on that tool is ignored.
 - Cookie validated for CR/LF; errors redacted; redirects limited to `https://hk.unfranchise.com`.
 - FINDINGS and this repo contain **no** real account data.
 
@@ -69,10 +82,11 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 ## Roadmap
 
 - [x] FINDINGS: orders, IBV/BV, Form 1000
-- [x] MCP / CLI v0 (`npm test`, 14 tools)
+- [x] MCP / CLI v0 (`npm test`, 16 tools)
 - [x] Checkout / bill-ship field map ([CHECKOUT.md](./CHECKOUT.md); live names are the 13 Nov 2026 redacted browser map; synthetic HTML is parser-test only)
 - [x] Network XHR capture ([NETWORK.md](./NETWORK.md); document log + optional Playwright `capture:xhr`)
 - [x] `form1000_draft`, cart update (dry-run tools)
+- [x] Form 1000 dry-run receipt optimiser (two receipts ≥ HKD 1,500) and quarter-window file
 - [ ] Reports placement
 
 ## Maintainer scripts

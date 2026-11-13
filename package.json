@@ -9,7 +9,8 @@
   },
   "scripts": {
     "mcp": "node server.js",
-    "test": "node pure-smoke.mjs",
+    "test": "node pure-smoke.mjs && node test-form1000-optimise.mjs",
+    "form1000:optimise": "node cli.js form1000-optimise",
     "capture": "node scripts/capture-session.mjs",
     "capture:xhr": "node scripts/capture-xhr-playwright.mjs"
   },

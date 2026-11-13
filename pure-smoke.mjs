@@ -9,7 +9,7 @@ import {
   MONTHLY_IBV_CAP_MA_SA,
 } from './lib/volume.js';
 import { DryRunError, requireConfirm } from './lib/confirm.js';
-import { assertValidCookie, parseLocaleNumber, parsePositiveIntQty } from './lib/validate.js';
+import { assertValidCookie, parseLocaleNumber, parsePositiveIntQty, publicErrorMessage } from './lib/validate.js';
 import { parseCartSummary } from './lib/client.js';
 import { load as loadCheerio } from 'cheerio';
 import { callTool, TOOL_DEFINITIONS } from './lib/tools.js';
@@ -26,7 +26,12 @@ import {
 } from './lib/billship-fixtures.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { redactActionString, redactSessionTokensInText, redactSessionTokensInUrl } from './lib/redact.js';
+import {
+  redactActionString,
+  redactSessionTokensInText,
+  redactSessionTokensInUrl,
+  assertCaptureJsonSafe,
+} from './lib/redact.js';
 import { parseDataActionLinks } from './lib/parse-forms.js';
 import { assertSafeFixturePath } from './lib/form1000-sheet.js';
 
@@ -329,6 +334,15 @@ assert.doesNotMatch(
   /CFID_CANARY|CFTOKEN_CANARY/,
 );
 assert.doesNotMatch(redactSessionTokensInText('var CFID = "SESSION_SENTINEL";'), /SESSION_SENTINEL/);
+assert.doesNotMatch(
+  redactSessionTokensInUrl('https://hk.unfranchaise.com/index.cfm#email=EMAIL_CANARY'),
+  /EMAIL_CANARY/,
+);
+assert.doesNotMatch(
+  publicErrorMessage(new Error('failed https://hk.unfranchise.com/?CFID=SECRET')),
+  /SECRET/,
+);
+assert.doesNotThrow(() => assertCaptureJsonSafe({ action: 'orders.unfBillShip', url: 'https://x/?CFID=[REDACTED]' }));
 
 const dataActions = parseDataActionLinks(
   loadCheerio('<a data-action="orders.unfBillShip&CFID=leak">Continue</a>'),

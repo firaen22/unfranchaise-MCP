@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { optimiseForm1000 } from './lib/form1000-optimise.js';
-import { loadSheetFromFile } from './lib/form1000-sheet.js';
+import { loadSheetFromFile, parseCsv } from './lib/form1000-sheet.js';
 import {
   loadQuarters,
   quarterWindowFromQuarterDate,
@@ -36,6 +36,8 @@ function assertDisjoint(result) {
     }
   }
 }
+
+assert.throws(() => parseCsv('line,"1500'), /unclosed quoted field/i);
 
 const example = optimiseForm1000(loadSheetFromFile('fixtures/form1000-sheet.example.csv'));
 assert.equal(example.feasible, true);

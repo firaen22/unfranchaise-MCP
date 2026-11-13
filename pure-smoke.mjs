@@ -62,6 +62,33 @@ const dryParsed = JSON.parse(dry.content[0].text);
 assert.ok(dryParsed.dryRun);
 assert.match(dryParsed.preview?.productUrl ?? '', /action=shopping\.unfProduct&skuID=/);
 
+let unexpectedCartUpdateFetch = false;
+const savedCartUpdateFetch = globalThis.fetch;
+globalThis.fetch = async () => {
+  unexpectedCartUpdateFetch = true;
+  throw new Error('cart_update dry-run must not fetch network');
+};
+const cartUpdateDry = await callTool('unf_cart_update', { skuID: 'X', qty: 2 });
+globalThis.fetch = savedCartUpdateFetch;
+assert.equal(unexpectedCartUpdateFetch, false);
+const cartUpdateParsed = JSON.parse(cartUpdateDry.content[0].text);
+assert.equal(cartUpdateParsed.dryRun, true);
+assert.equal(cartUpdateParsed.preview.qty, 2);
+assert.equal(cartUpdateParsed.preview.remove, false);
+assert.match(cartUpdateParsed.preview.url, /action=shopping\.unfUpdateCart/);
+
+const cartRemove = JSON.parse((await callTool('unf_cart_update', { skuID: 'X', remove: true })).content[0].text);
+assert.equal(cartRemove.preview.qty, 0);
+assert.equal(cartRemove.preview.remove, true);
+assert.throws(() => parsePositiveIntQty(0));
+
+const form1000Draft = await callTool('unf_form1000_draft', {});
+const form1000DraftText = form1000Draft.content[0].text;
+assert.match(form1000DraftText, /forms\.unf1000Update/);
+assert.match(form1000DraftText, /forms\.unf1000Assign/);
+assert.match(form1000DraftText, /HK\$1,500/);
+assert.match(form1000DraftText, /No network request/);
+
 const report = await callTool('unf_report_url', { reportName: 'personalVolume' });
 assert.match(JSON.parse(report.content[0].text).url, /reports\.unfReportCriteria/);
 assert.match(JSON.parse(report.content[0].text).url, /reportName=personalVolume/);

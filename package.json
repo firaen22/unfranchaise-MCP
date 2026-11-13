@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "MCP + CLI for Market Hong Kong Unfranchise (hk.unfranchise.com): catalog, cart, volume rules, Form 1000 status. Dry-run by default.",
+  "description": "stdio MCP + CLI for hk.unfranchise.com (17 tools): catalog/cart dry-run, Form 1000 optimiser, checkout map, placement URLs. Cookie auth.",
   "bin": {
     "unfranchaise": "cli.js"
   },

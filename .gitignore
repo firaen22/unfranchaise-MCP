@@ -17,16 +17,16 @@ dist/
 .review-gate/sol-prompt-r*.md
 .review-gate/PLAN-grok-draft.md
 .review-gate/fable-precommit/verdict-stream.txt
-.review-gate/plan-*/
-.review-gate/luna-*/
-.review-gate/*-pre-*/
-.review-gate/files-pr2-gate*/
-.review-gate/sol-pr2-gate*/
-.review-gate/grok-pr2-gate*/
-.review-gate/pr-pr2-gate*.diff
-.review-gate/brief-pr2-gate*.md
-.review-gate/sol-prompt-pr2-gate*.md
-.review-gate/pr2-gate*.log
-.review-gate/plan-pr2-run.log
+.review-gate/plan-*-run.log
+# Per-round review outputs (keep *-gate-verdict.md committed)
+.review-gate/files-*-gate*/
+.review-gate/sol-*-gate*/
+.review-gate/grok-*-gate*/
+.review-gate/pr-*-gate*.diff
+.review-gate/brief-*-gate*.md
+.review-gate/sol-prompt-*-gate*.md
+.review-gate/*-gate-run.log
+.review-gate/fable-*-run.log
+.review-gate/luna-*.log
 fixtures/captured/
 PLAN.md

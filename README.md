@@ -1,10 +1,15 @@
 # unfranchaise-MCP
 
-https://github.com/firaen22/unfranchaise-MCP
+stdio **MCP server** and **CLI** for [Market Hong Kong 超連鎖](https://hk.unfranchise.com) — **17 tools**, cookie session auth, dry-run by default.
 
-**stdio MCP + CLI** for [Market Hong Kong 超連鎖](https://hk.unfranchise.com): catalog, cart (dry-run by default), IBV/BV rules, Form 1000 status, and report URLs.
+| Area | What you get |
+|------|----------------|
+| Catalog & cart | Search, product BV/IBV, cart view/add/update (`confirm: true` to POST) |
+| Volume & Form 1000 | Rules explain/calculate, quarter file, status, local **two-receipt optimiser** (≥ HKD 1,500 product each; no assign/submit) |
+| Checkout research | Bill/ship field map ([CHECKOUT.md](./CHECKOUT.md)), XHR patterns + capture scripts ([NETWORK.md](./NETWORK.md)) |
+| Reports & placement | Report criteria URLs, placement form URLs (read-only; no submit) |
 
-Built from signed-in site research in [FINDINGS.md](./FINDINGS.md). No checkout, payment, or Form 1000 submit unless you explicitly pass `confirm: true` on mutating tools.
+Behavior and action names come from signed-in site research in [FINDINGS.md](./FINDINGS.md). This repo has **no** real account data. Checkout, payment, cart mutations, and Form 1000 assign/submit are blocked unless you explicitly opt in (`confirm: true` on the tools that support it).
 
 ## Quick start
 
@@ -45,7 +50,18 @@ node cli.js form1000-quarters read
 
 See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product total each. Shipping, tax, and fees are not counted.
 
-## Tools (v0)
+**Placement URLs (no network):** `node cli.js unf_placement_forms_url '{"target":"auto"}'`
+
+## Documentation
+
+| Doc | Contents |
+|-----|----------|
+| [FINDINGS.md](./FINDINGS.md) | Site actions, forms, volume rules (source of truth) |
+| [FORM1000.md](./FORM1000.md) | Receipt optimiser inputs, quarters, deadlines |
+| [CHECKOUT.md](./CHECKOUT.md) | Bill/ship field map (redacted live baseline) |
+| [NETWORK.md](./NETWORK.md) | Navigation/XHR notes, `npm run capture` / `capture:xhr` |
+
+## Tools (17)
 
 | Tool | Network | Notes |
 |------|---------|--------|
@@ -89,6 +105,8 @@ See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product tot
 - [x] `form1000_draft`, cart update (dry-run tools)
 - [x] Form 1000 dry-run receipt optimiser (two receipts ≥ HKD 1,500) and quarter-window file
 - [x] Reports placement — URL helpers only (`unf_placement_forms_url`; no submit)
+
+**Not in v0 (see [FINDINGS.md § Gaps](./FINDINGS.md)):** payment/submit/checkout POST helpers, live placement assign, committed XHR log artifact.
 
 ## Maintainer scripts
 

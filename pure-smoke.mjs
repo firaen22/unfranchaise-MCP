@@ -14,7 +14,16 @@ import { parseCartSummary } from './lib/client.js';
 import { load as loadCheerio } from 'cheerio';
 import { callTool, TOOL_DEFINITIONS } from './lib/tools.js';
 import { cookieStatus } from './lib/client.js';
-import { parseCheckoutPage } from './lib/parse-checkout.js';
+import { parseCheckoutPage, checkoutMapBlocker } from './lib/parse-checkout.js';
+import {
+  NOT_LIVE_SYNTHETIC_FIELD_NAMES,
+  capturedBillShipUsable,
+  fieldNamesFromParsed,
+  loadLiveBillShip,
+  loadLiveExpressPay,
+  loadSyntheticBillShip,
+  resolveOfflineBillShip,
+} from './lib/billship-fixtures.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { redactActionString, redactSessionTokensInText, redactSessionTokensInUrl } from './lib/redact.js';
@@ -83,15 +92,145 @@ const checkout = parseCheckoutPage(loadCheerio(syntheticHtml));
 assert.ok(checkout.stepHints.includes('pickup'));
 assert.ok(checkout.formCount >= 1);
 assert.ok(checkout.forms[0].fields.some((f) => f.name === 'pickUpOrder'));
+assert.ok(parseCheckoutPage(loadCheerio('<p>親自提貨</p>')).stepHints.includes('pickup'));
+assert.ok(parseCheckoutPage(loadCheerio('<p>提貨</p>')).stepHints.includes('pickup'));
+
+const fixtureDir = path.join('fixtures');
+const syntheticOnly = loadSyntheticBillShip(fixtureDir);
+assert.equal(syntheticOnly.source, 'synthetic_fixture');
+assert.ok(fieldNamesFromParsed(syntheticOnly).includes('pickUpOrder'));
+
+const live = loadLiveBillShip(fixtureDir);
+assert.equal(live.source, 'live_redacted_fixture');
+assert.equal(live.live, false);
+assert.equal(live.pageTitle, '送貨與付款資訊 | 超連鎖');
+assert.equal(live.baseline.form.name, 'billShip');
+assert.equal(live.baseline.form.action, 'index.cfm?action=orders.unfBillShip');
+assert.equal(live.baseline.submit.clicked, false);
+assert.equal(live.baseline.submit.name, null);
+assert.equal(live.baseline.submit.id, 'btnSubmit');
+const liveNames = live.baseline.fields.map((field) => field.name);
+for (const syntheticName of NOT_LIVE_SYNTHETIC_FIELD_NAMES) {
+  assert.ok(!liveNames.includes(syntheticName), syntheticName);
+}
+for (const requiredName of ['shipType', 'pcid', 'contactPhone', 'shipEmail', 'pickUp', 'shpfirstName', 'shpPCode', 'mCountry']) {
+  assert.ok(liveNames.includes(requiredName), requiredName);
+}
+assert.deepEqual(
+  live.baseline.fields.find((field) => field.name === 'shipType').options.map((option) => option.value),
+  ['1', '3', '2'],
+);
+assert.equal(live.baseline.fields.find((field) => field.name === 'orderDirective').observedValue, 'SO');
+assert.ok(live.stepHints.includes('pickup'));
+assert.ok(!live.stepHints.includes('empty_cart'));
+assert.ok(!live.stepHints.includes('login_required'));
+const parsedLiveNames = new Set(fieldNamesFromParsed(live));
+for (const name of liveNames) {
+  assert.ok(parsedLiveNames.has(name), `html missing ${name}`);
+}
+assert.ok(parsedLiveNames.has('btnSubmit'));
+const orderDirective = live.forms[0].fields.find((field) => field.name === 'orderDirective');
+assert.equal(orderDirective.redacted, true);
+assert.equal(JSON.stringify(orderDirective).includes('SO'), false);
+assert.equal(live.forms[0].fields.find((field) => field.name === 'shpPCode').id, 'postal');
+
+const express = loadLiveExpressPay(fixtureDir);
+assert.equal(express.pageTitle, '超連鎖事業帳戶 | 超連鎖');
+assert.equal(express.baseline.form.name, 'finalPreview');
+assert.equal(express.baseline.form.action, 'index.cfm?action=express.unfProcessExpressOrder');
+assert.equal(express.baseline.submit.clicked, false);
+assert.equal(express.baseline.pickupControls, false);
+assert.ok(!express.stepHints.includes('pickup'));
+assert.ok(express.stepHints.includes('shipping'));
+const expressNames = express.baseline.fields.map((field) => field.name);
+for (const requiredName of ['shippingSelection1', 'paymentType', 'ccNum', 'cvv', 'empty1', 'empty2', 'deliveryTime6', 'vendorCode']) {
+  assert.ok(expressNames.includes(requiredName), requiredName);
+}
+assert.equal(express.baseline.fields.find((field) => field.name === 'cvv').filled, false);
+assert.deepEqual(
+  express.baseline.fields.find((field) => field.name === 'shippingSelection1').options.map((option) => option.value),
+  ['44', '45'],
+);
+const parsedExpressNames = new Set(fieldNamesFromParsed(express));
+for (const name of expressNames) {
+  assert.ok(parsedExpressNames.has(name), `express html missing ${name}`);
+}
+assert.equal(express.forms[0].dataAction, 'express.unfProcessExpressOrder');
+for (const file of [
+  'fixtures/checkout-billship.live.redacted.html',
+  'fixtures/checkout-express-pay.live.redacted.html',
+  'fixtures/checkout-billship.live.redacted.json',
+  'fixtures/checkout-express-pay.live.redacted.json',
+]) {
+  const text = fs.readFileSync(file, 'utf8');
+  assert.doesNotMatch(text, /@|CFID|CFTOKEN|cf_clearance|__cf_bm=|\/workspace|\/home\/box/);
+  assert.doesNotMatch(text, /name="pickUpOrder"|name="continueCheckout"|name="shipFirstName"/);
+}
+assert.doesNotMatch(fs.readFileSync('fixtures/checkout-express-pay.live.redacted.html', 'utf8'), /提貨|取貨|HK\$/);
+
+assert.equal(checkoutMapBlocker(parseCheckoutPage(loadCheerio('<html><body>main.unfLogin permissionViolation</body></html>'))), 'login_required');
+assert.equal(checkoutMapBlocker(parseCheckoutPage(loadCheerio('<html><body>你的購物車是空的</body></html>'))), 'empty_cart');
+assert.equal(capturedBillShipUsable({ stepHints: ['login_required'], fieldCount: 3, forms: [] }), false);
+assert.equal(
+  capturedBillShipUsable({
+    stepHints: [],
+    fieldCount: 2,
+    forms: [{ fields: [{ name: 'shipType' }, { name: 'pickUpOrder' }] }],
+  }),
+  false,
+);
+const ignoredSyntheticCapture = resolveOfflineBillShip(fixtureDir, {
+  stepHints: ['shipping'],
+  fieldCount: 1,
+  forms: [{ fields: [{ name: 'pickUpOrder' }] }],
+});
+assert.equal(ignoredSyntheticCapture.source, 'live_redacted_fixture');
+const usableCapture = resolveOfflineBillShip(fixtureDir, {
+  stepHints: ['shipping', 'pickup'],
+  fieldCount: 3,
+  forms: [{ name: 'billShip', fields: [{ name: 'shipType' }, { name: 'contactPhone' }, { name: 'pickUp' }] }],
+});
+assert.equal(usableCapture.source, 'captured_fixture');
+assert.equal(usableCapture.live, false);
+assert.ok(usableCapture.baseline.fields.some((field) => field.name === 'shpfirstName'));
 
 const billMap = await callTool('unf_checkout_billship_map', { useFixture: true });
 const billParsed = JSON.parse(billMap.content[0].text);
-assert.equal(billParsed.source, 'synthetic_fixture');
+assert.equal(billParsed.source, 'live_redacted_fixture');
 assert.equal(billParsed.live, false);
+assert.notEqual(billParsed.source, 'synthetic_fixture');
+assert.ok(billParsed.baseline.fields.some((field) => field.name === 'shipType'));
+assert.ok(!billParsed.baseline.fields.some((field) => field.name === 'pickUpOrder'));
+assert.equal(billParsed.expressPayFixture.baseline.form.action, 'index.cfm?action=express.unfProcessExpressOrder');
+assert.equal(billParsed.pageTitle, '送貨與付款資訊 | 超連鎖');
 
 const net = await callTool('unf_network_patterns', {});
 const netParsed = JSON.parse(net.content[0].text);
 assert.ok(netParsed.navigation.checkout_entry?.action === 'orders.unfBillShip');
+assert.ok(netParsed.confirmedLiveActions.some((row) => row.action === 'orders.unfBillShip' && row.method === 'POST'));
+assert.ok(netParsed.confirmedLiveActions.some((row) => row.action === 'express.unfProcessExpressOrder'));
+assert.ok(netParsed.confirmedLiveActions.some((row) => row.action === 'orders.unfBillShipAJAX'));
+const unverifiedNames = netParsed.unverifiedCheckoutActions.map((row) => row.action);
+assert.deepEqual(unverifiedNames, ['orders.unfBillShipUpdate', 'orders.unfOrderReview', 'orders.unfPayment']);
+assert.ok(unverifiedNames.every((action) => !netParsed.confirmedLiveActions.some((row) => row.action === action)));
+assert.match(netParsed.markdown, /Not observed — unverified/);
+assert.match(netParsed.markdown, /cf_clearance/);
+
+const checkoutMd = fs.readFileSync('CHECKOUT.md', 'utf8');
+const networkMd = fs.readFileSync('NETWORK.md', 'utf8');
+assert.match(checkoutMd, /shipType/);
+assert.match(checkoutMd, /shpfirstName/);
+assert.match(checkoutMd, /親自提貨/);
+assert.match(checkoutMd, /not live/i);
+const unverifiedSection = networkMd.split('## Not observed')[1].split('## ')[0];
+assert.match(unverifiedSection, /orders\.unfBillShipUpdate/);
+assert.match(unverifiedSection, /orders\.unfOrderReview/);
+assert.match(unverifiedSection, /orders\.unfPayment/);
+assert.doesNotMatch(unverifiedSection, /orders\.unfBillShipAJAX/);
+const confirmedSection = networkMd.split('## Confirmed live')[1].split('## ')[0];
+assert.match(confirmedSection, /orders\.unfBillShipAJAX/);
+assert.match(confirmedSection, /express\.unfProcessExpressOrder/);
+assert.doesNotMatch(confirmedSection, /unfBillShipUpdate/);
 
 assert.match(
   redactSessionTokensInUrl('https://hk.unfranchise.com/index.cfm?CFID=secret&action=x'),
@@ -123,6 +262,10 @@ assert.doesNotMatch(
   /EMAIL_CANARY/,
 );
 assert.doesNotMatch(
+  redactActionString('orders.unfBillShip&contactPhone=PHONE_CANARY&cvv=CVV_CANARY&shpAddr1=ADDR_CANARY'),
+  /PHONE_CANARY|CVV_CANARY|ADDR_CANARY/,
+);
+assert.doesNotMatch(
   redactSessionTokensInUrl(
     'https://hk.unfranchise.com/index.cfm?next=index.cfm?C%46ID=TOKEN_CANARY&C%46TOKEN=TOKEN2_CANARY',
   ),
@@ -141,5 +284,56 @@ const dataActions = parseDataActionLinks(
 );
 assert.doesNotMatch(dataActions[0].action, /leak/);
 assert.equal(dataActions[0].text, '[REDACTED]');
+
+const savedCookie = process.env.UNF_COOKIE;
+const savedCookieFile = process.env.UNF_COOKIE_FILE;
+const savedFetch = globalThis.fetch;
+process.env.UNF_COOKIE = 'CFID=stub-session; CFTOKEN=stub-session';
+delete process.env.UNF_COOKIE_FILE;
+try {
+  globalThis.fetch = async () => ({
+    status: 200,
+    headers: { get: () => null },
+    text: async () => '<html><title>Login</title><body>main.unfLogin permissionViolation</body></html>',
+  });
+  const blocked = JSON.parse((await callTool('unf_checkout_billship_map', {})).content[0].text);
+  assert.equal(blocked.networkBlocked, true);
+  assert.equal(blocked.blocker, 'login_required');
+  assert.equal(blocked.live, false);
+  assert.equal(blocked.source, 'live_redacted_fixture');
+  assert.ok(blocked.baseline.fields.some((field) => field.name === 'shipType'));
+  assert.ok(!blocked.baseline.fields.some((field) => field.name === 'pickUpOrder'));
+  assert.doesNotMatch(JSON.stringify(blocked), /stub-session/);
+
+  globalThis.fetch = async () => ({
+    status: 200,
+    headers: { get: () => null },
+    text: async () => '<html><body>你的購物車是空的</body></html>',
+  });
+  const emptyCart = JSON.parse((await callTool('unf_checkout_billship_map', {})).content[0].text);
+  assert.equal(emptyCart.blocker, 'empty_cart');
+  assert.equal(emptyCart.live, false);
+  assert.equal(emptyCart.source, 'live_redacted_fixture');
+
+  const liveHtml = fs.readFileSync('fixtures/checkout-billship.live.redacted.html', 'utf8');
+  globalThis.fetch = async () => ({
+    status: 200,
+    headers: { get: () => null },
+    text: async () => liveHtml,
+  });
+  const liveNet = JSON.parse((await callTool('unf_checkout_billship_map', {})).content[0].text);
+  assert.equal(liveNet.source, 'network');
+  assert.equal(liveNet.live, true);
+  assert.equal(liveNet.networkBlocked, undefined);
+  assert.ok(liveNet.forms[0].fields.some((field) => field.name === 'shipType'));
+  assert.ok(!liveNet.forms[0].fields.some((field) => field.name === 'pickUpOrder'));
+  assert.equal(liveNet.expressPayFixture.live, false);
+} finally {
+  globalThis.fetch = savedFetch;
+  if (savedCookie === undefined) delete process.env.UNF_COOKIE;
+  else process.env.UNF_COOKIE = savedCookie;
+  if (savedCookieFile === undefined) delete process.env.UNF_COOKIE_FILE;
+  else process.env.UNF_COOKIE_FILE = savedCookieFile;
+}
 
 console.log('pure-smoke: ok', TOOL_DEFINITIONS.length, 'tools');

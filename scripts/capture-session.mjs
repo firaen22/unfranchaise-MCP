@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Actions } from '../lib/urls.js';
 import { getAction } from '../lib/client.js';
-import { parseCheckoutPage } from '../lib/parse-checkout.js';
+import { parseCheckoutPage, checkoutMapBlocker } from '../lib/parse-checkout.js';
 import { redactSessionTokensInUrl, redactToolPayload } from '../lib/redact.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,7 +17,7 @@ const outDir = path.join(__dirname, '..', 'fixtures', 'captured');
 const steps = [
   { label: 'cart', action: Actions.viewCart },
   { label: 'bill_ship', action: Actions.billShip, requireCheckout: true },
-  { label: 'express_pay', action: Actions.expressPay },
+  { label: 'express_pay', action: Actions.expressPay, requireCheckout: true },
 ];
 
 const networkLog = [];
@@ -34,18 +34,18 @@ async function captureStep(step) {
     transport: 'document',
   });
   const parsed = redactToolPayload(parseCheckoutPage(result.$));
-  if (step.requireCheckout) {
-    const blockers = ['login_required', 'empty_cart'].filter((h) => parsed.stepHints.includes(h));
-    if (blockers.length) {
-      console.error(`[capture] bill_ship blocked (${blockers.join(', ')}). Non-empty cart + valid cookie required.`);
-      exitCode = 1;
-      return;
-    }
-    if (parsed.fieldCount === 0) {
-      console.error('[capture] bill_ship blocked (zero form fields).');
-      exitCode = 1;
-      return;
-    }
+  const blocker = checkoutMapBlocker(parsed, result.url);
+  const refuse = blocker === 'login_required' || (step.requireCheckout && blocker);
+  if (refuse) {
+    const extra =
+      blocker === 'login_required'
+        ? ' HTTP 200 can still be the login wall: Cloudflare cf_clearance / __cf_bm is often bound to the browser TLS fingerprint, so a session cookie is not enough. Do not overwrite fixtures from this HTML.'
+        : blocker === 'empty_cart'
+          ? ' Empty cart hides checkout forms. Do not build the map from this response.'
+          : ' No checkout fields.';
+    console.error(`[capture] ${step.label} blocked (${blocker}).${extra}`);
+    exitCode = 1;
+    return;
   }
   fs.mkdirSync(outDir, { recursive: true });
   const jsonPath = path.join(outDir, `${step.label}.json`);

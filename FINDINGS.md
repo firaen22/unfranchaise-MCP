@@ -1,6 +1,6 @@
 # Unfranchise HK — site map (orders, IBV/BV, Form 1000)
 
-Captured from a signed-in browse of `hk.unfranchise.com`. No checkout, pay, or Form 1000 submit. Personal values redacted.
+Captured from signed-in browses of `hk.unfranchise.com`. No payment submit and no Form 1000 submit. Checkout field names from the 13 Nov 2026 (Asia/Hong_Kong) browser capture are in [CHECKOUT.md](./CHECKOUT.md). Personal values redacted.
 
 ## Top navigation
 
@@ -76,10 +76,10 @@ Also: GET `shopping.unfProduct` (`skuIDForm`); POST `shopping.unfMyList`.
 - 訂單摘要: `業績點數總額` (BV total), `IBV總數`, `零售總額`, `超連鎖成本價`, product count, HKD
 - On IBV-only SKU: **業績點數總額 = 0**, **IBV總數 = line IBV** → BV and IBV are **SKU-exclusive**, not stacked on one item
 
-**Next steps (not opened):**
+**Checkout (opened 13 Nov 2026, non-empty cart; not submitted):**
 
-- 前往結帳 → `orders.unfBillShip`
-- 快捷付款 → `express.unfExpressPay`
+- 前往結帳 → `orders.unfBillShip` — field map [CHECKOUT.md](./CHECKOUT.md)
+- 快捷付款 → `express.unfExpressPay` — same doc. Settings header is `services.unfExpressPaySettings`, not checkout
 
 ### Related order URLs
 
@@ -217,7 +217,7 @@ When already on file: 「謝謝，無需重新提交，您的925/1001已存檔�
 
 ## API / form URL patterns
 
-No cookies, tokens, or credential headers. Network XHR panel was not available; patterns from forms / `data-action` / browser bar:
+No cookies, tokens, or credential headers. The original browse had no DevTools XHR panel. The 13 Nov 2026 session confirmed the checkout rows below; names that were not observed stay unverified in [NETWORK.md](./NETWORK.md).
 
 | Method | action | Notes |
 |---|---|---|
@@ -228,8 +228,10 @@ No cookies, tokens, or credential headers. Network XHR panel was not available; 
 | POST | `#` (`prodOrderForm`, `qoe`) | Add/quick-order via page JS |
 | GET | `shopping.unfViewCart` | Cart |
 | GET/POST | `shopping.unfUpdateCart` | Qty / remove |
-| GET | `orders.unfBillShip` | Checkout bill/ship — field map [CHECKOUT.md](./CHECKOUT.md) |
-| GET | `express.unfExpressPay` | Express pay from cart |
+| GET + POST | `orders.unfBillShip` | Bill-ship page and form. POST was not submitted. Map [CHECKOUT.md](./CHECKOUT.md) |
+| referenced | `orders.unfBillShipAJAX`, `orders.unfBillShipBags` | Page JS / `#pcSelect` data-action. Not `orders.unfBillShipUpdate` |
+| GET | `express.unfExpressPay` | Express pay. POST target `express.unfProcessExpressOrder` was not submitted |
+| GET | `services.unfExpressPaySettings` | Express-pay settings, not checkout |
 | GET | `forms.unf1000` | `quarterDate` reload |
 | POST | `forms.unf1000Update` | Terms agree |
 | POST | `forms.unf1000Assign` | `orderIDAssigning`, `availableBDC`, `isAgree`, `quarterDate` |
@@ -258,8 +260,9 @@ No cookies, tokens, or credential headers. Network XHR panel was not available; 
 
 ## Gaps
 
-- Checkout **documented** ([CHECKOUT.md](./CHECKOUT.md)); **live** field names: `UNF_COOKIE_FILE=… npm run capture`  
+- Checkout field names: redacted 13 Nov 2026 browser map ([CHECKOUT.md](./CHECKOUT.md)). `orders.unfBillShipUpdate`, `orders.unfOrderReview`, and `orders.unfPayment` were **not observed** ([NETWORK.md](./NETWORK.md))
+- Node `npm run capture` can still be a Cloudflare login wall; do not overwrite fixtures from it
 - Personal-volume report viewed for BV only, not IBV  
-- **XHR**: class + capture scripts ([NETWORK.md](./NETWORK.md)); live `xhr-log.json` via `npm run capture:xhr` (Playwright)  
+- **XHR**: class + capture scripts ([NETWORK.md](./NETWORK.md)); a committed per-request `xhr-log.json` is still absent  
 - 925/1001 had no live form (already on file)  
 - 手動BV/IBV放置 had no pending orders (assign fields not on screen)

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * Log XHR/fetch/document requests while opening checkout pages (needs UNF_COOKIE* + playwright).
+ * A session cookie is often not enough: Cloudflare cf_clearance / __cf_bm is bound to the
+ * browser TLS fingerprint, so this can still land on the login wall. This script never
+ * submits orders.unfBillShip or express.unfProcessExpressOrder.
  */
 import fs from 'node:fs';
 import path from 'node:path';

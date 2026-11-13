@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head><title>超連鎖事業帳戶 | 超連鎖</title></head>
+<body>
+<p>Redacted structural fixture. Signed-in browser, 13 Nov 2026 (Asia/Hong_Kong), non-empty cart. No personal values, no card data, no shipping prices.</p>
+<ol>
+  <li>快捷付款</li>
+  <li>送貨與付款資訊</li>
+  <li>BV/IBV放置</li>
+  <li>提交你的訂單</li>
+</ol>
+<form name="finalPreview" id="finalPreview" method="post" action="index.cfm?action=express.unfProcessExpressOrder">
+  <input name="vendorCode">
+  <input name="vendorCnt">
+  <input name="isDebit">
+  <input name="validateBVIBV">
+  <input name="checkExistingbvIBV">
+  <input name="backupPayMethReq">
+  <input name="ibvOverage">
+  <input type="hidden" name="contactPhone">
+  <input type="hidden" name="shipEmail">
+  <input type="hidden" name="billingFirstName">
+  <input type="hidden" name="billingLastName">
+  <input type="hidden" name="billingAddress1">
+  <input type="hidden" name="billingAddress2">
+  <input type="hidden" name="billingCity">
+  <input type="hidden" name="billingPostalCode">
+  <input name="empty1" autocomplete="off">
+  <input name="empty2" autocomplete="off">
+  <!-- shippingSelection1 values 44 and 45 were observed on this test and may change. Prices omitted. -->
+  <label><input type="radio" name="shippingSelection1" value="44">任何時段</label>
+  <label><input type="radio" name="shippingSelection1" value="45">指定時段</label>
+  <select name="deliveryDate"></select>
+  <input name="deliveryTime">
+  <input name="deliveryTime1">
+  <input name="deliveryTime2">
+  <input name="deliveryTime3">
+  <input name="deliveryTime4">
+  <input name="deliveryTime5">
+  <input name="deliveryTime6">
+  <input name="specShipInstruction1">
+  <!-- paymentType=cc; control type was not recorded -->
+  <label>以信用卡/金融卡付款 <input name="paymentType" value="cc"></label>
+  <select name="ccNum"></select>
+  <input name="cvv" required>
+  <button type="submit" data-action="express.unfProcessExpressOrder">提交你的訂單</button>
+</form>
+<p><a href="index.cfm?action=services.unfManageCreditCardsFrame&amp;callback=ccCallback">添加/管理信用卡/扣帳卡</a></p>
+<p><a href="index.cfm?action=services.unfExpressPaySettings">快捷付款</a></p>
+</body>
+</html>

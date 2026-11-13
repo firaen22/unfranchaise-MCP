@@ -1,0 +1,96 @@
+{
+  "sourceKind": "signed_in_browser",
+  "observedOn": "2026-11-13",
+  "timezone": "Asia/Hong_Kong",
+  "cart": "non-empty",
+  "pageTitle": "超連鎖事業帳戶 | 超連鎖",
+  "stepLabels": ["快捷付款", "送貨與付款資訊", "BV/IBV放置", "提交你的訂單"],
+  "pickupControls": false,
+  "note": "Redacted structural map from a signed-in browser. No personal values, no card data, no cash or IBV/BV figures, no shipping prices. The place-order control was not clicked.",
+  "form": {
+    "name": "finalPreview",
+    "id": "finalPreview",
+    "method": "POST",
+    "action": "index.cfm?action=express.unfProcessExpressOrder"
+  },
+  "submit": {
+    "name": null,
+    "label": "提交你的訂單",
+    "dataAction": "express.unfProcessExpressOrder",
+    "clicked": false
+  },
+  "links": [
+    {
+      "label": "添加/管理信用卡/扣帳卡",
+      "action": "services.unfManageCreditCardsFrame&callback=ccCallback",
+      "opened": false
+    },
+    {
+      "label": "快捷付款",
+      "action": "services.unfExpressPaySettings",
+      "role": "Header settings. Not checkout."
+    }
+  ],
+  "typeNote": "type is null when the 13 Nov note recorded the name but not the control type.",
+  "omittedBecauseNotEnumerated": [
+    "Exact bv* / ibv* / sabv* placement field names were present and are omitted rather than invented",
+    "Exact gc* field names on this page were not listed and are omitted",
+    "3DS/CCA token field names may exist; none were enumerated. A later capture may record names only, never values",
+    "Saved-card option text on ccNum",
+    "Observed shipping prices (not stable fixtures)"
+  ],
+  "fields": [
+    { "name": "vendorCode", "type": null },
+    { "name": "vendorCnt", "type": null },
+    { "name": "isDebit", "type": null },
+    { "name": "validateBVIBV", "type": null },
+    { "name": "checkExistingbvIBV", "type": null },
+    { "name": "backupPayMethReq", "type": null },
+    { "name": "ibvOverage", "type": null },
+    { "name": "contactPhone", "type": "hidden" },
+    { "name": "shipEmail", "type": "hidden" },
+    { "name": "billingFirstName", "type": "hidden" },
+    { "name": "billingLastName", "type": "hidden" },
+    { "name": "billingAddress1", "type": "hidden" },
+    { "name": "billingAddress2", "type": "hidden" },
+    { "name": "billingCity", "type": "hidden" },
+    { "name": "billingPostalCode", "type": "hidden" },
+    { "name": "empty1", "type": null, "role": "honeypot" },
+    { "name": "empty2", "type": null, "role": "honeypot" },
+    {
+      "name": "shippingSelection1",
+      "type": "radio",
+      "optionsNote": "Observed on this test and may change. Do not fixture shipping prices.",
+      "options": [
+        { "value": "44", "label": "任何時段", "observedOnThisTest": true, "mayChange": true },
+        { "value": "45", "label": "指定時段", "observedOnThisTest": true, "mayChange": true }
+      ]
+    },
+    {
+      "name": "deliveryDate",
+      "type": "select",
+      "optionsOmitted": "Option values were not enumerated"
+    },
+    { "name": "deliveryTime", "type": null },
+    { "name": "deliveryTime1", "type": null },
+    { "name": "deliveryTime2", "type": null },
+    { "name": "deliveryTime3", "type": null },
+    { "name": "deliveryTime4", "type": null },
+    { "name": "deliveryTime5", "type": null },
+    { "name": "deliveryTime6", "type": null },
+    { "name": "specShipInstruction1", "type": null },
+    {
+      "name": "paymentType",
+      "type": null,
+      "typeNote": "Control type was not recorded",
+      "value": "cc",
+      "label": "以信用卡/金融卡付款"
+    },
+    {
+      "name": "ccNum",
+      "type": "select",
+      "optionsOmitted": "Saved-card option text omitted"
+    },
+    { "name": "cvv", "type": null, "required": true, "filled": false }
+  ]
+}

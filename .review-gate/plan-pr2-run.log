@@ -1,7 +1,0 @@
-{"name": "unf-pr2-codex", "tool": "codex", "model": "gpt-5.6-luna", "cap": 900, "pong": false, "status": "PASS", "rc": 0, "elapsed": 99.1, "out_bytes": 444, "err_bytes": 83230, "served_model": "gpt-5.6-luna", "cwd": "/Users/yauch/Documents/unfranchaise", "effort_applied": true}
-PASS
-{"name": "unf-pr2-agy", "tool": "agy", "model": "gemini-3.8-flash-medium", "cap": 900, "pong": false, "status": "PASS", "rc": 0, "elapsed": 260.6, "out_bytes": 3914, "err_bytes": 0, "served_model": null, "cwd": "/Users/yauch/Documents/unfranchaise", "effort_applied": false}
-PASS
-{"name": "unf-pr2-grok", "tool": "grok", "model": "grok-4.7", "cap": 900, "pong": false, "status": "PASS", "rc": 0, "elapsed": 319.7, "out_bytes": 10822, "err_bytes": 0, "served_model": "grok-4.7-build", "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate/plan-grok-pr2", "effort_applied": true}
-PASS
-pr2 planners done

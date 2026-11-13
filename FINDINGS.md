@@ -11,6 +11,7 @@ Captured from signed-in browses of `hk.unfranchise.com`. No payment submit and n
 | Order entry | 訂購 → 訂購產品 / 再次訂購 / 超連鎖事業自動購貨 / 購物車 |
 | Volume admin | 我的帳戶 → BV/IBV管理 → BV/IBV放置, 手動BV放置, IBDC指定, 現金回贈/IBV獎勵設定 |
 | Form 1000 | 我的帳戶 → 網上表格 → 1000表格 (also 925/1001合併表格, 續約選項) |
+| Sales receipt inventory | 事業 → 我的顧客 → 銷售收據輸入 (`moe.unfMOEPCSelect`, then `moe.unfMOEPCSelectU`). On-hand stock, not the Form 1000 unplaced-order list |
 | Volume reports | 事業 → 報告 → report picker |
 
 ---
@@ -213,6 +214,20 @@ When already on file: 「謝謝，無需重新提交，您的925/1001已存檔�
 
 續約選項: `profile.unfAnnualRenewal` (not a quarterly 1000 substitute).
 
+### Dry-run receipt optimiser
+
+[FORM1000.md](./FORM1000.md) plans two receipts of at least HKD 1,500 product total each from a local sheet. Nothing is submitted. The sheet is filled by hand. `fixtures/form1000-quarters.example.json` is a synthetic quarter-window example (deadline: last day of the quarter, 11:59 pm US Eastern), not a live balance.
+
+### Sales receipt inventory (not Form 1000 unplaced orders)
+
+Signed-in browse on **13 Nov 2026 (Asia/Hong_Kong)**. This is where on-hand inventory for a **new sales receipt** is listed. It is not the Form 1000 list of unplaced orders (`forms.unf1000`). No customer numbers, names, SKUs, quantities, or prices from that browse are recorded here.
+
+- Menu: 事業 → 我的顧客 → **銷售收據輸入** (live label; conversation may also say 創造銷售收據).
+- Landing: 優惠顧客選擇 at `https://hk.unfranchise.com/index.cfm?action=moe.unfMOEPCSelect` (`moe.unfMOEPCSelect`). Pick one preferred customer, then 繼續.
+- Inventory: 產品存貨選擇 at `moe.unfMOEPCSelectU`. Columns: 產品, 代號, 成本, 零售, 可使用, 數量. **可使用** is on-hand quantity. Record both **成本** and **零售**.
+- A hidden **手動產品代號** catalog has a large SKU list and no 可使用 column. It is not on-hand inventory.
+- The next 繼續, to `moe.unfMOEFinalPreview`, was **not clicked**. This repo does not create a receipt or submit that step.
+
 ---
 
 ## API / form URL patterns
@@ -233,6 +248,9 @@ No cookies, tokens, or credential headers. The original browse had no DevTools X
 | GET | `express.unfExpressPay` | Express pay. POST target `express.unfProcessExpressOrder` was not submitted |
 | GET | `services.unfExpressPaySettings` | Express-pay settings, not checkout |
 | GET | `forms.unf1000` | `quarterDate` reload |
+| GET | `moe.unfMOEPCSelect` | Preferred-customer pick for a sales receipt. Not submitted |
+| GET | `moe.unfMOEPCSelectU` | On-hand inventory table (可使用). Not submitted |
+| not clicked | `moe.unfMOEFinalPreview` | Next step after inventory. Not opened and not submitted |
 | POST | `forms.unf1000Update` | Terms agree |
 | POST | `forms.unf1000Assign` | `orderIDAssigning`, `availableBDC`, `isAgree`, `quarterDate` |
 | POST | `forms.unfBVIBVPlacementUpdate` | Designated placement |

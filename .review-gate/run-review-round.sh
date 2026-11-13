@@ -10,12 +10,14 @@ ROUND="${1:-r1}"
 mkdir -p "$GATE/files-$ROUND" "$GATE/sol-$ROUND" "$GATE/grok-$ROUND"
 
 FILES=(
-  package.json server.js cli.js pure-smoke.mjs
+  package.json server.js cli.js pure-smoke.mjs test-form1000-optimise.mjs
   lib/urls.js lib/volume.js lib/client.js lib/tools.js lib/confirm.js lib/validate.js
   lib/parse-forms.js lib/parse-checkout.js lib/network-patterns.js lib/billship-fixtures.js lib/redact.js
+  lib/form1000-optimise.js lib/form1000-sheet.js lib/form1000-quarters.js lib/form1000-cli.js
   scripts/capture-session.mjs scripts/capture-xhr-playwright.mjs
-  CHECKOUT.md NETWORK.md README.md .gitignore
+  CHECKOUT.md NETWORK.md README.md FORM1000.md .gitignore
   fixtures/checkout-billship.synthetic.html fixtures/checkout-billship.parsed.json
+  fixtures/form1000-sheet.example.csv fixtures/form1000-quarters.example.json
 )
 rm -rf "$GATE/files-$ROUND"
 mkdir -p "$GATE/files-$ROUND/lib" "$GATE/files-$ROUND/scripts" "$GATE/files-$ROUND/fixtures"
@@ -39,9 +41,9 @@ cat > "$GATE/brief-$ROUND.md" <<EOF
 
 Read-only security + correctness review of the Unfranchise HK MCP (Node stdio, cookie auth).
 
-Scope: server.js, cli.js, lib/*.js, capture scripts, pure-smoke.mjs — session cookie handling, dry-run gates, checkout read-only tools, no credential logging in fixtures/capture output.
+Scope: server.js, cli.js, lib/*.js, form1000 modules, capture scripts, pure-smoke + test-form1000-optimise — cookie handling, dry-run gates, Form 1000 optimiser must never assign/submit/order or fetch.
 
-Threat focus: cookie leakage in logs/errors, accidental live mutations without confirm, SSRF via user-controlled URLs, PII in captured HTML/logs.
+Threat focus: cookie leakage, accidental mutations without confirm, SSRF, path traversal on fixturePath, PII in captures, optimiser calling network on confirm.
 
 Consensus: **PROCEED** or **approve with nits** with zero High/Critical in scope.
 

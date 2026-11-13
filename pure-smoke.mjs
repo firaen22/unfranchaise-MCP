@@ -9,7 +9,7 @@ import {
   MONTHLY_IBV_CAP_MA_SA,
 } from './lib/volume.js';
 import { DryRunError, requireConfirm } from './lib/confirm.js';
-import { assertValidCookie, parseLocaleNumber, parsePositiveIntQty } from './lib/validate.js';
+import { assertValidCookie, parseLocaleNumber, parsePositiveIntQty, publicErrorMessage } from './lib/validate.js';
 import { parseCartSummary } from './lib/client.js';
 import { load as loadCheerio } from 'cheerio';
 import { callTool, TOOL_DEFINITIONS } from './lib/tools.js';
@@ -26,8 +26,14 @@ import {
 } from './lib/billship-fixtures.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { redactActionString, redactSessionTokensInText, redactSessionTokensInUrl } from './lib/redact.js';
+import {
+  redactActionString,
+  redactSessionTokensInText,
+  redactSessionTokensInUrl,
+  assertCaptureJsonSafe,
+} from './lib/redact.js';
 import { parseDataActionLinks } from './lib/parse-forms.js';
+import { assertSafeFixturePath } from './lib/form1000-sheet.js';
 
 assert.match(actionUrl(Actions.ordering), /action=shopping\.unfOrdering/);
 assert.match(Actions.product('HK1410IBV'), /skuID=HK1410IBV/);
@@ -40,6 +46,8 @@ assert.equal(cartLineTotals('BV', { bvPoints: 5 }).bvTotal, 5);
 assert.equal(form1000QualifyingOrders([800, 800]).meetsRule, true);
 assert.equal(form1000QualifyingOrders([500]).meetsRule, false);
 assert.throws(() => form1000QualifyingOrders(['100', '100']), /must be a finite number/);
+assert.throws(() => assertSafeFixturePath('../fixtures/form1000-sheet.example.csv'), /must not contain/);
+assert.throws(() => assertSafeFixturePath('/tmp/form1000-sheet.csv'), /within the repository root/);
 assert.throws(() => sammQualificationSummary({ ibv: 0, bvExclusive: 0, hasHsl: 'false' }));
 
 const samm = sammQualificationSummary({ ibv: 300, bvExclusive: 2500, hasHsl: true });
@@ -88,6 +96,27 @@ assert.match(form1000DraftText, /forms\.unf1000Update/);
 assert.match(form1000DraftText, /forms\.unf1000Assign/);
 assert.match(form1000DraftText, /HK\$1,500/);
 assert.match(form1000DraftText, /No network request/);
+
+let form1000OptimiserFetched = false;
+const savedForm1000Fetch = globalThis.fetch;
+globalThis.fetch = async () => {
+  form1000OptimiserFetched = true;
+  throw new Error('form1000 optimiser must not fetch network');
+};
+try {
+  const form1000Optimised = await callTool('unf_form1000_optimise', {
+    rows: [
+      { sku: 'SMOKE-1', qty: 1, lineProductTotalHkd: 1600, alreadyPlaced: false },
+      { sku: 'SMOKE-2', qty: 1, lineProductTotalHkd: 1600, alreadyPlaced: false },
+    ],
+    confirm: true,
+  });
+  assert.equal(form1000OptimiserFetched, false);
+  assert.equal(form1000Optimised.isError, undefined);
+  assert.equal(JSON.parse(form1000Optimised.content[0].text).submitted, false);
+} finally {
+  globalThis.fetch = savedForm1000Fetch;
+}
 
 const report = await callTool('unf_report_url', { reportName: 'personalVolume' });
 assert.match(JSON.parse(report.content[0].text).url, /reports\.unfReportCriteria/);
@@ -305,6 +334,15 @@ assert.doesNotMatch(
   /CFID_CANARY|CFTOKEN_CANARY/,
 );
 assert.doesNotMatch(redactSessionTokensInText('var CFID = "SESSION_SENTINEL";'), /SESSION_SENTINEL/);
+assert.doesNotMatch(
+  redactSessionTokensInUrl('https://hk.unfranchaise.com/index.cfm#email=EMAIL_CANARY'),
+  /EMAIL_CANARY/,
+);
+assert.doesNotMatch(
+  publicErrorMessage(new Error('failed https://hk.unfranchise.com/?CFID=SECRET')),
+  /SECRET/,
+);
+assert.doesNotThrow(() => assertCaptureJsonSafe({ action: 'orders.unfBillShip', url: 'https://x/?CFID=[REDACTED]' }));
 
 const dataActions = parseDataActionLinks(
   loadCheerio('<a data-action="orders.unfBillShip&CFID=leak">Continue</a>'),

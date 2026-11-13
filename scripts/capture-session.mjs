@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { Actions } from '../lib/urls.js';
 import { getAction } from '../lib/client.js';
 import { parseCheckoutPage, checkoutMapBlocker } from '../lib/parse-checkout.js';
-import { redactSessionTokensInUrl, redactToolPayload } from '../lib/redact.js';
+import { assertCaptureJsonSafe, redactSessionTokensInUrl, redactToolPayload } from '../lib/redact.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.join(__dirname, '..', 'fixtures', 'captured');
@@ -33,6 +33,11 @@ async function captureStep(step) {
     ms: Date.now() - started,
     transport: 'document',
   });
+  if (result.status < 200 || result.status >= 300) {
+    console.error(`[capture] ${step.label} blocked (HTTP ${result.status}). Refusing to overwrite capture files.`);
+    exitCode = 1;
+    return;
+  }
   const parsed = redactToolPayload(parseCheckoutPage(result.$));
   const blocker = checkoutMapBlocker(parsed, result.url);
   const refuse = blocker === 'login_required' || (step.requireCheckout && blocker);
@@ -47,9 +52,12 @@ async function captureStep(step) {
     exitCode = 1;
     return;
   }
+  assertCaptureJsonSafe(parsed);
   fs.mkdirSync(outDir, { recursive: true });
   const jsonPath = path.join(outDir, `${step.label}.json`);
-  fs.writeFileSync(jsonPath, JSON.stringify(parsed, null, 2));
+  const body = JSON.stringify(parsed, null, 2);
+  assertCaptureJsonSafe(JSON.parse(body));
+  fs.writeFileSync(jsonPath, body);
   console.log(`[capture] ${step.label}: HTTP ${result.status} → ${jsonPath} (${parsed.fieldCount} fields)`);
 }
 

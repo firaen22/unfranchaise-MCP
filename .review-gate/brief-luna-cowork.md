@@ -1,16 +1,15 @@
-# Luna 5.6 — PR3 follow-on (roadmap v0.2 tools)
+# Luna 5.6 — PR4 Form 1000 optimiser hardening
 
-You are in an isolated cowork copy with the same files as branch `cursor/live-billship-map-10c5`.
+Branch: `cursor/form1000-receipt-optimiser-527f`. Cowork copy must stay dry-run only.
 
-**Context:** Live bill-ship baseline is in `fixtures/checkout-billship.live.redacted.json` — do not weaken `unf_checkout_billship_map` or `billship-fixtures.js` live detection.
+**Non-negotiable:** No Form 1000 assign/submit, no place-order, no network in optimiser/quarters tools. `confirm` on `unf_form1000_optimise` is ignored.
 
-**Tasks (surgical, ≤3 files beyond tools/pure-smoke if needed):**
+**Tasks:**
 
-1. **`unf_cart_update`** — MCP tool: default `dryRun: true`, describes `shopping.unfUpdateCart` params (`skuID`, `qty`, remove line); only GET/POST when `confirm === true` (same boolean discipline as `unf_cart_add`). No checkout/payment.
-2. **`unf_form1000_draft`** — read-only markdown checklist for Form 1000 submit fields (`forms.unf1000Update`, `forms.unf1000Assign`) from FINDINGS — **no network**, no submit.
-3. **`unf_placement_forms_status`** (optional if time): GET `forms.unfBVIBVPlacement` or document URL-only if no cookie — prefer dry URL builder if form needs pending orders.
+1. **`.review-gate/run-review-round.sh`** — Extend `FILES` to include: `test-form1000-optimise.mjs`, `FORM1000.md`, `lib/form1000-optimise.js`, `lib/form1000-sheet.js`, `lib/form1000-quarters.js`, `lib/form1000-cli.js`, `fixtures/form1000-sheet.example.csv`, `fixtures/form1000-quarters.example.json`.
+2. **`lib/form1000-sheet.js` or `lib/tools.js`** — Reject path traversal for `fixturePath` (`..`, absolute paths outside repo root); clear errors.
+3. **`lib/tools.js`** — Document/ensure `unf_form1000_optimise` never calls `unfFetch` regardless of `confirm`.
+4. **`test-form1000-optimise.mjs` or `pure-smoke.mjs`** — One assertion that `confirm:true` on optimiser does not enable network (mock fetch if needed).
+5. Run full **`npm test`** (pure-smoke + form1000 optimiser) — exit 0.
 
-4. Update `pure-smoke.mjs` for new tools (offline, no cookie).
-5. `node pure-smoke.mjs` must exit 0.
-
-Do not add dependencies. Match existing `lib/tools.js` patterns and `redactToolPayload`.
+Surgical edits only. Do not weaken receipt pairing logic.

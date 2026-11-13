@@ -62,3 +62,7 @@ On the live bill-ship page the pickup copy is **親自提貨 / 提貨**. The syn
 
 - MCP: `unf_network_patterns`, `unf_checkout_billship_map`
 - CLI: `node cli.js unf_network_patterns`
+
+## Optional artifact
+
+`fixtures/captured/` is gitignored. After a successful signed-in session (non-empty cart, no login wall), you may save a redacted XHR summary as `fixtures/captured/xhr-log.json` for offline reference. The repo does not ship one — empty or Cloudflare-blocked captures must not be committed.

@@ -26,13 +26,33 @@ export UNF_PRECOMMIT=1
 echo "[pre-commit] sol6.1 + grok review ($ROUND) — set UNF_SKIP_REVIEW=1 to skip"
 bash "$ROOT/.review-gate/run-review-round.sh" "$ROUND"
 
-SOL_OUT=$(ls "$ROOT/.review-gate/sol-$ROUND"/*-out.txt 2>/dev/null | head -1)
-GROK_OUT=$(ls "$ROOT/.review-gate/grok-$ROUND"/*-out.txt 2>/dev/null | head -1)
+SOL_OUT=$(ls "$ROOT/.review-gate/sol-$ROUND"/*-out.txt 2>/dev/null | head -1 || true)
+GROK_OUT=$(ls "$ROOT/.review-gate/grok-$ROUND"/*-out.txt 2>/dev/null | head -1 || true)
+
+reviewer_blocks() {
+  local f=$1
+  [[ -n "$f" && -f "$f" ]] || return 0
+  if grep -qiE '(^|\*\*)[Vv]erdict:\s*\**\s*(FIX|NO-GO)\b' "$f"; then
+    return 0
+  fi
+  if grep -qiE '^PROCEED\b' "$f" && ! grep -qiE '(^|\*\*)[Vv]erdict:\s*\**\s*(FIX|NO-GO)\b' "$f"; then
+    return 1
+  fi
+  if grep -qiE '[Vv]erdict:.*\bPROCEED\b|approve with nits' "$f"; then
+    return 1
+  fi
+  return 0
+}
 
 block=0
-for f in "$SOL_OUT" "$GROK_OUT"; do
-  [[ -f "$f" ]] || { echo "Missing reviewer output: $f"; block=1; continue; }
-  if grep -qiE 'Critical|High.*finding|NO-GO|FIX required|must not ship' "$f"; then
+for lens in sol grok; do
+  if [[ "$lens" == sol ]]; then f=$SOL_OUT; else f=$GROK_OUT; fi
+  if [[ ! -f "$f" ]]; then
+    echo "Missing reviewer output for $lens ($ROUND)"
+    block=1
+    continue
+  fi
+  if reviewer_blocks "$f"; then
     echo "Reviewer blocked commit — see $f"
     block=1
   fi

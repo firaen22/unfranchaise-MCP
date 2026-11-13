@@ -355,6 +355,12 @@ assert.throws(() => assertCaptureJsonSafe({ text: 'cf_clearance=#SECRET' }));
 { let deep = 'safe'; for (let i = 0; i < 5000; i++) deep = { x: deep }; assert.doesNotThrow(() => assertCaptureJsonSafe(deep)); }
 expectThrows(() => assertCaptureJsonSafe((() => { const f = () => {}; f.toJSON = () => 'user@example.com'; return { f }; })()), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ u: (() => { const s = new String('safe'); s.toString = () => 'CFID=SECRET'; return s; })() }), /session token/);
+assert.doesNotThrow(() => assertCaptureJsonSafe({ ok: new Boolean(false) }));
+expectThrows(() => assertCaptureJsonSafe({
+  [Symbol.toStringTag]: 'String',
+  toString: () => 'safe',
+  note: 'user@example.com',
+}), /email-like/);
 assert.equal(form1000QualifyingOrders([1, 0.009]).productTotalHkd, 1.009);
 { const q = form1000QualifyingOrders([1000, 499.99999999999994]); assert.equal(q.meetsRule, false); assert.ok(q.productTotalHkd < 1500); }
 

@@ -14,6 +14,9 @@ import { parseCartSummary } from './lib/client.js';
 import { load as loadCheerio } from 'cheerio';
 import { callTool, TOOL_DEFINITIONS } from './lib/tools.js';
 import { cookieStatus } from './lib/client.js';
+import { parseCheckoutPage } from './lib/parse-checkout.js';
+import fs from 'node:fs';
+import path from 'node:path';
 
 assert.match(actionUrl(Actions.ordering), /action=shopping\.unfOrdering/);
 assert.match(Actions.product('HK1410IBV'), /skuID=HK1410IBV/);
@@ -69,5 +72,23 @@ assert.equal(parseLocaleNumber('1,234.50'), 1234.5);
 const cart = parseCartSummary(loadCheerio('<html>IBV總數 1,234.50 業績點數總額 0</html>'));
 assert.equal(cart.ibvTotal, 1234.5);
 assert.throws(() => parsePositiveIntQty(-1));
+
+const syntheticHtml = fs.readFileSync(
+  path.join('fixtures', 'checkout-billship.synthetic.html'),
+  'utf8',
+);
+const checkout = parseCheckoutPage(loadCheerio(syntheticHtml));
+assert.ok(checkout.stepHints.includes('pickup'));
+assert.ok(checkout.formCount >= 1);
+assert.ok(checkout.forms[0].fields.some((f) => f.name === 'pickUpOrder'));
+
+const billMap = await callTool('unf_checkout_billship_map', { useFixture: true });
+const billParsed = JSON.parse(billMap.content[0].text);
+assert.equal(billParsed.source, 'synthetic_fixture');
+assert.equal(billParsed.live, false);
+
+const net = await callTool('unf_network_patterns', {});
+const netParsed = JSON.parse(net.content[0].text);
+assert.ok(netParsed.navigation.checkout_entry?.action === 'orders.unfBillShip');
 
 console.log('pure-smoke: ok', TOOL_DEFINITIONS.length, 'tools');

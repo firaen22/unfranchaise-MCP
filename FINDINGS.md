@@ -228,8 +228,8 @@ No cookies, tokens, or credential headers. Network XHR panel was not available; 
 | POST | `#` (`prodOrderForm`, `qoe`) | Add/quick-order via page JS |
 | GET | `shopping.unfViewCart` | Cart |
 | GET/POST | `shopping.unfUpdateCart` | Qty / remove |
-| — | `orders.unfBillShip` | Checkout start (not opened) |
-| — | `express.unfExpressPay` | Express pay (not opened) |
+| GET | `orders.unfBillShip` | Checkout bill/ship — field map [CHECKOUT.md](./CHECKOUT.md) |
+| GET | `express.unfExpressPay` | Express pay from cart |
 | GET | `forms.unf1000` | `quarterDate` reload |
 | POST | `forms.unf1000Update` | Terms agree |
 | POST | `forms.unf1000Assign` | `orderIDAssigning`, `availableBDC`, `isAgree`, `quarterDate` |
@@ -258,8 +258,8 @@ No cookies, tokens, or credential headers. Network XHR panel was not available; 
 
 ## Gaps
 
-- Checkout (`orders.unfBillShip` / `express.unfExpressPay`) not mapped  
+- Checkout **documented** ([CHECKOUT.md](./CHECKOUT.md)); **live** field names: `UNF_COOKIE_FILE=… npm run capture`  
 - Personal-volume report viewed for BV only, not IBV  
-- No DevTools XHR capture  
+- **XHR**: class + capture scripts ([NETWORK.md](./NETWORK.md)); live `xhr-log.json` via `npm run capture:xhr` (Playwright)  
 - 925/1001 had no live form (already on file)  
 - 手動BV/IBV放置 had no pending orders (assign fields not on screen)

@@ -54,6 +54,7 @@ See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product tot
 | `unf_volume_calculate` | — | form1000 / SAMM / IBV% / SKU variant |
 | `unf_url_build` | — | Build `index.cfm?action=` URLs |
 | `unf_report_url` | — | Report criteria URL |
+| `unf_placement_forms_url` | — | Placement form URLs from FINDINGS (designated, auto, IBDC); no network |
 | `unf_search_products` | GET | Requires cookie |
 | `unf_get_product` | GET | Parse BV/IBV/UC |
 | `unf_cart_view` | GET | Cart totals |
@@ -82,12 +83,12 @@ See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product tot
 ## Roadmap
 
 - [x] FINDINGS: orders, IBV/BV, Form 1000
-- [x] MCP / CLI v0 (`npm test`, 16 tools)
+- [x] MCP / CLI v0 (`npm test`, 17 tools)
 - [x] Checkout / bill-ship field map ([CHECKOUT.md](./CHECKOUT.md); live names are the 13 Nov 2026 redacted browser map; synthetic HTML is parser-test only)
 - [x] Network XHR capture ([NETWORK.md](./NETWORK.md); document log + optional Playwright `capture:xhr`)
 - [x] `form1000_draft`, cart update (dry-run tools)
 - [x] Form 1000 dry-run receipt optimiser (two receipts ≥ HKD 1,500) and quarter-window file
-- [ ] Reports placement
+- [x] Reports placement — URL helpers only (`unf_placement_forms_url`; no submit)
 
 ## Maintainer scripts
 

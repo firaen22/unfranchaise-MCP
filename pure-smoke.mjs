@@ -124,6 +124,22 @@ assert.match(JSON.parse(report.content[0].text).url, /reportName=personalVolume/
 const missingReport = await callTool('unf_report_url', {});
 assert.equal(missingReport.isError, true);
 
+assert.ok(TOOL_DEFINITIONS.some((tool) => tool.name === 'unf_placement_forms_url'));
+const placementFetch = globalThis.fetch;
+globalThis.fetch = async () => {
+  throw new Error('placement URL helper must not fetch network');
+};
+try {
+  const placement = JSON.parse(
+    (await callTool('unf_placement_forms_url', { target: 'auto' })).content[0].text,
+  );
+  assert.equal(placement.target, 'auto');
+  assert.match(placement.url, /^https:\/\/hk\.unfranchise\.com\/index\.cfm\?/);
+  assert.match(placement.url, /action=forms\.unfBVIBVAutoPlacementUpdate/);
+} finally {
+  globalThis.fetch = placementFetch;
+}
+
 const session = await callTool('unf_session_status', {});
 const parsed = JSON.parse(session.content[0].text);
 assert.equal(typeof parsed.configured, 'boolean');

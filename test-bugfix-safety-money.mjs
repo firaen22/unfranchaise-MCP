@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import vm from 'node:vm';
 import { assertSafePostRedirect, assertSafeReadRedirect, publicErrorMessage } from './lib/validate.js';
 import { unfFetch } from './lib/client.js';
 import {
@@ -361,6 +362,13 @@ expectThrows(() => assertCaptureJsonSafe({
   toString: () => 'safe',
   note: 'user@example.com',
 }), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({ x: Object(1n) }), /BigInt/);
+expectThrows(() => assertCaptureJsonSafe({ x: 1n }), /BigInt/);
+{
+  const foreignString = vm.runInNewContext('String');
+  expectThrows(() => assertCaptureJsonSafe({ u: foreignString('user@example.com') }), /email-like/);
+  expectSafe(() => assertCaptureJsonSafe({ u: foreignString('safe') }));
+}
 assert.equal(form1000QualifyingOrders([1, 0.009]).productTotalHkd, 1.009);
 { const q = form1000QualifyingOrders([1000, 499.99999999999994]); assert.equal(q.meetsRule, false); assert.ok(q.productTotalHkd < 1500); }
 

@@ -35,7 +35,7 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 npm run capture
 ```
 
-Outputs under `fixtures/captured/` (gitignored): token- and text-input-redacted HTML, parsed field JSON, `network-log.json`. XHR capture is separate (`xhr-log.json`).
+Outputs under `fixtures/captured/` (gitignored): **structural JSON only** (no raw HTML), plus `network-log.json`. XHR capture is separate (`xhr-log.json`).
 
 ## Inferred checkout POST targets (verify on capture)
 

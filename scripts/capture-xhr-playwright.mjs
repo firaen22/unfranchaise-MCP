@@ -12,6 +12,11 @@ import { redactSessionTokensInUrl } from '../lib/redact.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.join(__dirname, '..', 'fixtures', 'captured');
 const ALLOWED_HOST = 'hk.unfranchise.com';
+const READ_ACTIONS = new Set([
+  'shopping.unfViewCart',
+  'orders.unfBillShip',
+  'express.unfExpressPay',
+]);
 
 function cookieHeaderToPlaywright(cookieStr) {
   return cookieStr.split(';').map((part) => {
@@ -68,12 +73,21 @@ async function main() {
       route.abort();
       return;
     }
-    const action = parsed.searchParams.get('action') ?? '';
-    if (/\.(unfUpdateCart|unfPayment|unfBillShipUpdate)/i.test(action)) {
-      route.abort();
+    const rawAction = parsed.searchParams.get('action');
+    if (rawAction) {
+      const action = rawAction.split('&')[0];
+      if (!READ_ACTIONS.has(action)) {
+        route.abort();
+        return;
+      }
+      route.continue();
       return;
     }
-    route.continue();
+    if (/\.(js|css|png|jpe?g|gif|svg|woff2?|ico|map)(\?|$)/i.test(parsed.pathname)) {
+      route.continue();
+      return;
+    }
+    route.abort();
   });
   page.on('request', (req) => {
     const type = req.resourceType();

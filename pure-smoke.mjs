@@ -17,7 +17,8 @@ import { cookieStatus } from './lib/client.js';
 import { parseCheckoutPage } from './lib/parse-checkout.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { redactSessionTokensInUrl } from './lib/redact.js';
+import { redactActionString, redactSessionTokensInText, redactSessionTokensInUrl } from './lib/redact.js';
+import { parseDataActionLinks } from './lib/parse-forms.js';
 
 assert.match(actionUrl(Actions.ordering), /action=shopping\.unfOrdering/);
 assert.match(Actions.product('HK1410IBV'), /skuID=HK1410IBV/);
@@ -105,5 +106,40 @@ assert.doesNotMatch(
   redactSessionTokensInUrl('https://hk.unfranchaise.com/?%25=x&%43FID=TOKEN_SENTINEL'),
   /TOKEN_SENTINEL/,
 );
+assert.doesNotMatch(
+  redactActionString('orders.unfBillShip&CFID=SYNTHETIC_TOKEN'),
+  /SYNTHETIC_TOKEN/,
+);
+assert.doesNotMatch(
+  redactActionString('index.cfm?action=orders.unfBillShip&C%46ID=COOKIE_CANARY'),
+  /COOKIE_CANARY/,
+);
+assert.doesNotMatch(
+  redactActionString('orders.unfBillShip&C%46TOKEN=TOKEN2_CANARY'),
+  /TOKEN2_CANARY/,
+);
+assert.doesNotMatch(
+  redactActionString('orders.unfBillShip&email=EMAIL_CANARY'),
+  /EMAIL_CANARY/,
+);
+assert.doesNotMatch(
+  redactSessionTokensInUrl(
+    'https://hk.unfranchise.com/index.cfm?next=index.cfm?C%46ID=TOKEN_CANARY&C%46TOKEN=TOKEN2_CANARY',
+  ),
+  /TOKEN_CANARY|TOKEN2_CANARY/,
+);
+assert.doesNotMatch(
+  redactSessionTokensInUrl(
+    'https://hk.unfranchise.com/index.cfm?action=orders.unfBillShip&next=index.cfm%3FC%2546ID%3DCFID_CANARY%26C%2546TOKEN%3DCFTOKEN_CANARY',
+  ),
+  /CFID_CANARY|CFTOKEN_CANARY/,
+);
+assert.doesNotMatch(redactSessionTokensInText('var CFID = "SESSION_SENTINEL";'), /SESSION_SENTINEL/);
+
+const dataActions = parseDataActionLinks(
+  loadCheerio('<a data-action="orders.unfBillShip&CFID=leak">Continue</a>'),
+);
+assert.doesNotMatch(dataActions[0].action, /leak/);
+assert.equal(dataActions[0].text, '[REDACTED]');
 
 console.log('pure-smoke: ok', TOOL_DEFINITIONS.length, 'tools');

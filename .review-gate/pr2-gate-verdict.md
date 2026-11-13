@@ -1,23 +1,17 @@
 # PR2 gate summary (2026-11-13)
 
 ## Planners (medium)
-- **codex (luna):** sandbox blocked `PLAN.md` write — see `.review-gate/plan-codex-pr2/`
-- **agy:** `.review-gate/plan-agy-pr2/PLAN.md`
-- **grok:** plan in `.review-gate/plan-grok-pr2/unf-pr2-grok-out.txt` (run `bash .review-gate/run-planners-pr2.sh`)
-- Consolidated: `.review-gate/PLAN-consolidated-pr2.md`
+Run: `bash .review-gate/run-planners-pr2.sh` → agy `PLAN.md`, grok out, codex may sandbox-block.
 
-## Pre-commit (Sol 6.1 + grok, `UNF_SKIP_FABLE=1`)
+## Pre-commit Sol 6.1 + grok (`UNF_SKIP_FABLE=1`)
+
 | Round | Grok | Sol 6.1 |
 |-------|------|---------|
-| pr2-gate | PROCEED | HOLD (URL/token leakage) |
-| pr2-gate2 | approve | HOLD (URL + dataActions) |
-| pr2-gate3 | approve | HOLD (encoded tokens) |
-| pr2-gate4 | approve w/ Medium nits | HOLD (decode edge case) |
+| pr2-gate5–8 | PROCEED | HOLD (encoded/nested URL tokens) |
+| **pr2-gate9** | **PROCEED** | **PROCEED** (zero High/Critical) |
 
-**Mitigations shipped:** `lib/redact.js`, `redactToolPayload` on all MCP JSON, capture URL logs scrubbed, Playwright GET-only route, empty-cart guard.
+**Fixes in gate9 tree:** structural JSON-only capture, nested URL decode+redact (`decodeRepeatedly`), PII query keys, Playwright action-first allowlist + static assets, `redactToolPayload` on all MCP JSON.
 
-**Residual (Sol Medium):** `fixtures/captured/*.html` may retain visible page text PII — operator-local, gitignored. Grok accepts for merge; Sol wants structural-only capture long-term.
+**Tests:** `npm test` → `pure-smoke: ok 12 tools` (includes redact canaries).
 
-**Tests:** `npm test` → `pure-smoke: ok 12 tools`
-
-Re-run: `UNF_SKIP_FABLE=1 bash .review-gate/run-review-round.sh <name>`
+Re-run: `UNF_SKIP_FABLE=1 bash .review-gate/run-review-round.sh pr2-gate9`

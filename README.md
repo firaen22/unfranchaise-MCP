@@ -1,86 +1,83 @@
-# Unfranchise HK (hk.unfranchise.com) — scrape findings for MCP / CLI
+# unfranchaise-MCP
 
-Repo: https://github.com/firaen22/unfranchaise-MCP (private).
+https://github.com/firaen22/unfranchaise-MCP
 
-Private research notes from a signed-in session on Market America / Market Hong Kong **超連鎖** (Unfranchise) Hong Kong.
+**stdio MCP + CLI** for [Market Hong Kong 超連鎖](https://hk.unfranchise.com): catalog, cart (dry-run by default), IBV/BV rules, Form 1000 status, and report URLs.
 
-**Goal:** give Cursor enough site structure to build a local MCP server or CLI that:
+Built from signed-in site research in [FINDINGS.md](./FINDINGS.md). No checkout, payment, or Form 1000 submit unless you explicitly pass `confirm: true` on mutating tools.
 
-1. Places (or stages) product orders and calculates **IBV / BV**
-2. Fills **Form 1000** (表格 1000) each quarter
-
-**Out of scope for this repo so far:** live checkout, payment, form submit, and any personal account values.
-
-**Privacy:** no cookies, tokens, passwords, names, addresses, emails, phones, order numbers, or real volume/cash balances. Official rule thresholds are kept; account-specific figures use `[amount]` / `[n]`.
-
-## Target site
-
-- Base: `https://hk.unfranchise.com`
-- Auth: session cookie after login at `index.cfm?action=main.unfLogin` → home `main.unfHome`
-- Stack: ColdFusion-style `index.cfm?action=<area>.<page>` routes (not a public REST API)
-
-## Suggested build (for Cursor)
-
-- **Private** MCP + thin CLI
-- Auth: reuse browser session cookie jar / vault login (never commit secrets)
-- Tools (draft):
-  - `search_products` / `get_product`
-  - `cart_view` / `cart_add` / `cart_update`
-  - `volume_explain` (IBV vs BV SKU rules + caps)
-  - `report_personal_volume` / `report_qualification` / `report_samm`
-  - `form1000_status` / `form1000_draft` (stop before final submit unless user confirms)
-- Always dry-run by default; require explicit confirm for checkout and Form 1000 submit
-- Do not auto-submit Form 1000 or place orders unless the user explicitly asks; planning and calculation only until then
-
-See [FINDINGS.md](./FINDINGS.md) for URLs, fields, and calculation rules.
-
-## Status
-
-- [x] Signed-in site map (order + IBV/BV + Form 1000)
-- [x] MCP / CLI v0 (`npm test`, 10 tools; review **r3**: sol PROCEED + grok PROCEED, medium effort)
-- [ ] Checkout / bill-ship field map
-- [ ] Network XHR capture (browser tool could not intercept)
-
-## MCP setup
+## Quick start
 
 ```bash
-cd /Users/yauch/Documents/unfranchaise
 npm install
 npm test
 ```
 
-**Session cookie (never commit):** after logging in at hk.unfranchise.com, set either:
+After logging in in a browser, point the tools at your session (never commit this):
 
-- `export UNF_COOKIE='CFID=…; CFTOKEN=…; …'`, or
-- `export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie`
+```bash
+export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
+# or: export UNF_COOKIE='CFID=…; CFTOKEN=…'
+```
 
-**Cursor / Claude MCP** (`mcp.json`):
+**MCP** (Cursor / Claude `mcp.json`):
 
 ```json
 {
   "mcpServers": {
     "unfranchaise-hk": {
       "command": "node",
-      "args": ["/Users/yauch/Documents/unfranchaise/server.js"]
+      "args": ["<repo>/server.js"]
     }
   }
 }
 ```
 
-**CLI:** `node cli.js unf_volume_explain` or `node cli.js unf_search_products '{"keyword":"omega"}'`
+**CLI:** `node cli.js unf_volume_explain` · `node cli.js unf_search_products '{"keyword":"omega"}'`
 
-**Model effort:** all `dispatch.py` / codex / grok / agy runs in this repo use **medium** only (see `.review-gate/dispatch-medium.sh`).
+## Tools (v0)
 
-**Review gate (sol 6.1 + grok):** `.review-gate/run-review-round.sh r1`
+| Tool | Network | Notes |
+|------|---------|--------|
+| `unf_session_status` | — | Cookie configured? |
+| `unf_volume_explain` | — | Markdown rules from FINDINGS |
+| `unf_volume_calculate` | — | form1000 / SAMM / IBV% / SKU variant |
+| `unf_url_build` | — | Build `index.cfm?action=` URLs |
+| `unf_report_url` | — | Report criteria URL |
+| `unf_search_products` | GET | Requires cookie |
+| `unf_get_product` | GET | Parse BV/IBV/UC |
+| `unf_cart_view` | GET | Cart totals |
+| `unf_cart_add` | POST if `confirm: true` | Default dry-run |
+| `unf_form1000_status` | GET | Quarter list + summary |
 
-**Planners (5 subs):** `.review-gate/run-planners.sh` · **Luna cowork:** `.review-gate/run-luna-cowork.sh r1`
+## Safety defaults
 
-**Pre-commit (optional, local only — does not change your global git config):**
+- Live **cart add** only when `confirm === true` (JSON boolean, not `"true"`).
+- Cookie validated for CR/LF; errors redacted; redirects limited to `https://hk.unfranchise.com`.
+- FINDINGS and this repo contain **no** real account data.
 
-```bash
-git config core.hooksPath .githooks   # you run this once if you want hooks
-UNF_SKIP_REVIEW=1 git commit …        # skip slow sol/grok dispatch
-UNF_SKIP_FABLE=1 git commit …         # skip Fable final gate (emergency only)
-```
+## Site model
 
-Default hook runs `npm test` then dispatches **gpt-6.1-sol** and **grok-4.7** on MCP sources unless `UNF_SKIP_REVIEW=1`.
+- Base: `https://hk.unfranchise.com`
+- Auth: session cookie after `main.unfLogin`
+- Routes: `index.cfm?action=<area>.<page>` (ColdFusion, not a public REST API)
+
+## Roadmap
+
+- [x] FINDINGS: orders, IBV/BV, Form 1000
+- [x] MCP / CLI v0 (`npm test`, 10 tools)
+- [ ] Checkout / bill-ship field map
+- [ ] Network XHR capture
+- [ ] Reports placement, `form1000_draft`, cart update
+
+## Maintainer scripts
+
+Optional review gates (medium effort only — see `.review-gate/dispatch-medium.sh`):
+
+| Script | Purpose |
+|--------|---------|
+| `run-fable-precommit.sh` | Fable final pre-commit |
+| `run-review-round.sh` | sol 6.1 + grok |
+| `run-planners.sh` | Five-lens planning packet |
+
+Local git hook (opt-in): `git config core.hooksPath .githooks` · skip with `UNF_SKIP_FABLE=1` / `UNF_SKIP_REVIEW=1`.

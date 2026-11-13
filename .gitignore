@@ -16,3 +16,4 @@ dist/
 .review-gate/brief-r*.md
 .review-gate/sol-prompt-r*.md
 .review-gate/PLAN-grok-draft.md
+.review-gate/fable-precommit/verdict-stream.txt

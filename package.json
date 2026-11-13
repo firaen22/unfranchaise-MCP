@@ -9,7 +9,9 @@
   },
   "scripts": {
     "mcp": "node server.js",
-    "test": "node pure-smoke.mjs"
+    "test": "node pure-smoke.mjs",
+    "capture": "node scripts/capture-session.mjs",
+    "capture:xhr": "node scripts/capture-xhr-playwright.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

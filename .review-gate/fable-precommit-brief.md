@@ -5,7 +5,7 @@ Repository: `/Users/yauch/Documents/unfranchaise` (Unfranchise HK MCP, Node ESM 
 **Run first:** `npm test` in repo root (must exit 0).
 
 **Review scope (read files on disk):**
-`server.js`, `cli.js`, `pure-smoke.mjs`, `package.json`, `lib/*.js`, `.githooks/pre-commit`, `.review-gate/dispatch-medium.sh`, `README.md`.
+`server.js`, `cli.js`, `pure-smoke.mjs`, `package.json`, `lib/*.js`, `scripts/capture-session.mjs`, `scripts/capture-xhr-playwright.mjs`, `CHECKOUT.md`, `NETWORK.md`, `fixtures/checkout-billship.synthetic.html`, `fixtures/checkout-billship.parsed.json`, `.githooks/pre-commit`, `.review-gate/dispatch-medium.sh`, `README.md`.
 
 **Threat focus:** cookie leakage, redirect/SSRF, `confirm !== true` mutations, bad numeric/boolean input, error redaction.
 

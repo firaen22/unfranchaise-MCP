@@ -1,8 +1,8 @@
 # Network capture — hk.unfranchise.com
 
-No cookies, tokens, or personal values. Checkout field names are the 13 Nov 2026 (Asia/Hong_Kong) signed-in browser map in [CHECKOUT.md](./CHECKOUT.md).
+No cookies, tokens, personal values, or geographic location data. Checkout field names are the 13 Nov 2026 signed-in browser map in [CHECKOUT.md](./CHECKOUT.md).
 
-## Confirmed live (13 Nov 2026, Asia/Hong_Kong)
+## Confirmed live (13 Nov 2026)
 
 Non-empty cart. Form POST targets were observed. **繼續結帳** and **提交你的訂單** were not clicked.
 

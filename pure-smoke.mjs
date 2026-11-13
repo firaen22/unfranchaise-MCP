@@ -243,6 +243,7 @@ for (const file of [
 ]) {
   const text = fs.readFileSync(file, 'utf8');
   assert.doesNotMatch(text, /@|CFID|CFTOKEN|cf_clearance|__cf_bm=|\/workspace|\/home\/box/);
+  assert.doesNotMatch(text, /尖沙咀|Asia\/Hong_Kong/);
   assert.doesNotMatch(text, /name="pickUpOrder"|name="continueCheckout"|name="shipFirstName"/);
 }
 assert.doesNotMatch(fs.readFileSync('fixtures/checkout-express-pay.live.redacted.html', 'utf8'), /提貨|取貨|HK\$/);

@@ -1,6 +1,6 @@
 # Checkout — bill & ship and express pay
 
-Signed-in browser capture on **13 Nov 2026 (Asia/Hong_Kong)** with a **non-empty cart**. No personal values. **繼續結帳** and **提交你的訂單** were not clicked. This repo does not place orders.
+Signed-in browser capture on **13 Nov 2026** with a **non-empty cart**. No personal or location values. **繼續結帳** and **提交你的訂單** were not clicked. This repo does not place orders.
 
 Machine baseline:
 
@@ -48,7 +48,7 @@ Pickup UI copy is **親自提貨 / 提貨**. **自行提取 / 取貨** is the ol
 | `shipEmail` | (type not recorded) | required |
 | `packSlip` | radio | `1` 裝貨單不顯示價格; `0` 裝貨單或裝箱單顯示超連鎖成本價 |
 | `pickUp` | checkbox | value `1` |
-| `pickUpLoc` | select | Observed option `01` / 尖沙咀. Observed on this test and may change |
+| `pickUpLoc` | select | Options are account-specific and omitted |
 | `billtype` | radio | value `1`. Label was not recorded |
 
 ### Hidden names only

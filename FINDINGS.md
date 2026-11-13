@@ -1,6 +1,6 @@
 # Unfranchise HK — site map (orders, IBV/BV, Form 1000)
 
-Captured from signed-in browses of `hk.unfranchise.com`. No payment submit and no Form 1000 submit. Checkout field names from the 13 Nov 2026 (Asia/Hong_Kong) browser capture are in [CHECKOUT.md](./CHECKOUT.md). Personal values redacted.
+Captured from signed-in browses of `hk.unfranchise.com`. No payment submit and no Form 1000 submit. Checkout field names from the 13 Nov 2026 browser capture are in [CHECKOUT.md](./CHECKOUT.md). Personal and location values redacted.
 
 ## Top navigation
 
@@ -220,7 +220,7 @@ When already on file: 「謝謝，無需重新提交，您的925/1001已存檔�
 
 ### Sales receipt inventory (not Form 1000 unplaced orders)
 
-Signed-in browse on **13 Nov 2026 (Asia/Hong_Kong)**. This is where on-hand inventory for a **new sales receipt** is listed. It is not the Form 1000 list of unplaced orders (`forms.unf1000`). No customer numbers, names, SKUs, quantities, or prices from that browse are recorded here.
+Signed-in browse on **13 Nov 2026**. This is where on-hand inventory for a **new sales receipt** is listed. It is not the Form 1000 list of unplaced orders (`forms.unf1000`). No customer numbers, names, SKUs, quantities, or prices from that browse are recorded here.
 
 - Menu: 事業 → 我的顧客 → **銷售收據輸入** (live label; conversation may also say 創造銷售收據).
 - Landing: 優惠顧客選擇 at `https://hk.unfranchise.com/index.cfm?action=moe.unfMOEPCSelect` (`moe.unfMOEPCSelect`). Pick one preferred customer, then 繼續.

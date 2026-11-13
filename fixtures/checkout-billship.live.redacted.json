@@ -1,10 +1,9 @@
 {
   "sourceKind": "signed_in_browser",
   "observedOn": "2026-11-13",
-  "timezone": "Asia/Hong_Kong",
   "cart": "non-empty",
   "pageTitle": "送貨與付款資訊 | 超連鎖",
-  "note": "Redacted structural map from a signed-in browser. No personal values. Node npm run capture is not the source. Synthetic PR2 names are not live.",
+  "note": "Redacted structural map from a signed-in browser. No personal or location values. Node npm run capture is not the source. Synthetic PR2 names are not live.",
   "form": {
     "name": "billShip",
     "id": "billShip",
@@ -86,14 +85,7 @@
     {
       "name": "pickUpLoc",
       "type": "select",
-      "options": [
-        {
-          "value": "01",
-          "label": "尖沙咀",
-          "observedOnThisTest": true,
-          "mayChange": true
-        }
-      ]
+      "optionsOmitted": "Pickup location codes and labels are account-specific and omitted"
     },
     {
       "name": "billtype",

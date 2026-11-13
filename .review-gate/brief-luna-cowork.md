@@ -1,15 +1,17 @@
-# Luna 5.6 — PR4 Form 1000 optimiser hardening
+# Luna 5.6 — MCP polish (main)
 
-Branch: `cursor/form1000-receipt-optimiser-527f`. Cowork copy must stay dry-run only.
-
-**Non-negotiable:** No Form 1000 assign/submit, no place-order, no network in optimiser/quarters tools. `confirm` on `unf_form1000_optimise` is ignored.
+**Goals:** Documentation and pure URL helpers only. No new network mutations.
 
 **Tasks:**
 
-1. **`.review-gate/run-review-round.sh`** — Extend `FILES` to include: `test-form1000-optimise.mjs`, `FORM1000.md`, `lib/form1000-optimise.js`, `lib/form1000-sheet.js`, `lib/form1000-quarters.js`, `lib/form1000-cli.js`, `fixtures/form1000-sheet.example.csv`, `fixtures/form1000-quarters.example.json`.
-2. **`lib/form1000-sheet.js` or `lib/tools.js`** — Reject path traversal for `fixturePath` (`..`, absolute paths outside repo root); clear errors.
-3. **`lib/tools.js`** — Document/ensure `unf_form1000_optimise` never calls `unfFetch` regardless of `confirm`.
-4. **`test-form1000-optimise.mjs` or `pure-smoke.mjs`** — One assertion that `confirm:true` on optimiser does not enable network (mock fetch if needed).
-5. Run full **`npm test`** (pure-smoke + form1000 optimiser) — exit 0.
+1. Add **`unf_placement_forms_url`** (pure): build URLs for placement-related actions from FINDINGS — at minimum `forms.unfBVIBVPlacement`, `forms.unfBVIBVAutoPlacementUpdate`, `forms.unfBVIBVDesignationU` / `forms.unfIBVDesignationU` (pick names from FINDINGS.md API table). Optional `target` enum in schema. No fetch.
 
-Surgical edits only. Do not weaken receipt pairing logic.
+2. **README.md** — Add tool row; update intro line to mention 17 tools; mark roadmap **Reports placement** as URL helpers only (read FINDINGS, no submit).
+
+3. **package.json** — description one line mentioning Form 1000 optimiser + placement URLs.
+
+4. **pure-smoke.mjs** — Assert new tool exists and returns hk.unfranchise.com URL without network.
+
+5. `npm test` exit 0.
+
+Do not change bill-ship live fixtures, optimiser logic, or capture scripts except if a one-line comment is needed.

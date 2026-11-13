@@ -6,8 +6,9 @@ GATE="$(cd "$(dirname "$0")" && pwd)"
 ROUND="${1:-r1}"
 LUNA_DIR="$GATE/luna-$ROUND/cowork"
 mkdir -p "$LUNA_DIR/lib"
-cp "$REPO"/{package.json,server.js,cli.js,pure-smoke.mjs} "$LUNA_DIR/"
+cp "$REPO"/{package.json,server.js,cli.js,pure-smoke.mjs,test-form1000-optimise.mjs} "$LUNA_DIR/"
 cp "$REPO/lib/"*.js "$LUNA_DIR/lib/"
+cp "$REPO/FINDINGS.md" "$LUNA_DIR/00-FINDINGS.md" 2>/dev/null || true
 cp "$GATE/brief-luna-cowork.md" "$LUNA_DIR/00-BRIEF.md"
 
 if ! command -v codex >/dev/null; then

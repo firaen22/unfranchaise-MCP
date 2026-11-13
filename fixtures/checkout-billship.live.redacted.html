@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head><title>送貨與付款資訊 | 超連鎖</title></head>
+<body>
+<p>Redacted structural fixture. Signed-in browser, 13 Nov 2026 (Asia/Hong_Kong), non-empty cart. No personal values.</p>
+<h1>送貨與付款資訊</h1>
+<p>親自提貨</p>
+<p>提貨</p>
+<form name="billShip" id="billShip" method="post" action="index.cfm?action=orders.unfBillShip">
+  <input type="radio" name="shipType" value="1" id="shipTypeDefault">
+  <input type="radio" name="shipType" value="3" id="shipTypeFreeEntry">
+  <label for="shipTypeFreeEntry">輸入送貨地址</label>
+  <input type="radio" name="shipType" value="2" id="shipTypePC">
+  <label for="shipTypePC">選擇優惠顧客</label>
+
+  <select name="pcid" id="pcSelect" required data-action="orders.unfBillShipAJAX"></select>
+  <input name="filingID">
+  <button type="button" name="getFileID">獲取超連鎖店主編號</button>
+  <input name="contactPhone" required>
+  <input name="shipEmail" required>
+
+  <label><input type="radio" name="packSlip" value="1">裝貨單不顯示價格</label>
+  <label><input type="radio" name="packSlip" value="0">裝貨單或裝箱單顯示超連鎖成本價</label>
+
+  <input type="checkbox" name="pickUp" value="1">
+  <!-- pickUpLoc option 01 / 尖沙咀 was observed on this test and may change -->
+  <select name="pickUpLoc">
+    <option value="01">尖沙咀</option>
+  </select>
+
+  <input type="radio" name="billtype" value="1">
+
+  <input type="hidden" name="orderDirective" value="SO">
+  <input type="hidden" name="mustProvideShip">
+  <input type="hidden" name="isShipVerified">
+  <input type="hidden" name="specialCartProcess">
+  <input type="hidden" name="displayFlyout">
+  <input type="hidden" name="kiala">
+  <input type="hidden" name="usedKiala">
+  <input type="hidden" name="taxID">
+  <input type="hidden" name="apprenticeID">
+  <input type="hidden" name="mtaID">
+  <input type="hidden" name="prodSel">
+  <input type="hidden" name="gc">
+  <input type="hidden" name="addrHash">
+  <input type="hidden" name="ecEmail">
+  <input type="hidden" name="shpfirstName">
+  <input type="hidden" name="shplastName">
+  <input type="hidden" name="shpAddr1">
+  <input type="hidden" name="shpAddr2">
+  <input type="hidden" name="shpAddr3">
+  <input type="hidden" name="shpAddr4">
+  <input type="hidden" name="shpAddr5">
+  <input type="hidden" name="shpAddr6">
+  <input type="hidden" name="shpAddr7">
+  <input type="hidden" name="shpCity">
+  <input type="hidden" name="shpState">
+  <input type="hidden" name="shpPCode" id="postal">
+  <input type="hidden" name="shpArea">
+  <input type="hidden" name="shpDistrict">
+  <input type="hidden" name="shpCountry">
+  <input type="hidden" name="email">
+  <input type="hidden" name="phone">
+  <input type="hidden" name="firstName">
+  <input type="hidden" name="lastName">
+  <input type="hidden" name="maddr1">
+  <input type="hidden" name="maddr2">
+  <input type="hidden" name="maddr3">
+  <input type="hidden" name="maddr4">
+  <input type="hidden" name="maddr5">
+  <input type="hidden" name="maddr6">
+  <input type="hidden" name="maddr7">
+  <input type="hidden" name="mcity">
+  <input type="hidden" name="mstate">
+  <input type="hidden" name="mPCode">
+  <input type="hidden" name="marea">
+  <input type="hidden" name="mdistrict">
+  <input type="hidden" name="mCountry">
+
+  <button type="submit" id="btnSubmit">繼續結帳</button>
+</form>
+<script>
+// Names only. This fixture does not call the actions.
+var unfBillShipPageActions = ["orders.unfBillShipAJAX", "orders.unfBillShipBags"];
+</script>
+</body>
+</html>

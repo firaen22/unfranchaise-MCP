@@ -1,6 +1,6 @@
 {
   "source": "fixtures/checkout-billship.synthetic.html",
-  "note": "Baseline map until fixtures/captured/bill_ship.json exists",
+  "note": "NOT live. Parser unit-test list only. None of these names matched the 13 Nov 2026 signed-in bill-ship page. Tool baseline is checkout-billship.live.redacted.json.",
   "stepHints": ["shipping", "pickup", "payment"],
   "fields": [
     "pickUpOrder",

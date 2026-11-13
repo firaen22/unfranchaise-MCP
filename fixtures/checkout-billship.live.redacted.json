@@ -1,0 +1,173 @@
+{
+  "sourceKind": "signed_in_browser",
+  "observedOn": "2026-11-13",
+  "timezone": "Asia/Hong_Kong",
+  "cart": "non-empty",
+  "pageTitle": "送貨與付款資訊 | 超連鎖",
+  "note": "Redacted structural map from a signed-in browser. No personal values. Node npm run capture is not the source. Synthetic PR2 names are not live.",
+  "form": {
+    "name": "billShip",
+    "id": "billShip",
+    "method": "POST",
+    "action": "index.cfm?action=orders.unfBillShip"
+  },
+  "submit": {
+    "id": "btnSubmit",
+    "name": null,
+    "label": "繼續結帳",
+    "clicked": false
+  },
+  "pageJsActions": ["orders.unfBillShipAJAX", "orders.unfBillShipBags"],
+  "pickupCopy": ["親自提貨", "提貨"],
+  "pickupCopyNotLive": ["自行提取", "取貨"],
+  "typeNote": "type is null when the 13 Nov note recorded the name but not the control type.",
+  "kialaNote": "Other hidden names matching kiala* were present. Only kiala and usedKiala were listed, so no further kiala* names are invented.",
+  "fields": [
+    {
+      "name": "shipType",
+      "type": "radio",
+      "options": [
+        {
+          "value": "1",
+          "id": "shipTypeDefault",
+          "label": null,
+          "role": "saved address",
+          "labelNote": "Chinese label was not recorded"
+        },
+        {
+          "value": "3",
+          "id": "shipTypeFreeEntry",
+          "label": "輸入送貨地址"
+        },
+        {
+          "value": "2",
+          "id": "shipTypePC",
+          "label": "選擇優惠顧客"
+        }
+      ]
+    },
+    {
+      "name": "pcid",
+      "type": "select",
+      "id": "pcSelect",
+      "required": true,
+      "dataAction": "orders.unfBillShipAJAX",
+      "optionsOmitted": "Account-specific options omitted"
+    },
+    { "name": "filingID", "type": null },
+    {
+      "name": "getFileID",
+      "type": "button",
+      "label": "獲取超連鎖店主編號"
+    },
+    {
+      "name": "contactPhone",
+      "type": null,
+      "required": true
+    },
+    {
+      "name": "shipEmail",
+      "type": null,
+      "required": true
+    },
+    {
+      "name": "packSlip",
+      "type": "radio",
+      "options": [
+        { "value": "1", "label": "裝貨單不顯示價格" },
+        { "value": "0", "label": "裝貨單或裝箱單顯示超連鎖成本價" }
+      ]
+    },
+    {
+      "name": "pickUp",
+      "type": "checkbox",
+      "value": "1"
+    },
+    {
+      "name": "pickUpLoc",
+      "type": "select",
+      "options": [
+        {
+          "value": "01",
+          "label": "尖沙咀",
+          "observedOnThisTest": true,
+          "mayChange": true
+        }
+      ]
+    },
+    {
+      "name": "billtype",
+      "type": "radio",
+      "options": [
+        { "value": "1", "label": null, "labelNote": "Label was not recorded" }
+      ]
+    },
+    {
+      "name": "orderDirective",
+      "type": "hidden",
+      "observedValue": "SO",
+      "note": "Observed value on this capture. Hidden values are omitted from parser output."
+    },
+    { "name": "mustProvideShip", "type": "hidden" },
+    { "name": "isShipVerified", "type": "hidden" },
+    { "name": "specialCartProcess", "type": "hidden" },
+    { "name": "displayFlyout", "type": "hidden" },
+    { "name": "kiala", "type": "hidden" },
+    { "name": "usedKiala", "type": "hidden" },
+    { "name": "taxID", "type": "hidden" },
+    { "name": "apprenticeID", "type": "hidden" },
+    { "name": "mtaID", "type": "hidden" },
+    { "name": "prodSel", "type": "hidden" },
+    { "name": "gc", "type": "hidden" },
+    { "name": "addrHash", "type": "hidden" },
+    { "name": "ecEmail", "type": "hidden" },
+    { "name": "shpfirstName", "type": "hidden" },
+    { "name": "shplastName", "type": "hidden" },
+    { "name": "shpAddr1", "type": "hidden" },
+    { "name": "shpAddr2", "type": "hidden" },
+    { "name": "shpAddr3", "type": "hidden" },
+    { "name": "shpAddr4", "type": "hidden" },
+    { "name": "shpAddr5", "type": "hidden" },
+    { "name": "shpAddr6", "type": "hidden" },
+    { "name": "shpAddr7", "type": "hidden" },
+    { "name": "shpCity", "type": "hidden" },
+    { "name": "shpState", "type": "hidden" },
+    { "name": "shpPCode", "type": "hidden", "id": "postal" },
+    { "name": "shpArea", "type": "hidden" },
+    { "name": "shpDistrict", "type": "hidden" },
+    { "name": "shpCountry", "type": "hidden" },
+    { "name": "email", "type": "hidden" },
+    { "name": "phone", "type": "hidden" },
+    { "name": "firstName", "type": "hidden" },
+    { "name": "lastName", "type": "hidden" },
+    { "name": "maddr1", "type": "hidden" },
+    { "name": "maddr2", "type": "hidden" },
+    { "name": "maddr3", "type": "hidden" },
+    { "name": "maddr4", "type": "hidden" },
+    { "name": "maddr5", "type": "hidden" },
+    { "name": "maddr6", "type": "hidden" },
+    { "name": "maddr7", "type": "hidden" },
+    { "name": "mcity", "type": "hidden" },
+    { "name": "mstate", "type": "hidden" },
+    { "name": "mPCode", "type": "hidden" },
+    { "name": "marea", "type": "hidden" },
+    { "name": "mdistrict", "type": "hidden" },
+    { "name": "mCountry", "type": "hidden" }
+  ],
+  "notLiveSyntheticNames": [
+    "pickUpOrder",
+    "billSameAsShip",
+    "shipFirstName",
+    "shipLastName",
+    "shipAddress1",
+    "shipAddress2",
+    "shipCity",
+    "shipRegion",
+    "shipPostalCode",
+    "shipPhone",
+    "shipCountry",
+    "payMethod",
+    "orderStep",
+    "continueCheckout"
+  ]
+}

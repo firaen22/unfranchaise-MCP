@@ -48,8 +48,10 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 | `unf_get_product` | GET | Parse BV/IBV/UC |
 | `unf_cart_view` | GET | Cart totals |
 | `unf_cart_add` | POST if `confirm: true` | Default dry-run |
+| `unf_cart_update` | POST if `confirm: true` | Qty or remove line; default dry-run |
+| `unf_form1000_draft` | — | Markdown checklist (no network) |
 | `unf_form1000_status` | GET | Quarter list + summary |
-| `unf_checkout_billship_map` | GET* | Bill/ship forms (*live → captured → synthetic) |
+| `unf_checkout_billship_map` | GET* | Bill/ship map. Offline baseline is the 13 Nov 2026 redacted browser capture, not the synthetic fixture. Login-wall and empty-cart HTML are not the map |
 | `unf_network_patterns` | — | Navigation / XHR pattern doc + capture paths |
 
 ## Safety defaults
@@ -67,10 +69,11 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 ## Roadmap
 
 - [x] FINDINGS: orders, IBV/BV, Form 1000
-- [x] MCP / CLI v0 (`npm test`, 12 tools)
-- [x] Checkout / bill-ship field map ([CHECKOUT.md](./CHECKOUT.md); parsers + capture scripts in tree; live names verified via operator checklist)
+- [x] MCP / CLI v0 (`npm test`, 14 tools)
+- [x] Checkout / bill-ship field map ([CHECKOUT.md](./CHECKOUT.md); live names are the 13 Nov 2026 redacted browser map; synthetic HTML is parser-test only)
 - [x] Network XHR capture ([NETWORK.md](./NETWORK.md); document log + optional Playwright `capture:xhr`)
-- [ ] Reports placement, `form1000_draft`, cart update
+- [x] `form1000_draft`, cart update (dry-run tools)
+- [ ] Reports placement
 
 ## Maintainer scripts
 

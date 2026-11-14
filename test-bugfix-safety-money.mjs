@@ -401,6 +401,7 @@ if (JSON.rawJSON) {
     /email-like/,
   );
 }
+expectThrows(() => assertCaptureJsonSafe({ u: (() => { const n = new Number(1); n[Symbol.toPrimitive] = () => 1n; return n; })() }));
 {
   let calls = 0;
   const base = ['safe', 'user@example.com'];

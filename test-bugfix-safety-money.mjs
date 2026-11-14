@@ -365,9 +365,23 @@ expectThrows(() => assertCaptureJsonSafe({
 expectThrows(() => assertCaptureJsonSafe({ x: Object(1n) }), /BigInt/);
 expectThrows(() => assertCaptureJsonSafe({ x: 1n }), /BigInt/);
 {
-  const foreignString = vm.runInNewContext('String');
+  const foreignString = vm.runInNewContext('(x) => new String(x)');
   expectThrows(() => assertCaptureJsonSafe({ u: foreignString('user@example.com') }), /email-like/);
   expectSafe(() => assertCaptureJsonSafe({ u: foreignString('safe') }));
+}
+expectThrows(() => assertCaptureJsonSafe(
+  Object.assign(Object.create(String.prototype), { toString: () => 'safe', note: 'user@example.com' }),
+), /email-like/);
+{
+  const hacked = new String('safe');
+  hacked[Symbol.toStringTag] = 'Object';
+  hacked.toString = () => 'user@example.com';
+  expectThrows(() => assertCaptureJsonSafe({ u: hacked }), /email-like/);
+}
+{
+  let deep = { v: 'user@example.com' };
+  for (let i = 0; i < 5000; i++) deep = { x: deep };
+  expectThrows(() => assertCaptureJsonSafe(deep), /email-like/);
 }
 assert.equal(form1000QualifyingOrders([1, 0.009]).productTotalHkd, 1.009);
 { const q = form1000QualifyingOrders([1000, 499.99999999999994]); assert.equal(q.meetsRule, false); assert.ok(q.productTotalHkd < 1500); }

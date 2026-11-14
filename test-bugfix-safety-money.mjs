@@ -383,6 +383,30 @@ expectThrows(() => assertCaptureJsonSafe(
   for (let i = 0; i < 5000; i++) deep = { x: deep };
   expectThrows(() => assertCaptureJsonSafe(deep), /email-like/);
 }
+expectThrows(() => assertCaptureJsonSafe({ u: (() => { const n = new Number(1); n.valueOf = () => { throw new Error('nope'); }; return n; })() }));
+expectThrows(() => assertCaptureJsonSafe({ u: (() => { const s = new String('user@example.com'); s.toString = () => { throw new Error('nope'); }; return s; })() }));
+expectThrows(() => {
+  const orig = Object.getOwnPropertyDescriptor(BigInt.prototype, 'toJSON');
+  BigInt.prototype.toJSON = () => 'user@example.com';
+  try {
+    assertCaptureJsonSafe(1n);
+  } finally {
+    if (orig) Object.defineProperty(BigInt.prototype, 'toJSON', orig);
+    else delete BigInt.prototype.toJSON;
+  }
+}, /email-like/);
+{
+  let calls = 0;
+  const base = ['safe', 'user@example.com'];
+  const arr = new Proxy(base, {
+    get(target, prop) {
+      if (prop === 'length') return (calls++ === 0 ? 2 : 0);
+      const key = typeof prop === 'string' && /^\d+$/.test(prop) ? Number(prop) : prop;
+      return target[key];
+    },
+  });
+  expectThrows(() => assertCaptureJsonSafe({ items: arr }), /email-like/);
+}
 assert.equal(form1000QualifyingOrders([1, 0.009]).productTotalHkd, 1.009);
 { const q = form1000QualifyingOrders([1000, 499.99999999999994]); assert.equal(q.meetsRule, false); assert.ok(q.productTotalHkd < 1500); }
 

@@ -369,6 +369,24 @@ for (const value of [
 ]) {
   assert.equal(captureSerializedForTest(value), JSON.stringify(value), JSON.stringify(value).slice(0, 40));
 }
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    Object.keys = () => [];
+    return { note: 'user@example.com' };
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  get toJSON() {
+    Reflect.apply = () => 'ok';
+    return function () { return 'user@example.com'; };
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    Boolean.prototype.valueOf = () => false;
+    return { note: 'user@example.com', pickUpLoc: { label: 'Secret Shop' } };
+  },
+}), /email-like/);
 expectThrows(() => assertCaptureJsonSafe((() => { const f = () => {}; f.toJSON = () => 'user@example.com'; return { f }; })()), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ u: (() => { const s = new String('safe'); s.toString = () => 'CFID=SECRET'; return s; })() }), /session token/);
 assert.doesNotThrow(() => assertCaptureJsonSafe({ ok: new Boolean(false) }));

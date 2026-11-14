@@ -566,6 +566,15 @@ expectThrows(() => assertCaptureJsonSafe({
 }
 expectThrows(() => assertCaptureJsonSafe({ note: 'user+@example.com' }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ tz: 'Asia%2FHong_Kong', loc: '%E5%B0%96%E6%B2%99%E5%92%80' }), /geographic/);
+{
+  const prior = String.prototype.slice;
+  String.prototype.slice = () => '';
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ note: 'user%40example.com' }), /email-like/);
+  } finally {
+    String.prototype.slice = prior;
+  }
+}
 if (JSON.rawJSON) {
   expectThrows(() => assertCaptureJsonSafe({
     toJSON() {

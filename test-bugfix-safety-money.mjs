@@ -420,6 +420,17 @@ expectThrows(() => assertCaptureJsonSafe({
   const base = ['safe', 'user@example.com'];
   const arr = new Proxy(base, {
     get(target, prop) {
+      if (prop === 'length') return { valueOf: () => (++calls === 1 ? 2 : 0n) };
+      return target[prop];
+    },
+  });
+  expectThrows(() => assertCaptureJsonSafe({ items: arr }));
+}
+{
+  let calls = 0;
+  const base = ['safe', 'user@example.com'];
+  const arr = new Proxy(base, {
+    get(target, prop) {
       if (prop === 'length') return (calls++ === 0 ? 2 : 0);
       const key = typeof prop === 'string' && /^\d+$/.test(prop) ? Number(prop) : prop;
       return target[key];

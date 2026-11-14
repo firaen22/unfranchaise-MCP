@@ -542,6 +542,28 @@ expectThrows(() => assertCaptureJsonSafe({
     String.prototype.replace = prior;
   }
 }
+{
+  const prior = RegExp.prototype[Symbol.replace];
+  RegExp.prototype[Symbol.replace] = () => 'safe';
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'cf_clearance=#SECRET' }), /session token/);
+  } finally {
+    RegExp.prototype[Symbol.replace] = prior;
+  }
+}
+{
+  const prior = Object.getOwnPropertyDescriptor(RegExp.prototype, 'source');
+  Object.defineProperty(RegExp.prototype, 'source', {
+    get() { return 'a^'; },
+    configurable: true,
+  });
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'cf_clearance=SECRET' }), /session token/);
+  } finally {
+    if (prior) Object.defineProperty(RegExp.prototype, 'source', prior);
+    else delete RegExp.prototype.source;
+  }
+}
 expectThrows(() => assertCaptureJsonSafe({ note: 'user+@example.com' }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ tz: 'Asia%2FHong_Kong', loc: '%E5%B0%96%E6%B2%99%E5%92%80' }), /geographic/);
 if (JSON.rawJSON) {

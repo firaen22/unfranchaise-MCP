@@ -371,20 +371,37 @@ for (const value of [
 }
 expectThrows(() => assertCaptureJsonSafe({
   toJSON() {
+    const prior = Object.keys;
     Object.keys = () => [];
-    return { note: 'user@example.com' };
+    try {
+      return { note: 'user@example.com' };
+    } finally {
+      Object.keys = prior;
+    }
   },
 }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({
   get toJSON() {
-    Reflect.apply = () => 'ok';
-    return function () { return 'user@example.com'; };
+  const prior = Reflect.apply;
+  Reflect.apply = () => 'ok';
+  return function () {
+    try {
+      return 'user@example.com';
+    } finally {
+      Reflect.apply = prior;
+    }
+  };
   },
 }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({
   toJSON() {
+    const prior = Boolean.prototype.valueOf;
     Boolean.prototype.valueOf = () => false;
-    return { note: 'user@example.com', pickUpLoc: { label: 'Secret Shop' } };
+    try {
+      return { note: 'user@example.com', pickUpLoc: { label: 'Secret Shop' } };
+    } finally {
+      Boolean.prototype.valueOf = prior;
+    }
   },
 }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe((() => { const f = () => {}; f.toJSON = () => 'user@example.com'; return { f }; })()), /email-like/);
@@ -430,8 +447,53 @@ expectThrows(() => {
 }, /email-like/);
 expectThrows(() => assertCaptureJsonSafe({
   toJSON() {
+    const prior = Array.prototype.push;
     Array.prototype.push = () => 0;
-    return { note: 'user@example.com' };
+    try {
+      return { note: 'user@example.com' };
+    } finally {
+      Array.prototype.push = prior;
+    }
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Array.prototype.some;
+    Array.prototype.some = () => false;
+    try {
+      return { note: 'user@example.com' };
+    } finally {
+      Array.prototype.some = prior;
+    }
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Array.prototype[Symbol.iterator];
+    Array.prototype[Symbol.iterator] = function* () {};
+    try {
+      return { tz: 'Asia/Hong_Kong' };
+    } finally {
+      Array.prototype[Symbol.iterator] = prior;
+    }
+  },
+}), /geographic/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Math.floor;
+    Math.floor = () => 0;
+    try {
+      return ['user@example.com'];
+    } finally {
+      Math.floor = prior;
+    }
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  get toJSON() {
+    const f = () => 'user@example.com';
+    f.call = () => 'safe';
+    return f;
   },
 }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ note: 'user+@example.com' }), /email-like/);

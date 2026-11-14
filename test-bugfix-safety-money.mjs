@@ -402,6 +402,19 @@ if (JSON.rawJSON) {
   );
 }
 expectThrows(() => assertCaptureJsonSafe({ u: (() => { const n = new Number(1); n[Symbol.toPrimitive] = () => 1n; return n; })() }));
+expectThrows(() => assertCaptureJsonSafe({
+  u: { toJSON() { return Object.assign(new String('user@example.com'), { toJSON: () => 'safe' }); } },
+}), /email-like/);
+{
+  const base = ['safe', 'user@example.com'];
+  const arr = new Proxy(base, {
+    get(target, prop) {
+      if (prop === 'length') return 1n;
+      return target[prop];
+    },
+  });
+  expectThrows(() => assertCaptureJsonSafe({ items: arr }));
+}
 {
   let calls = 0;
   const base = ['safe', 'user@example.com'];

@@ -2,13 +2,17 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { assertSafePostRedirect, assertSafeReadRedirect, publicErrorMessage } from './lib/validate.js';
 import { unfFetch } from './lib/client.js';
-import {
+const rawGetterMarker = Symbol('rawGetterMarker');
+const nativeIsRawJSON = JSON.isRawJSON;
+JSON.isRawJSON = (value) => value?.[rawGetterMarker] === true || nativeIsRawJSON?.(value) === true;
+const {
   assertCaptureJsonSafe,
   captureSerializedForTest,
   redactActionString,
   redactSessionTokensInText,
   redactSessionTokensInUrl,
-} from './lib/redact.js';
+} = await import('./lib/redact.js?raw-getter-regression');
+JSON.isRawJSON = nativeIsRawJSON;
 import { parseHkdToCents } from './lib/form1000-sheet.js';
 import { form1000QualifyingOrders } from './lib/volume.js';
 import { optimiseForm1000 } from './lib/form1000-optimise.js';
@@ -576,6 +580,18 @@ expectThrows(() => assertCaptureJsonSafe({ tz: 'Asia%2FHong_Kong', loc: '%E5%B0%
   }
 }
 if (JSON.rawJSON) {
+  {
+    let reads = 0;
+    const raw = {
+      [rawGetterMarker]: true,
+      get rawJSON() {
+        reads++;
+        return reads === 1 ? '"user\\u0040example.com"' : '"safe"';
+      },
+    };
+    expectThrows(() => assertCaptureJsonSafe({ toJSON() { return raw; } }), /email-like/);
+    assert.equal(reads, 1);
+  }
   expectThrows(() => assertCaptureJsonSafe({
     toJSON() {
       const prior = JSON.isRawJSON;
@@ -599,6 +615,29 @@ if (JSON.rawJSON) {
     () => assertCaptureJsonSafe({ v: JSON.rawJSON('"\\u5c16\\u6c99\\u5480"') }),
     /geographic/,
   );
+}
+{
+  const prior = Object.setPrototypeOf;
+  Object.setPrototypeOf = () => null;
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    Object.setPrototypeOf = prior;
+  }
+}
+{
+  const prior1 = Object.getOwnPropertyDescriptor(Array.prototype, '1');
+  const prior2 = Object.getOwnPropertyDescriptor(Array.prototype, '2');
+  Object.defineProperty(Array.prototype, '1', { configurable: true, get: () => 'safe', set: () => {} });
+  Object.defineProperty(Array.prototype, '2', { configurable: true, get: () => 'safe', set: () => {} });
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    if (prior1) Object.defineProperty(Array.prototype, '1', prior1);
+    else delete Array.prototype[1];
+    if (prior2) Object.defineProperty(Array.prototype, '2', prior2);
+    else delete Array.prototype[2];
+  }
 }
 expectThrows(() => assertCaptureJsonSafe({ u: (() => { const n = new Number(1); n[Symbol.toPrimitive] = () => 1n; return n; })() }));
 expectThrows(() => assertCaptureJsonSafe({

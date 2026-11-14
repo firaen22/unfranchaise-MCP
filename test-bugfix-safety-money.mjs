@@ -428,7 +428,26 @@ expectThrows(() => {
     else delete BigInt.prototype.toJSON;
   }
 }, /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    Array.prototype.push = () => 0;
+    return { note: 'user@example.com' };
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({ note: 'user+@example.com' }), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({ tz: 'Asia%2FHong_Kong', loc: '%E5%B0%96%E6%B2%99%E5%92%80' }), /geographic/);
 if (JSON.rawJSON) {
+  expectThrows(() => assertCaptureJsonSafe({
+    toJSON() {
+      const prior = JSON.isRawJSON;
+      JSON.isRawJSON = () => false;
+      try {
+        return JSON.rawJSON('"user\\u0040example.com"');
+      } finally {
+        JSON.isRawJSON = prior;
+      }
+    },
+  }), /email-like/);
   expectThrows(
     () => assertCaptureJsonSafe({ v: JSON.rawJSON('"user\\u0040example.com"') }),
     /email-like/,

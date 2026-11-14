@@ -395,6 +395,12 @@ expectThrows(() => {
     else delete BigInt.prototype.toJSON;
   }
 }, /email-like/);
+if (JSON.rawJSON) {
+  expectThrows(
+    () => assertCaptureJsonSafe({ v: JSON.rawJSON('"user\\u0040example.com"') }),
+    /email-like/,
+  );
+}
 {
   let calls = 0;
   const base = ['safe', 'user@example.com'];

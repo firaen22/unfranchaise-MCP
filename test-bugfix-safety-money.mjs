@@ -515,6 +515,33 @@ expectThrows(() => assertCaptureJsonSafe({
     Array.prototype[Symbol.iterator] = iter;
   }
 }
+{
+  const prior = Function.prototype.call;
+  Function.prototype.call = () => true;
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ note: 'user@example.com' }), /email-like/);
+  } finally {
+    Function.prototype.call = prior;
+  }
+}
+{
+  const prior = RegExp.prototype.exec;
+  RegExp.prototype.exec = () => null;
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'cf_clearance=SECRET' }), /session token/);
+  } finally {
+    RegExp.prototype.exec = prior;
+  }
+}
+{
+  const prior = String.prototype.replace;
+  String.prototype.replace = () => 'safe';
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    String.prototype.replace = prior;
+  }
+}
 expectThrows(() => assertCaptureJsonSafe({ note: 'user+@example.com' }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ tz: 'Asia%2FHong_Kong', loc: '%E5%B0%96%E6%B2%99%E5%92%80' }), /geographic/);
 if (JSON.rawJSON) {

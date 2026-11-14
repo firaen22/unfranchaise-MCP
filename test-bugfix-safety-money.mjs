@@ -4,6 +4,7 @@ import { assertSafePostRedirect, assertSafeReadRedirect, publicErrorMessage } fr
 import { unfFetch } from './lib/client.js';
 import {
   assertCaptureJsonSafe,
+  captureSerializedForTest,
   redactActionString,
   redactSessionTokensInText,
   redactSessionTokensInUrl,
@@ -354,6 +355,20 @@ assert.equal(parseHkdToCents('1000000000000', 'x'), 1e14);
 assert.ok(!redactSessionTokensInText('cf_clearance=#SECRET').includes('SECRET'));
 assert.throws(() => assertCaptureJsonSafe({ text: 'cf_clearance=#SECRET' }));
 { let deep = 'safe'; for (let i = 0; i < 5000; i++) deep = { x: deep }; assert.doesNotThrow(() => assertCaptureJsonSafe(deep)); }
+for (const value of [
+  { ok: true, n: 1 },
+  { items: ['a', 'b'] },
+  { u: new String('safe') },
+  { ok: new Boolean(false) },
+  { sparse: [, 'x'] },
+  { child: { toJSON() { return { k: 'v' }; } } },
+  { nested: { list: [null, true, 42], text: 'line\nquote"' } },
+  { omitted: undefined, callable() {}, tagged: Symbol('safe') },
+  { date: new Date('2020-01-02T03:04:05.000Z') },
+  { escaped: '\\', unicode: '\u2603' },
+]) {
+  assert.equal(captureSerializedForTest(value), JSON.stringify(value), JSON.stringify(value).slice(0, 40));
+}
 expectThrows(() => assertCaptureJsonSafe((() => { const f = () => {}; f.toJSON = () => 'user@example.com'; return { f }; })()), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ u: (() => { const s = new String('safe'); s.toString = () => 'CFID=SECRET'; return s; })() }), /session token/);
 assert.doesNotThrow(() => assertCaptureJsonSafe({ ok: new Boolean(false) }));
@@ -399,6 +414,14 @@ if (JSON.rawJSON) {
   expectThrows(
     () => assertCaptureJsonSafe({ v: JSON.rawJSON('"user\\u0040example.com"') }),
     /email-like/,
+  );
+  expectThrows(
+    () => assertCaptureJsonSafe({ v: JSON.rawJSON('"cf_clearance=SECRET"') }),
+    /session token/,
+  );
+  expectThrows(
+    () => assertCaptureJsonSafe({ v: JSON.rawJSON('"\\u5c16\\u6c99\\u5480"') }),
+    /geographic/,
   );
 }
 expectThrows(() => assertCaptureJsonSafe({ u: (() => { const n = new Number(1); n[Symbol.toPrimitive] = () => 1n; return n; })() }));

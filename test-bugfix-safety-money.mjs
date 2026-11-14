@@ -369,17 +369,15 @@ for (const value of [
 ]) {
   assert.equal(captureSerializedForTest(value), JSON.stringify(value), JSON.stringify(value).slice(0, 40));
 }
-expectThrows(() => assertCaptureJsonSafe({
-  toJSON() {
-    const prior = Object.keys;
-    Object.keys = () => [];
-    try {
-      return { note: 'user@example.com' };
-    } finally {
-      Object.keys = prior;
-    }
-  },
-}), /email-like/);
+{
+  const prior = Object.keys;
+  Object.keys = () => [];
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ note: 'user@example.com' }), /email-like/);
+  } finally {
+    Object.keys = prior;
+  }
+}
 expectThrows(() => assertCaptureJsonSafe({
   get toJSON() {
   const prior = Reflect.apply;
@@ -496,6 +494,27 @@ expectThrows(() => assertCaptureJsonSafe({
     return f;
   },
 }), /email-like/);
+{
+  const prior = RegExp.prototype.test;
+  RegExp.prototype.test = () => false;
+  try {
+    expectThrows(
+      () => assertCaptureJsonSafe({ note: 'user@example.com', tz: 'Asia/Hong_Kong' }),
+      /email-like/,
+    );
+  } finally {
+    RegExp.prototype.test = prior;
+  }
+}
+{
+  const iter = Array.prototype[Symbol.iterator];
+  Array.prototype[Symbol.iterator] = function* () {};
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    Array.prototype[Symbol.iterator] = iter;
+  }
+}
 expectThrows(() => assertCaptureJsonSafe({ note: 'user+@example.com' }), /email-like/);
 expectThrows(() => assertCaptureJsonSafe({ tz: 'Asia%2FHong_Kong', loc: '%E5%B0%96%E6%B2%99%E5%92%80' }), /geographic/);
 if (JSON.rawJSON) {

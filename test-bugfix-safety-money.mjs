@@ -1,12 +1,18 @@
 import assert from 'node:assert/strict';
+import vm from 'node:vm';
 import { assertSafePostRedirect, assertSafeReadRedirect, publicErrorMessage } from './lib/validate.js';
 import { unfFetch } from './lib/client.js';
-import {
+const rawGetterMarker = Symbol('rawGetterMarker');
+const nativeIsRawJSON = JSON.isRawJSON;
+JSON.isRawJSON = (value) => value?.[rawGetterMarker] === true || nativeIsRawJSON?.(value) === true;
+const {
   assertCaptureJsonSafe,
+  captureSerializedForTest,
   redactActionString,
   redactSessionTokensInText,
   redactSessionTokensInUrl,
-} from './lib/redact.js';
+} = await import('./lib/redact.js?raw-getter-regression');
+JSON.isRawJSON = nativeIsRawJSON;
 import { parseHkdToCents } from './lib/form1000-sheet.js';
 import { form1000QualifyingOrders } from './lib/volume.js';
 import { optimiseForm1000 } from './lib/form1000-optimise.js';
@@ -353,6 +359,323 @@ assert.equal(parseHkdToCents('1000000000000', 'x'), 1e14);
 assert.ok(!redactSessionTokensInText('cf_clearance=#SECRET').includes('SECRET'));
 assert.throws(() => assertCaptureJsonSafe({ text: 'cf_clearance=#SECRET' }));
 { let deep = 'safe'; for (let i = 0; i < 5000; i++) deep = { x: deep }; assert.doesNotThrow(() => assertCaptureJsonSafe(deep)); }
+for (const value of [
+  { ok: true, n: 1 },
+  { items: ['a', 'b'] },
+  { u: new String('safe') },
+  { ok: new Boolean(false) },
+  { sparse: [, 'x'] },
+  { child: { toJSON() { return { k: 'v' }; } } },
+  { nested: { list: [null, true, 42], text: 'line\nquote"' } },
+  { omitted: undefined, callable() {}, tagged: Symbol('safe') },
+  { date: new Date('2020-01-02T03:04:05.000Z') },
+  { escaped: '\\', unicode: '\u2603' },
+]) {
+  assert.equal(captureSerializedForTest(value), JSON.stringify(value), JSON.stringify(value).slice(0, 40));
+}
+{
+  const prior = Object.keys;
+  Object.keys = () => [];
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ note: 'user@example.com' }), /email-like/);
+  } finally {
+    Object.keys = prior;
+  }
+}
+expectThrows(() => assertCaptureJsonSafe({
+  get toJSON() {
+  const prior = Reflect.apply;
+  Reflect.apply = () => 'ok';
+  return function () {
+    try {
+      return 'user@example.com';
+    } finally {
+      Reflect.apply = prior;
+    }
+  };
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Boolean.prototype.valueOf;
+    Boolean.prototype.valueOf = () => false;
+    try {
+      return { note: 'user@example.com', pickUpLoc: { label: 'Secret Shop' } };
+    } finally {
+      Boolean.prototype.valueOf = prior;
+    }
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe((() => { const f = () => {}; f.toJSON = () => 'user@example.com'; return { f }; })()), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({ u: (() => { const s = new String('safe'); s.toString = () => 'CFID=SECRET'; return s; })() }), /session token/);
+assert.doesNotThrow(() => assertCaptureJsonSafe({ ok: new Boolean(false) }));
+expectThrows(() => assertCaptureJsonSafe({
+  [Symbol.toStringTag]: 'String',
+  toString: () => 'safe',
+  note: 'user@example.com',
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({ x: Object(1n) }), /BigInt/);
+expectThrows(() => assertCaptureJsonSafe({ x: 1n }), /BigInt/);
+{
+  const foreignString = vm.runInNewContext('(x) => new String(x)');
+  expectThrows(() => assertCaptureJsonSafe({ u: foreignString('user@example.com') }), /email-like/);
+  expectSafe(() => assertCaptureJsonSafe({ u: foreignString('safe') }));
+}
+expectThrows(() => assertCaptureJsonSafe(
+  Object.assign(Object.create(String.prototype), { toString: () => 'safe', note: 'user@example.com' }),
+), /email-like/);
+{
+  const hacked = new String('safe');
+  hacked[Symbol.toStringTag] = 'Object';
+  hacked.toString = () => 'user@example.com';
+  expectThrows(() => assertCaptureJsonSafe({ u: hacked }), /email-like/);
+}
+{
+  let deep = { v: 'user@example.com' };
+  for (let i = 0; i < 5000; i++) deep = { x: deep };
+  expectThrows(() => assertCaptureJsonSafe(deep), /email-like/);
+}
+expectThrows(() => assertCaptureJsonSafe({ u: (() => { const n = new Number(1); n.valueOf = () => { throw new Error('nope'); }; return n; })() }));
+expectThrows(() => assertCaptureJsonSafe({ u: (() => { const s = new String('user@example.com'); s.toString = () => { throw new Error('nope'); }; return s; })() }));
+expectThrows(() => {
+  const orig = Object.getOwnPropertyDescriptor(BigInt.prototype, 'toJSON');
+  BigInt.prototype.toJSON = () => 'user@example.com';
+  try {
+    assertCaptureJsonSafe(1n);
+  } finally {
+    if (orig) Object.defineProperty(BigInt.prototype, 'toJSON', orig);
+    else delete BigInt.prototype.toJSON;
+  }
+}, /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Array.prototype.push;
+    Array.prototype.push = () => 0;
+    try {
+      return { note: 'user@example.com' };
+    } finally {
+      Array.prototype.push = prior;
+    }
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Array.prototype.some;
+    Array.prototype.some = () => false;
+    try {
+      return { note: 'user@example.com' };
+    } finally {
+      Array.prototype.some = prior;
+    }
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Array.prototype[Symbol.iterator];
+    Array.prototype[Symbol.iterator] = function* () {};
+    try {
+      return { tz: 'Asia/Hong_Kong' };
+    } finally {
+      Array.prototype[Symbol.iterator] = prior;
+    }
+  },
+}), /geographic/);
+expectThrows(() => assertCaptureJsonSafe({
+  toJSON() {
+    const prior = Math.floor;
+    Math.floor = () => 0;
+    try {
+      return ['user@example.com'];
+    } finally {
+      Math.floor = prior;
+    }
+  },
+}), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({
+  get toJSON() {
+    const f = () => 'user@example.com';
+    f.call = () => 'safe';
+    return f;
+  },
+}), /email-like/);
+{
+  const prior = RegExp.prototype.test;
+  RegExp.prototype.test = () => false;
+  try {
+    expectThrows(
+      () => assertCaptureJsonSafe({ note: 'user@example.com', tz: 'Asia/Hong_Kong' }),
+      /email-like/,
+    );
+  } finally {
+    RegExp.prototype.test = prior;
+  }
+}
+{
+  const iter = Array.prototype[Symbol.iterator];
+  Array.prototype[Symbol.iterator] = function* () {};
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    Array.prototype[Symbol.iterator] = iter;
+  }
+}
+{
+  const prior = Function.prototype.call;
+  Function.prototype.call = () => true;
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ note: 'user@example.com' }), /email-like/);
+  } finally {
+    Function.prototype.call = prior;
+  }
+}
+{
+  const prior = RegExp.prototype.exec;
+  RegExp.prototype.exec = () => null;
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'cf_clearance=SECRET' }), /session token/);
+  } finally {
+    RegExp.prototype.exec = prior;
+  }
+}
+{
+  const prior = String.prototype.replace;
+  String.prototype.replace = () => 'safe';
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    String.prototype.replace = prior;
+  }
+}
+{
+  const prior = RegExp.prototype[Symbol.replace];
+  RegExp.prototype[Symbol.replace] = () => 'safe';
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'cf_clearance=#SECRET' }), /session token/);
+  } finally {
+    RegExp.prototype[Symbol.replace] = prior;
+  }
+}
+{
+  const prior = Object.getOwnPropertyDescriptor(RegExp.prototype, 'source');
+  Object.defineProperty(RegExp.prototype, 'source', {
+    get() { return 'a^'; },
+    configurable: true,
+  });
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'cf_clearance=SECRET' }), /session token/);
+  } finally {
+    if (prior) Object.defineProperty(RegExp.prototype, 'source', prior);
+    else delete RegExp.prototype.source;
+  }
+}
+expectThrows(() => assertCaptureJsonSafe({ note: 'user+@example.com' }), /email-like/);
+expectThrows(() => assertCaptureJsonSafe({ tz: 'Asia%2FHong_Kong', loc: '%E5%B0%96%E6%B2%99%E5%92%80' }), /geographic/);
+{
+  const prior = String.prototype.slice;
+  String.prototype.slice = () => '';
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ note: 'user%40example.com' }), /email-like/);
+  } finally {
+    String.prototype.slice = prior;
+  }
+}
+if (JSON.rawJSON) {
+  {
+    let reads = 0;
+    const raw = {
+      [rawGetterMarker]: true,
+      get rawJSON() {
+        reads++;
+        return reads === 1 ? '"user\\u0040example.com"' : '"safe"';
+      },
+    };
+    expectThrows(() => assertCaptureJsonSafe({ toJSON() { return raw; } }), /email-like/);
+    assert.equal(reads, 1);
+  }
+  expectThrows(() => assertCaptureJsonSafe({
+    toJSON() {
+      const prior = JSON.isRawJSON;
+      JSON.isRawJSON = () => false;
+      try {
+        return JSON.rawJSON('"user\\u0040example.com"');
+      } finally {
+        JSON.isRawJSON = prior;
+      }
+    },
+  }), /email-like/);
+  expectThrows(
+    () => assertCaptureJsonSafe({ v: JSON.rawJSON('"user\\u0040example.com"') }),
+    /email-like/,
+  );
+  expectThrows(
+    () => assertCaptureJsonSafe({ v: JSON.rawJSON('"cf_clearance=SECRET"') }),
+    /session token/,
+  );
+  expectThrows(
+    () => assertCaptureJsonSafe({ v: JSON.rawJSON('"\\u5c16\\u6c99\\u5480"') }),
+    /geographic/,
+  );
+}
+{
+  const prior = Object.setPrototypeOf;
+  Object.setPrototypeOf = () => null;
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    Object.setPrototypeOf = prior;
+  }
+}
+{
+  const prior1 = Object.getOwnPropertyDescriptor(Array.prototype, '1');
+  const prior2 = Object.getOwnPropertyDescriptor(Array.prototype, '2');
+  Object.defineProperty(Array.prototype, '1', { configurable: true, get: () => 'safe', set: () => {} });
+  Object.defineProperty(Array.prototype, '2', { configurable: true, get: () => 'safe', set: () => {} });
+  try {
+    expectThrows(() => assertCaptureJsonSafe({ text: 'CFID=SECRET' }), /session token/);
+  } finally {
+    if (prior1) Object.defineProperty(Array.prototype, '1', prior1);
+    else delete Array.prototype[1];
+    if (prior2) Object.defineProperty(Array.prototype, '2', prior2);
+    else delete Array.prototype[2];
+  }
+}
+expectThrows(() => assertCaptureJsonSafe({ u: (() => { const n = new Number(1); n[Symbol.toPrimitive] = () => 1n; return n; })() }));
+expectThrows(() => assertCaptureJsonSafe({
+  u: { toJSON() { return Object.assign(new String('user@example.com'), { toJSON: () => 'safe' }); } },
+}), /email-like/);
+{
+  const base = ['safe', 'user@example.com'];
+  const arr = new Proxy(base, {
+    get(target, prop) {
+      if (prop === 'length') return 1n;
+      return target[prop];
+    },
+  });
+  expectThrows(() => assertCaptureJsonSafe({ items: arr }));
+}
+{
+  let calls = 0;
+  const base = ['safe', 'user@example.com'];
+  const arr = new Proxy(base, {
+    get(target, prop) {
+      if (prop === 'length') return { valueOf: () => (++calls === 1 ? 2 : 0n) };
+      return target[prop];
+    },
+  });
+  expectThrows(() => assertCaptureJsonSafe({ items: arr }));
+}
+{
+  let calls = 0;
+  const base = ['safe', 'user@example.com'];
+  const arr = new Proxy(base, {
+    get(target, prop) {
+      if (prop === 'length') return (calls++ === 0 ? 2 : 0);
+      const key = typeof prop === 'string' && /^\d+$/.test(prop) ? Number(prop) : prop;
+      return target[key];
+    },
+  });
+  expectThrows(() => assertCaptureJsonSafe({ items: arr }), /email-like/);
+}
 assert.equal(form1000QualifyingOrders([1, 0.009]).productTotalHkd, 1.009);
 { const q = form1000QualifyingOrders([1000, 499.99999999999994]); assert.equal(q.meetsRule, false); assert.ok(q.productTotalHkd < 1500); }
 

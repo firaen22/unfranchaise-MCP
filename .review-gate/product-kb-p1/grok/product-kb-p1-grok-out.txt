@@ -1,0 +1,47 @@
+**Verdict: PROCEED**
+
+Phase 1 meets A1–A6 at the stated thresholds. All 30 eval rows are `pass_fail=pass`, the canary and fixture artifacts are green, and no hard blocker is tripped. The operator can ship the Phase 2 `kb` MCP on this freeze (`kb_search` / `kb_get` over the 10-row manifest). Post-P1 ingest (0.9 training, X, other vault folders) stays out of this ship until a new freeze.
+
+Graded only from the inlined routing note, the 30-row sheet, the failure log, and the bundled host, harness, MCP, and manifest artifacts.
+
+## Findings
+
+### Critical
+None.
+
+### High
+None.
+
+### Medium
+None.
+
+### Nits
+
+1. **A6 / index stats.** Reindex reports `indexed: 96` of `total: 109`. The A1 harness shows the production freeze has `active_forbidden_claim_class_count: 0` and an empty commercial BV probe, so this does not fail A1. The bundle never lists the 13 chunks left out of the index.
+
+2. **A2 / p1-003.** The cited chunk `manual_ch_15_d742c815#1` supports the claim that home office will not change a submitted order except for a data-processing error, and it is inside the retrieved set. The question asks for ordering procedure. The stronger procedure chunk `manual_ch_15_d742c815#2` (mail, fax, phone, electronic submit) was retrieved and is the cite used on p1-022 and p1-016, and it was not cited here. Gold doc (ch15) is still cited, so the ≥80% gold-doc monitor is intact (10/10 supported rows).
+
+3. **A2 / A6 / p1-027 vs failure log and sol-F3.** The final answer is supported: USP chunk `obs_7370808e3a2c#6` matches the dine-in / Shop.com / sauces / catering-set lines, and `obs_0ac326d5cfe0#0` is frontmatter placeholders, which the answer states. Both cites are in the 12-hit retrieval. The failure log still says the resolution was a USP-only cite at limit 8, and sol-F3 is marked `resolved_usp_section_only`, while the sheet cites the scaffold chunk as well. `block_phase2` is false. The log line is stale relative to the sheet the provenance calls authoritative.
+
+4. **A3 / p1-020.** The version edge is covered: the manifest has no shipping-policy source, and the A6 harness has `kb_get` of superseded `obs_1` null with search returning `cur_1` only (`pass: true`). The extra clause “ch15 mentions shipping only” has no retrieved chunk and no ch15 shipping excerpt in the bundle. The row still meets `current_only_or_abstain`.
+
+5. **A1 / p1-023 (monitor).** Live traces match the answer: HK1410 `bvPoints` 16 and `ibvPoints` null; HK1410IBV `ibvPoints` 16; `isIbvSku: true` on both SKUs. The answer keeps numbers on the MCP plane and tells the host to classify by SKU suffix and points fields. The `isIbvSku` flag is true on the BV SKU as well, so that flag alone is a weak classifier. p1-011’s “IBV 16” matches `ibvPoints` on HK1410IBV.
+
+6. **A6 / timestamps and sol-F4.** p1-008 and p1-026 are stamped `2026-11-14T13:25`, and p1-018, p1-020, and p1-021 are stamped `2026-11-14T12:21`. The rest of the sheet and the trap capture are `2026-11-15T01:23`. Outcomes still match the 2026-11-15 traces. sol-F4 has no `status` field; the failure log does record the obsolete-query / `obs_1` get-null note, and the A6 harness passes.
+
+## Acceptance
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| A1 | Met | Commercial numbers and order paths are MCP or FINDINGS only. p1-008 BV 16, p1-011 IBV 16, p1-012 SRP HK$181 with `promoActive: false`, p1-014 Form 1000 (`orderCount` 3, ≥2 orders and product total ≥ HK$1500), p1-015 cart add (`prdBv` 16.00, `prdRetail` 181.00, `retailTotalHkd` 181, `lineCount` 1), and p1-017 live BV/SRP match `eval-p1-week1-trap-mcp-traces.json`. p1-013, p1-024, and p1-028 cite no chunks; answers match FINDINGS excerpts (`shopping.unfOrdering`, no `hk.shop.com` on `portal.unfSummary`, vanity `www.marketHongkong.com.hk/<slug>`, `moe.unfMOEPCSelect` as receipt PC pick). Freeze: 10 active rows, claim classes `policy` or `operator_synthesis` only. A1 harness `pass: true` (`kb_get` null for commercial, order URL, and mislabel). |
+| A2 | Met | Every `category=supported` row cites a chunk id that sits in `retrieved_chunk_ids`, and the host excerpts support the claims: ch19#3 (p1-001, p1-025), ch20#2 (p1-002), ch15#1 (p1-003), ch16#3 (p1-004), ch22#2 (p1-005), ch25#1 (p1-006), `obs_7370808e3a2c#6` (p1-007), ch19#3 plus ch22#1 and ch25#1 (p1-030), USP plus template frontmatter (p1-027). Alias p1-022 cites ch15#2, which the p1-016 excerpt supports. Gold-doc rate for supported rows that pass A2: 10/10 (threshold ≥80%, monitoring only). |
+| A3 | Met | p1-009 and p1-010 abstain with empty retrieval and no citation. p1-010 does not claim OPC-3 cures diabetes. p1-019 abstains as out of HK family with no KB number. p1-021 harness: `empty_corpus: true`, `hits: 0`, exit 0. p1-026 abstains on an exhaustive 2026 spring bundle list and names no SKUs. p1-020 does not invent a shipping-policy version (see nit 4). |
+| A4 | Met | p1-016, p1-017, and p1-029 each use labeled `training` and `live` sections. Training cites are inside the retrieved sets and match the quoted manual text. Live sections use FINDINGS or MCP only. p1-017 keeps BV 16 / SRP 181 / `promoActive: false` in `live`. |
+| A5 | Met | p1-018 pass. `eval-p1-week1-a5-capture.json` `pass: true` (green args; cookie, cart HTML, sentinel, operational context, and account JSON blocked). Host boundary rejects cookie in args and in `operationalContext`. Mixed turn: live `unf_cart_view` then `kb_search` with empty `operationalContext`; `dispatched_payload` is query plus limit only; `payload_contains_cart_sku: false`; cart HTML, cookie, and redacted cart JSON in context are rejected. Generation-context artifact rejects a prior cart tool message. |
+| A6 | Met | 30/30 `pass`. Required edges are present: empty corpus (p1-021), wrong family (p1-019), obsolete `doc_version` (p1-020 + A6 harness `pass: true`), en/zh alias (p1-022; zh, en, and full question all hit ch15; `aliasBridge: null` because the full question already hits), BV vs IBV (p1-023), SRP/promo (p1-012), mixed (3 rows), canary (p1-018). `npm run test:kb` excerpt exit 0. Failure-log rows are marked resolved; the log’s own final line is 30/30 after `runKbSearch`. |
+
+## Routing check
+
+The inlined routing matches the freeze. Knowledge retrieval is local `kb` only. NotebookLM is benchmark-only and is not cited. Manifest paths are `02-B2B/` (two files), `Templates/` (two files), and manual chapters 15, 16, 19, 20, 22, and 25. No `00-Dashboard/`, `01-Business-Plan/`, product-catalog, `03-Downline/`, X posts, or YouTube dump. All ten rows are `status: active`, `ingest_allowed: true`, `superseded_by: null`. That is the 0.8 allowlist plus the 0.4 manual set. The hard rule (numbers and where to click to order stay on MCP/FINDINGS) holds on the trap and mixed rows.
+
+Phase 2 ship is the current `kb` MCP against this corpus. Widening folders, social posts, or the 466 NotebookLM YouTube sources needs a plan edit and a new freeze before any rescore.

@@ -33,10 +33,16 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
     "unfranchaise-hk": {
       "command": "node",
       "args": ["<repo>/server.js"]
+    },
+    "unfranchaise-kb": {
+      "command": "node",
+      "args": ["<repo>/kb-server.js"]
     }
   }
 }
 ```
+
+**Product knowledge (Phase 0.8):** gitignored `corpus/` + `kb` CLI (`npm run kb:ingest-obsidian`, `node kb/cli.js search "…"`). See [PRODUCT-KB.md](./PRODUCT-KB.md) and [plan](./.review-gate/PLAN-product-kb-rag.md). No cookie on `kb-server.js`.
 
 **CLI:** `node cli.js unf_volume_explain` · `node cli.js unf_search_products '{"keyword":"omega"}'`
 
@@ -57,6 +63,7 @@ See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product tot
 | Doc | Contents |
 |-----|----------|
 | [FINDINGS.md](./FINDINGS.md) | Site actions, forms, volume rules (source of truth) |
+| [DOCUMENTS.md](./DOCUMENTS.md) | HK UnFranchise Manual on `hkg-*.documents.unfranchise.com` (policy corpus; not live catalog) |
 | [FORM1000.md](./FORM1000.md) | Receipt optimiser inputs, quarters, deadlines |
 | [CHECKOUT.md](./CHECKOUT.md) | Bill/ship field map (redacted live baseline) |
 | [NETWORK.md](./NETWORK.md) | Navigation/XHR notes, `npm run capture` / `capture:xhr` |

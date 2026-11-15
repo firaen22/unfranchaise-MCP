@@ -1,0 +1,13 @@
+Verdict: PROCEED
+
+[verified: inlined plan review] No blocking plan defect found. This verdict covers P0 plan readiness only; implementation, linked artifacts, and completed cross-family gate evidence remain [unverified].
+
+Findings, highest severity first:
+
+- **Gate scope / review independence:** [verified: §7] P0 requires both sol and grok outputs with no unresolved FIX. This review alone does not satisfy that gate. This assessment is **single-lens**; independent concurrence is [unverified].
+
+- **Nit — A5 canary precision (§7.1):** [verified: wording review] “Inject … into host context → canary must fail” leaves the deliberate boundary fault implicit. With isolation working, poisoned prior context should produce a passing canary. Clarify that the **red run deliberately bypasses isolation**, then the green run repeats the same poisoned input with isolation restored. Include a synthetic MCP account payload alongside cookie and cart sentinels.
+
+- **Nit — P2 acceptance clarity (§5, steps 2.3–2.4):** [verified: wording review] The plan requires scripted evaluation and re-P2 on failure, but the clearest “all 30 pass” language describes P1. Repeat explicitly that **all 30 rows must pass through the MCP path**, under the same A1–A6 scoring rules, before P2 PROCEED.
+
+[verified: §§2–7, 11] The required foundations are present: own RAG primary; NotebookLM benchmark-only; **0.7-lite → 0.8 → full 0.7 → 0.4**; frozen P1 corpus; Phase 2 MCP; separate operational and knowledge contexts; commercial and order-URL exclusions on **both search and get**; A1–A6 acceptance; reviewer gates; and stop/retest rules. No additional artifact is necessary to assess this inlined plan’s readiness.

@@ -1,0 +1,17 @@
+{
+ "name": "product-kb-p1-grok",
+ "tool": "grok",
+ "model": "grok-4.7",
+ "cap": 1200,
+ "pong": false,
+ "status": "PASS",
+ "rc": 0,
+ "elapsed": 166.9,
+ "out_bytes": 6930,
+ "err_bytes": 0,
+ "served_model": "grok-4.7-build",
+ "out": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p1/grok/product-kb-p1-grok-out.txt",
+ "err": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p1/grok/product-kb-p1-grok-err.txt",
+ "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p1/grok",
+ "effort_applied": true
+}

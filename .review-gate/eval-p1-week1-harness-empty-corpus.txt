@@ -1,0 +1,7 @@
+exit=0
+{
+  "id": "p1-021",
+  "empty_corpus": true,
+  "hits": 0
+}
+

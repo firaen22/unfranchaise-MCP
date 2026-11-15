@@ -1,0 +1,17 @@
+{
+ "name": "product-kb-p1-sol-retry",
+ "tool": "codex",
+ "model": "gpt-6.1-sol",
+ "cap": 1200,
+ "pong": false,
+ "status": "RATE_LIMIT",
+ "rc": 1,
+ "elapsed": 3.1,
+ "out_bytes": 0,
+ "err_bytes": 99618,
+ "served_model": "gpt-6.1-sol",
+ "out": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p1/sol/product-kb-p1-sol-retry-out.txt",
+ "err": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p1/sol/product-kb-p1-sol-retry-err.txt",
+ "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p1/sol",
+ "effort_applied": true
+}

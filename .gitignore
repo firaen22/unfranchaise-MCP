@@ -29,4 +29,9 @@ dist/
 .review-gate/fable-*-run.log
 .review-gate/luna-*.log
 fixtures/captured/
+# Product knowledge RAG — operator corpus (see corpus/README.md, plan §4.2)
+/corpus/*
+!/corpus/README.md
+corpus/**/*
+!/corpus/README.md
 PLAN.md

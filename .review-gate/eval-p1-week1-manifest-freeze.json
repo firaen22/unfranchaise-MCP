@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-11-15T01:23:47.158Z",
+  "row_count": 10,
+  "rows": [
+    {
+      "source_id": "obs_7370808e3a2c",
+      "vault_rel_path": "02-B2B/restaurant/restaurant-business-plan.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "obs_3e979574738b",
+      "vault_rel_path": "02-B2B/restaurant/restaurant-shopcom-pitch.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "obs_0ac326d5cfe0",
+      "vault_rel_path": "Templates/b2b-prospect.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "obs_8a57369a1509",
+      "vault_rel_path": "Templates/downline-recruit.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_15_d742c815",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-15-product-ordering-procedures-and-policies/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_16_6132d3eb",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-16-product-sales-and-distribution/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_19_147887cf",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-19-advertising-and-promotion/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_20_cf106b70",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-20-internet-and-webcenter-policies/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_22_ba05b35d",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-22-preferred-customer-program-policies-and-procedures/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_25_8a3fd765",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-25-key-definitions-and-terminology/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    }
+  ]
+}

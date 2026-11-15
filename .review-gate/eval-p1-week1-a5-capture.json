@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-11-15T01:23:46.868Z",
+  "green": {
+    "args": {
+      "query": "advertising policy"
+    },
+    "isolation": {
+      "ok": true
+    }
+  },
+  "red_operational_leak": {
+    "args": {
+      "query": "UNF_CANARY_LEAK=1"
+    },
+    "isolation": {
+      "ok": false,
+      "reason": "unexpected_sentinel_in_knowledge_payload"
+    }
+  },
+  "red_cookie_token": {
+    "args": {
+      "query": "UNF_COOKIE=CFID=1"
+    },
+    "isolation": {
+      "ok": false,
+      "reason": "operational_secret_in_knowledge_payload"
+    }
+  },
+  "red_cart_html": {
+    "args": {
+      "query": "<div class=\"cart\">Private cart contents</div>"
+    },
+    "isolation": {
+      "ok": false,
+      "reason": "cart_html_in_knowledge_payload"
+    }
+  },
+  "red_operational_context": {
+    "args": {
+      "query": "advertising"
+    },
+    "operationalContext": "UNF_COOKIE=leak session cart snippet",
+    "isolation": {
+      "ok": false,
+      "reason": "operational_secret_in_generation_context"
+    }
+  },
+  "red_account_context": {
+    "args": {
+      "query": "policy"
+    },
+    "operationalContext": "{\"accountId\":\"u123\",\"orders\":[]}",
+    "isolation": {
+      "ok": false,
+      "reason": "account_payload_in_generation_context"
+    }
+  },
+  "pass_rule": "green ok; red sentinel args cookie cart op-context and account JSON context blocked",
+  "pass": true
+}

@@ -1,0 +1,53 @@
+{
+  "p1_022_alias": {
+    "eval_question": "超連鎖訂貨程序 (zh) equivalent to English manual ch15 ordering policy?",
+    "zh_query": "超連鎖訂貨程序",
+    "en_query": "product ordering procedures manual chapter 15",
+    "zh_hits": [
+      "manual_ch_15_d742c815#1",
+      "manual_ch_15_d742c815#2",
+      "manual_ch_15_d742c815#3",
+      "manual_ch_15_d742c815#6",
+      "manual_ch_15_d742c815#8",
+      "manual_ch_15_d742c815#10"
+    ],
+    "en_hits": [
+      "manual_ch_15_d742c815#1",
+      "manual_ch_15_d742c815#2",
+      "manual_ch_15_d742c815#3",
+      "manual_ch_15_d742c815#6",
+      "manual_ch_15_d742c815#8",
+      "manual_ch_15_d742c815#10"
+    ],
+    "production_question_hits": [
+      "manual_ch_15_d742c815#1",
+      "manual_ch_15_d742c815#2",
+      "manual_ch_15_d742c815#3",
+      "manual_ch_15_d742c815#5",
+      "manual_ch_15_d742c815#6",
+      "manual_ch_15_d742c815#8",
+      "manual_ch_15_d742c815#10"
+    ],
+    "aliasBridge": null,
+    "policy": "Freeze is English-only manuals; zh-only FTS may be empty; runKbSearch aliasBridge en ch15 on full eval question; host cites ch15#2 on p1-022",
+    "zh_ch15": true,
+    "full_ch15": true,
+    "en_ch15": true
+  },
+  "p1_020_version": {
+    "eval_question": "What is the current shipping policy version after superseded doc removed?",
+    "authoritative": "eval-p1-week1-a6-version-harness.json",
+    "obsolete_query": "obsolete shipping v1",
+    "current_query": "shipping policy version two",
+    "kb_get_obs_1": null,
+    "kb_get_cur_1": true,
+    "search_obsolete_ids": [
+      "cur_1"
+    ],
+    "search_current_ids": [
+      "cur_1"
+    ],
+    "kbGet_superseded_obs_1_null": true,
+    "note": "obs_1 not in index; obsolete FTS may still rank cur_1; get on obs_1 is null"
+  }
+}

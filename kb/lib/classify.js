@@ -7,6 +7,7 @@ const ORDER_URL = new RegExp(
   [
     `https?:\\/\\/[^\\s)\\]"']*${ORDER_HOST}[^\\s)\\]"']*(?:cart|checkout|order|Basket|addtocart)`,
     `(?:https?:\\/\\/)?${ORDER_HOST}[^\\s)\\]"']*(?:cart|checkout|order|Shopping)`,
+    `https?:\\/\\/(?:www\\.)?marketHongkong\\.com\\.hk\\/[^\\s)\\]"']+`,
     `https?:\\/\\/${ORDER_HOST}\\/?(?:\\s|$|[)"'\\]])`,
   ].join('|'),
   'i',

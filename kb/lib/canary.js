@@ -1,7 +1,8 @@
 /** A5 poisoned-context isolation check (plan §7.1). */
 
-const SENTINEL_RE = /UNF_CANARY_[A-Z0-9_]+/;
-const COOKIE_LEAK_RE = /\bUNF_COOKIE\b|CFID=|CFTOKEN=|session_secret/i;
+const SENTINEL_RE = /UNF_CANARY(?:_[A-Z0-9_]+)?=/i;
+const COOKIE_LEAK_RE =
+  /\bUNF_COOKIE\b|CFID=|CFTOKEN=|session_secret|JSESSIONID=|PHPSESSID=|auth_token=/i;
 const CART_HTML_RE =
   /<[^>]*\bclass=["'][^"']*cart|Private cart contents|<div[^>]*cart|checkout[-_]html/i;
 const ACCOUNT_PAYLOAD_RE =
@@ -34,6 +35,7 @@ export function scanPayloadForLeaks(serializedPayload, rawArgs = {}) {
   if (COOKIE_LEAK_RE.test(joined)) return { ok: false, reason: 'operational_secret_in_knowledge_payload' };
   if (CART_HTML_RE.test(joined)) return { ok: false, reason: 'cart_html_in_knowledge_payload' };
   if (ACCOUNT_PAYLOAD_RE.test(joined)) return { ok: false, reason: 'account_payload_in_knowledge_payload' };
+  if (CART_MCP_JSON_RE.test(joined)) return { ok: false, reason: 'cart_mcp_json_in_knowledge_payload' };
   return null;
 }
 

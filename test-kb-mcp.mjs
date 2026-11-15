@@ -49,6 +49,18 @@ const genMsgRed = await handleKbTool(
 assert.equal(genMsgRed.isError, true, 'cart json in generationMessages');
 
 // Green again after red
+const extraPoison = await handleKbTool('kb_search', {
+  query: 'advertising',
+  limit: 3,
+  context: '{"accountId":"12345","email":"x@y.invalid","orders":[]}',
+});
+assert.equal(extraPoison.isError, true, 'extra MCP args with account json blocked');
+
+const cartJsonQuery = await handleKbTool('kb_search', {
+  query: '{"lineCount":1,"retailTotalHkd":181,"bvTotal":16}',
+});
+assert.equal(cartJsonQuery.isError, true, 'cart mcp json in query blocked');
+
 const green2 = await handleKbTool('kb_get', { chunk_id: 'pol_1' });
 assert.equal(green2.isError, false, 'handler get green');
 

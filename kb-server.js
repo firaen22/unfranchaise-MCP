@@ -11,37 +11,11 @@ import {
   CallToolRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { handleKbTool } from './kb/lib/kb-handlers.js';
-
-const TOOLS = [
-  {
-    name: 'kb_search',
-    description:
-      'Search local product knowledge corpus (policy, Obsidian synthesis). Not for live BV/price/cart — use unfranchaise-MCP.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        query: { type: 'string', description: 'Search query' },
-        limit: { type: 'number', minimum: 1, maximum: 20 },
-      },
-      required: ['query'],
-    },
-  },
-  {
-    name: 'kb_get',
-    description: 'Fetch a knowledge chunk by chunk_id from local corpus.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        chunk_id: { type: 'string' },
-      },
-      required: ['chunk_id'],
-    },
-  },
-];
+import { KB_TOOL_DEFINITIONS } from './kb/lib/kb-tool-defs.js';
 
 const server = new Server({ name: 'unfranchaise-kb', version: '0.1.0' }, { capabilities: { tools: {} } });
 
-server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
+server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: KB_TOOL_DEFINITIONS }));
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const { name, arguments: args = {} } = req.params;

@@ -11,8 +11,8 @@
   "scripts": {
     "mcp": "node server.js",
     "mcp:kb": "node kb-server.js",
-    "test": "node pure-smoke.mjs && node test-form1000-optimise.mjs && node test-bugfix-safety-money.mjs && node test-bugfix-robustness.mjs && node test-kb-classify.mjs && node test-kb-search-query.mjs && node test-kb.mjs && node test-kb-mcp.mjs && node test-kb-merge.mjs",
-    "test:kb": "node test-kb-classify.mjs && node test-kb.mjs && node test-kb-mcp.mjs",
+    "test": "node pure-smoke.mjs && node test-form1000-optimise.mjs && node test-bugfix-safety-money.mjs && node test-bugfix-robustness.mjs && node test-kb-classify.mjs && node test-kb-search-query.mjs && node test-kb.mjs && node test-kb-mcp.mjs && node test-kb-merge.mjs && node test-kb-tool-definitions.mjs",
+    "test:kb": "node test-kb-classify.mjs && node test-kb.mjs && node test-kb-mcp.mjs && node test-kb-tool-definitions.mjs",
     "kb:ship-smoke": "node scripts/kb-p2-ship-smoke.mjs",
     "kb:ingest-obsidian": "node kb/cli.js ingest-obsidian",
     "kb:ingest-manuals": "node scripts/kb-ingest-manuals.mjs",

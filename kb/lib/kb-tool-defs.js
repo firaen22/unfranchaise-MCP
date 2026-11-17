@@ -1,0 +1,28 @@
+/** KB MCP tool inventory — single source for kb-server list_tools (A5). */
+
+export const KB_TOOL_DEFINITIONS = [
+  {
+    name: 'kb_search',
+    description:
+      'Search local product knowledge corpus (policy, Obsidian synthesis). Not for live BV/price/cart — use unfranchaise-MCP.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query' },
+        limit: { type: 'number', minimum: 1, maximum: 20 },
+      },
+      required: ['query'],
+    },
+  },
+  {
+    name: 'kb_get',
+    description: 'Fetch a knowledge chunk by chunk_id from local corpus.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        chunk_id: { type: 'string' },
+      },
+      required: ['chunk_id'],
+    },
+  },
+];

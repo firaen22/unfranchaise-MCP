@@ -30,6 +30,15 @@ dist/
 .review-gate/luna-*.log
 .review-gate/product-kb-*/**/_home_*/
 .review-gate/product-kb-*/**/.grok/
+# Delegation / aggressive review scratch (not gate artifacts)
+.review-gate/agy-*/
+.review-gate/delegation-p1/
+.review-gate/sol-aggressive-*/
+.review-gate/rag-advice-20*/
+.review-gate/eval-p2-*-aggressive*.md
+.review-gate/eval-p2-luna-aggressive*.md
+.review-gate/wait-sol-*.sh
+.review-gate/product-kb-*/sol-retry-scheduled.log
 fixtures/captured/
 # Product knowledge RAG — operator corpus (see corpus/README.md, plan §4.2)
 /corpus/*

@@ -154,6 +154,11 @@ const commercial = [
   'Discount is 20%',
   'Sixteen IBV per bottle.',
   'Sixteen IBV.',
+  'sixteen IBV',
+  'sixteen BV',
+  'sixteen UC',
+  'twenty-one IBV',
+  'Sixteen IBV',
   'SRP is listed as sixteen.',
   'The bottle is priced at sixteen Hong Kong dollars.',
   'The bottle is priced at 181 Hong Kong dollars.',
@@ -264,8 +269,9 @@ const benign = [
   'The SRP field in the compensation plan is defined without quoting live amounts.',
   '', null, undefined, NaN,
   'PBV allocation for SKU HK1410 is described without amounts.',
-  '16 one two three four five six seven GBV',
-  'PIBV one two three four five six seven 16',
+  // >6 padding words; avoid trailing spelled-amount+label (e.g. "seven GBV") which is commercial.
+  '16 alpha beta gamma delta epsilon zeta eta GBV',
+  'PIBV alpha beta gamma delta epsilon zeta eta 16',
   'The GBV value is null; the PIBV value is undefined; SRP is NaN.',
 ];
 for (const s of benign) {

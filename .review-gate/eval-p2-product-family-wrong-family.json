@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-11-17T07:52:49.536Z",
+  "method": "p1-019 trap query blocked by detectKbSearchBlockedQuery; direct kb_get still returns labeled non-commercial harness text",
+  "harness_corpus": "/var/folders/wf/s5ctj32x6zd9p52g7kwphx7h0000gn/T/unf-kb-family-NTvoMS",
+  "p1_019_trap_query": "What is the BV of Isotonix on the US shop.com consumer site?",
+  "detectKbSearchBlockedQuery": true,
+  "kb_search_trap_hits": [],
+  "runKbSearch_trap": {
+    "hits": [],
+    "empty": true
+  },
+  "fts_probe_query": "Isotonix shop.com BV",
+  "fts_probe_hits": [
+    "us_iso#0"
+  ],
+  "us_chunk": {
+    "chunk_id": "us_iso#0",
+    "claim_class": "operator_synthesis",
+    "text_prefix": "Isotonix OPC-3 US shop.com consumer storefront scope; wrong product family for HK MCP numeric answers.",
+    "kb_get_ok": true
+  },
+  "hk_family_chunk_retrievable": true,
+  "host_rule": "wrong-family rows must not cite KB numeric/commercial evidence; use MCP scope abstain (p1-019)",
+  "p1_019": {
+    "category": "wrong-family",
+    "pass_fail": "pass",
+    "cited_chunk_ids": "",
+    "observed_outcome": "US shop.com consumer BV out of HK MCP family; no KB numeric cite; scope abstain",
+    "kb_cite_empty": true,
+    "abstains_out_of_family": true
+  },
+  "pass": true
+}

@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-11-15T01:23:44.333Z",
+  "live": true,
+  "protocol": "Simulated host chat: prior assistant message contains unf_cart_view JSON; kb_search must reject when generationMessages include cart MCP blob",
+  "prior_tool_message": "Tool unf_cart_view returned: {\"lineCount\":1,\"retailTotalHkd\":181,\"bvTotal\":16}",
+  "clean_generation_messages": {
+    "isError": false,
+    "capture": {
+      "query": "manual chapter 19 social advertising",
+      "limit": 4
+    }
+  },
+  "leaked_generation_messages": {
+    "isError": true,
+    "reason_prefix": "A5 isolation failed: cart_mcp_json_in_generation_context"
+  },
+  "pass": true
+}

@@ -1,0 +1,17 @@
+{
+ "name": "product-kb-p0-sol",
+ "tool": "codex",
+ "model": "gpt-6.1-sol",
+ "cap": 1200,
+ "pong": false,
+ "status": "PASS",
+ "rc": 0,
+ "elapsed": 43.4,
+ "out_bytes": 1694,
+ "err_bytes": 36462,
+ "served_model": "gpt-6.1-sol",
+ "out": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p0/sol/product-kb-p0-sol-out.txt",
+ "err": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p0/sol/product-kb-p0-sol-err.txt",
+ "cwd": "/Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p0/sol",
+ "effort_applied": true
+}

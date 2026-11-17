@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-11-17T07:52:48.876Z",
+  "protocol": "Host stub: operational turn text must not reach kb generation; host passes stripped UNF_KB_OP_CONTEXT + clean kb_search args",
+  "prior_operational_turn": "Operational turn: unf_cart_view {\"lineCount\":1,\"retailTotalHkd\":181} unf_get_pro",
+  "handler_path": {
+    "green_isError": false,
+    "red_isError": true
+  },
+  "mcp_stdio_path": {
+    "green_isError": false,
+    "red_isError": true,
+    "red_blocked": true
+  },
+  "plan_alignment": "PLAN §7.1 P2 gate: evidence is kb invocation boundary (args + UNF_KB_OP_CONTEXT + generationMessages on handleKbTool/MCP stdio), not sidecar LLM generate. Host must strip operational turns before populating those fields; eval-p2-a5-embedded-generation.json is the generation-message matrix.",
+  "accepts_sidecar_gate": "When kb MCP has no generate tool, outbound LLM prompt capture is replaced by embedded-generation matrix + host-generation stub (dual reviewers on this revision).",
+  "pass": true
+}

@@ -13,6 +13,41 @@ Captured from signed-in browses of `hk.unfranchise.com`. No payment submit and n
 | Form 1000 | 我的帳戶 → 網上表格 → 1000表格 (also 925/1001合併表格, 續約選項) |
 | Sales receipt inventory | 事業 → 我的顧客 → 銷售收據輸入 (`moe.unfMOEPCSelect`, then `moe.unfMOEPCSelectU`). On-hand stock, not the Form 1000 unplaced-order list |
 | Volume reports | 事業 → 報告 → report picker |
+| UnFranchise Manual (policy) | **Off-portal**, public read: `hkg-eng.documents.unfranchise.com` / `hkg-chi.documents.unfranchise.com` — chapter index, no cookie. Full map [DOCUMENTS.md](./DOCUMENTS.md). Portal **資源 → 超連鎖手冊** opens **`http://hkg-chi.documents.unfranchise.com/`** (signed-in nav, 2026-11-14) |
+| UFO storefront / Shop Global | **事業 → 服務 → 網站管理** `portal.unfSummary` — per-region vanity URLs on account (example pattern `www.marketHongkong.com.hk/<slug>`, `www.shopglobal.com/<slug>`). Not the wholesale catalog (`shopping.unfOrdering`) |
+
+---
+
+## 資源 (Resources) — signed-in nav map
+
+Captured **2026-11-14** on `shopping.unfOrdering` / `portal.unfSummary` (session in browser; no PII beyond public slug pattern `OPPA226` on portal page).
+
+| Menu item (中文) | URL / action |
+|---|---|
+| 會議活動行事曆 | `calendar.events-search` |
+| 全球會議聯盟系統 → 會議搜尋 | `meetings.unfMeetingSearch` |
+| → 通訊錄 | `meetings.unfDirectorySearch` |
+| → 提交會議 | `meetings.unfSubmitMeeting` |
+| → 我的會議活動管理 | `meetings.unfEventManager` |
+| → 演講者個人檔案 | `meetings.unfSpeakerProfileLanding` |
+| Zoom重溫在YouTube | YouTube playlist `PLD_fY5YxYNdGS6sXIIupC4VFxWAd1VR1E` |
+| 學習中心 | `main.unfPage&name=LearningCenterTableofContents` |
+| 支援資料 | `media.unfRespMediaSearchSM` (HKG, zh-Hant-hk) |
+| 超連鎖錄音檔 | `media.unfRespMediaSearch` (HKG) |
+| 報名參觀公司總部 | `events.unfCorporateTourSignUp` |
+| **超連鎖手冊** | **`http://hkg-chi.documents.unfranchise.com/`** (external) |
+| 規章管理辦公室 | `main.unfPage&name=ComplianceCorner_TableofContents` |
+| Blog.UnFranchise.com | `https://blog.unfranchise.com/` |
+| 線上訓練 → 成功五要訣評量 | `shoppingAnnuity.unfBasicFive` |
+| → 授證訓練員(CT)管理 | `learning.unfECCTLanding` |
+| 社群媒體 → Facebook | `facebook.com/markethongkong` |
+| → Instagram | `instagram.com/markethongkong` |
+| → YouTube | `youtube.com/markethongkongvideos` |
+| 聯絡我們/公司資訊 | `services.unfCustLanding&landingID=unfContactUs` |
+
+**Shop / consumer surface (this account):** `portal.unfSummary` lists **`www.marketHongkong.com.hk/<slug>`** and **`www.shopglobal.com/<slug>`** plus regional `marketTaiwan`, `marketSingapore`, etc. No `hk.shop.com` link on this screen. Treat legacy **SHOP.COM** training separately from current portal hostnames ([DOCUMENTS.md](./DOCUMENTS.md), product-KB plan).
+
+**Note:** `portal.unfSummary` showed error banner `(CF-2)` while still rendering portal rows — retry before automating.
 
 ---
 

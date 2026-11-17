@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-11-17T08:11:20.328Z",
+  "protocol": "kb-server passes UNF_KB_OP_CONTEXT (same as kb/cli.js); generationMessages only on embedded handleKbTool host path",
+  "handler_generation_messages": {
+    "clean_isError": false,
+    "red_cart_json_isError": true,
+    "pass": true
+  },
+  "handler_op_context": {
+    "red_sentinel_cart_snippet_isError": true,
+    "red_cart_items_div_isError": true,
+    "pass": true
+  },
+  "mcp_cli_env_op_context": {
+    "green_exit": 0,
+    "green_stdout_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_19_147887cf#2\",\n    \"source_id\": \"manual_ch_19_",
+    "red_exit": 1,
+    "red_stderr_prefix": "A5 isolation failed: operational_secret_in_generation_context\n",
+    "pass": true
+  },
+  "last_capture_args": {
+    "query": "advertising policy",
+    "limit": 8
+  },
+  "pass": true
+}

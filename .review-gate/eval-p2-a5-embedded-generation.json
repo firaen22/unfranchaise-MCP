@@ -1,0 +1,749 @@
+{
+  "generated_at": "2026-11-17T07:52:49.092Z",
+  "protocol": "Embedded generation poison matrix (handleKbTool = kb-server path)",
+  "results": [
+    {
+      "id": "phrase_free_portal_tool",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "unnamed_operational_tool",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "clean_kb_tool_quoted_braces",
+      "expectError": false,
+      "isError": false,
+      "reason_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_15_d742c815#4\",\n    \"source_id\": \"manual_ch_15_",
+      "ok": true
+    },
+    {
+      "id": "phrase_free_portal_function",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "unnamed_operational_function",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "clean_kb_function_quoted_braces",
+      "expectError": false,
+      "isError": false,
+      "reason_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_15_d742c815#4\",\n    \"source_id\": \"manual_ch_15_",
+      "ok": true
+    },
+    {
+      "id": "phrase_free_portal_Function",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "unnamed_operational_Function",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "clean_kb_Function_quoted_braces",
+      "expectError": false,
+      "isError": false,
+      "reason_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_15_d742c815#4\",\n    \"source_id\": \"manual_ch_15_",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_output_\"Ready\"",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_output_\"\"",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_output_null",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_output_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_text_\"Ready\"",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_text_\"\"",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_text_null",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_text_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_result_\"Ready\"",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_result_\"\"",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_result_null",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_hits_extra_result_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_search_hit_extra_output",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "function_call_output_ready",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: function_call_output_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "user_tool_result_sibling_output",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: tool_result_extra_field_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_get_sibling_output",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_extra_output_field_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "bare_context_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "flattened_generation_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_arguments_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "bare_context_1",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "flattened_generation_1",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_arguments_1",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "bare_context_2",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_status_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "flattened_generation_2",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_status_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_arguments_2",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "bare_context_3",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_status_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "flattened_generation_3",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_status_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_arguments_3",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_prose_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "bare_context_4",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "flattened_generation_4",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_arguments_4",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "bare_context_5",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "flattened_generation_5",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_arguments_5",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "bare_context_6",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "flattened_generation_6",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_arguments_6",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "clean_kb_hits_wrapper",
+      "expectError": false,
+      "isError": false,
+      "reason_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_15_d742c815#4\",\n    \"source_id\": \"manual_ch_15_",
+      "ok": true
+    },
+    {
+      "id": "mixed_text_cart_object",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_mcp_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "non_string_text_cookie_object",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "operational_context_object",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_mcp_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "generation_messages_string",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "generation_messages_string_array",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_search_hit_doc_title_poison",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_get_ellipsis_short_fragment_poison",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_get_ellipsis_second_fragment_poison",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_get_corpus_mismatch",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: kb_tool_role_poisoned_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "encoded_portal_tool_ctx_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "encoded_portal_tool_query_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "encoded_ctx_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "encoded_query_0",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "encoded_ctx_1",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "encoded_query_1",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "encoded_ctx_2",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_html_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "encoded_query_2",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_html_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "encoded_ctx_3",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "encoded_query_3",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_knowledge_payload",
+      "ok": true
+    },
+    {
+      "id": "tool_result_output_sibling",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: tool_result_extra_field_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "plain_object_generation",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "generic_account_json_context",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "snake_case_account_context",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "account_id_camelcase_variant",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "account_id_titlecase_variant",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "distid_lowercase_variant",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "structured_session_cookie_json",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "numeric_session_cookie_json",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_output_field_portal",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_portal_array_json",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_portal_messages_wrapper",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_portal_messages_stringified_element",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_function_call_output",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: function_call_output_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_truncated_portal_line",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: unparseable_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_portal_prose_wrapped",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_portal_multiline_json",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "op_context_portal_role_titlecase",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_decoy_kb_name_metadata",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_cross_message_name_bleed",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_nested_content_name_decoy",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_audit_note_decoy",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "kb_search_tool_result_operational_prose",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: unresolved_tool_result_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_provenance_name_decoy_first",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_details_name_decoy_first",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_decoy_metadata_first",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "customer_object_context",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "dist_id_object_context",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: account_payload_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "bare_cart_status_json_context",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_status_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "bare_cart_empty_only_context",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_empty_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "unresolved_tool_result_request_failed",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: unresolved_tool_result_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "cart_items_div_id",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_html_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "cart_items_div_id_unquoted",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_html_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "tool_role_cart_message",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: non_kb_tool_role_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "openai_tool_calls_array",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_mcp_tool_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "legacy_function_call_cart",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "metadata_poison_sibling",
+      "expectError": true,
+      "isError": true,
+      "reason_prefix": "A5 isolation failed: cart_mcp_json_in_generation_context",
+      "ok": true
+    },
+    {
+      "id": "clean_control",
+      "expectError": false,
+      "isError": false,
+      "reason_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_15_d742c815#4\",\n    \"source_id\": \"manual_ch_15_",
+      "ok": true
+    },
+    {
+      "id": "clean_kb_tool_role_history",
+      "expectError": false,
+      "isError": false,
+      "reason_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_15_d742c815#4\",\n    \"source_id\": \"manual_ch_15_",
+      "ok": true
+    },
+    {
+      "id": "clean_kb_tool_result_block",
+      "expectError": false,
+      "isError": false,
+      "reason_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_15_d742c815#4\",\n    \"source_id\": \"manual_ch_15_",
+      "ok": true
+    }
+  ],
+  "pass": true
+}

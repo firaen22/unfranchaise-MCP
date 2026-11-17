@@ -1,0 +1,30 @@
+Verdict: PROCEED
+
+No Critical or Major findings. This lens is the kb sidecar (`kb_search`, `kb_get` only) against A1–A6 and the English-primary addendum. Test and oracle results below are from the inlined packet, not a re-run.
+
+**Critical**
+
+None.
+
+**Major**
+
+None.
+
+**Nits**
+
+1. **A6 — frozen retrieval column drifted on p1-029.** `eval-p2-retrieval-live-traces.json` sets `all_cite_ok: true` and `all_retrieval_columns_match_run: false`. The fresh run returns `manual_ch_22_ba05b35d#10` where the frozen sheet has `#8`. The cited id `#5` is still in both lists, and the training excerpt still supports the PC ordering claim. Not a hard blocker. The sheet is stale on one uncited id.
+
+2. **A1 / wrong-family edge — block is a phrase list, not `product_family`.** `detectKbSearchBlockedQuery` only treats “BV” plus “us shop.com” as the p1-019 trap. `eval-p2-product-family-wrong-family.json` shows the exact row empty and `pass_fail=pass`, and also shows the probe `Isotonix shop.com BV` returning `us_iso#0` with `kb_get_ok: true`. That chunk is `operator_synthesis` and has no BV number, so it is not a `commercial_numeric` escape. Eligibility never reads `product_family` (freeze rows are `null`).
+
+3. **A5 — `npm run test:kb` is narrower than plan step 2.2.** `package.json` runs only `test-kb.mjs`. Poisoned-context coverage is in `test-kb-mcp.mjs`, which the inlined `npm test` log marks passed. Both ship commands in the packet are green. Stdio `kb-server.js` passes only `UNF_KB_OP_CONTEXT`, not `generationMessages`. That matches the sidecar addendum: the embedded matrix plus the host stub are the generation boundary, and the 2026-11-17 transport artifact blocks a red op-context on both `kb_search` and `kb_get`.
+
+**Acceptance**
+
+- **A1.** Freeze has `active_forbidden_claim_class_count: 0`. The classifier oracle is green, including `BV: sixteen`, `SRP: sixteen`, `SRP equals one hundred eighty-one`, `批發價：181`, and `售價每瓶181元`. Spelled-Chinese sentence prices stay deferred under the addendum. Numeric and order traps have empty kb cites. The manual ch25 Business Volume definition stays retrievable (`retrieve_guard_blocks: false`).
+- **A2.** Supported cites sit inside retrieval, and the inlined chapter excerpts support the host answers (ch19 media rule, ch20 point of sale, ch15 order policy, ch16 70% rule, ch22 PC, ch25 BV definition).
+- **A3.** Abstain rows p1-009, p1-010, and p1-026 are empty of kb cites. p1-010 does not invent a health claim. Empty-corpus harness returns 0 hits.
+- **A4.** p1-016, p1-017, and p1-029 use `training` and `live` labels. Commercial figures stay under `live`.
+- **A5.** Tool list is `kb_get` and `kb_search` only. Canary red cases fail closed (cookie, cart HTML, cart JSON, account JSON). Embedded-generation rows are `ok: true`. Env sanitize drops `UNF_COOKIE` / `CFID=` except `UNF_KB_OP_CONTEXT`, which the handler rejects.
+- **A6.** Sheet is 30/30 `pass_fail=pass`. Version and empty-corpus harnesses are green. Inlined `npm test` and `npm run test:kb` both report assertions passed.
+
+Ship still needs the other family’s PROCEED on this same packet.

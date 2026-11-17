@@ -1,0 +1,1366 @@
+{
+  "generated_at": "2026-11-17T08:11:20.653Z",
+  "method": "Plan §7.1 ingest oracle: mislabeled operator_synthesis + commercial manifest title blocked at ingest; signed price spans classify commercial; full fixture oracle green",
+  "independent_span_includes_detect": {
+    "rows": [
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "1,288",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": true,
+        "detect_on_includes_string": false,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "批發價：181",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "超連鎖成本價：181",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV equals 16",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "業績點數：16",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "IBV percentage of 8.8397",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "PBV: 50",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV: sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "IBV is sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP equals one hundred eighty-one",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP: sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP = sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price = sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Business Volume: sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Business Volume is sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP amounts to sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV points: sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP value equals sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP: HKD sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price: minus sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price: £sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "IBV points equal sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP: negative sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV is negative sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV = HKD sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP: a hundred and eighty-one",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP of sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV has a value of sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price: HKD minus sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP value: sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP: a thousand",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price = HKD minus sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP totals sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price amounts to minus sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV equals a hundred",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP value is HKD sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP amounts to HKD sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price = a hundred",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV = a hundred",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "售價售價１２８８",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "IBV points are sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price: zero",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV: zero",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP: zero",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP is sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP is a hundred.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP will be sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP is HKD minus sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP amounts to a hundred.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP = HKD a hundred",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP equals £sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP:​sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP has been set to sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The retail price has been reduced to sixteen Hong Kong dollars.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV points = sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP value = sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP is at least sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Wholesale price is sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Wholesale cost: sixteen",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Wholesale cost of HKD sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Discount: twenty percent.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Discount is twenty percent.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Discount is 20%",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Sixteen IBV per bottle.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP is listed as sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The bottle is priced at sixteen Hong Kong dollars.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The bottle is priced at 181 Hong Kong dollars.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "This item earns sixteen IBV.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "This SKU has sixteen IBV.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "This product costs 181 Hong Kong dollars per bottle.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Discount: 20%",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Discount: 20 percent.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The bottle costs £16.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The bottle costs sixteen pounds.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The bottle costs 16 pounds.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The bottle sells for sixteen pounds.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP ranges from sixteen to twenty.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Save twenty percent on this product.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "The recommended retail price per bottle for customers in Hong Kong is sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Manage recurring orders: /index.cfm?action=orders.unfManageUniversalAuto",
+        "kind": "order_url",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "This product sells for sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP of a hundred",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP costs sixteen.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "This product costs sixteen Hong Kong dollars per bottle.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "This product costs twenty-one Hong Kong dollars per unit.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "This item earns twenty-one IBV.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price is zero.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP amounts to 181",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price totals -29.99",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "BV comes to 0",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "售價每瓶181元",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP: one hundred eighty-one Hong Kong dollars.",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "IBV was 16",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "UC were -0.5",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "PBV allocation on the current official schedule 50",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "0 allocated units contribute toward GBV",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "PIBV one two three four five six 16",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "業績點數為１６",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "獎勵業績點數本次為0",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "16 是本次業績點數",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price equals 181",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP value is 181",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP value equals 181",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "SRP value of 181",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "Price (USD): 29.99",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "IBV points equal 16",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "### HK1410",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": true,
+        "detect_on_includes_string": false,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-policy.md",
+        "includes": "shopglobal.com/alice",
+        "kind": "order_url",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-manual.html",
+        "includes": "Shopping/Cart",
+        "kind": "order_url",
+        "requires_chunk_context": true,
+        "detect_on_includes_string": false,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-manual.html",
+        "includes": "orders.unfBillShip",
+        "kind": "order_url",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-manual.html",
+        "includes": "orders.productReorder",
+        "kind": "order_url",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-manual.html",
+        "includes": "autoship.unfAutoShip",
+        "kind": "order_url",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      },
+      {
+        "fixture": "mixed-manual.html",
+        "includes": "BV | 12.5",
+        "kind": "commercial_numeric",
+        "requires_chunk_context": false,
+        "detect_on_includes_string": true,
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  "manual_production_heading_oracle": {
+    "paragraph": {
+      "text": "## BV\n### HK1410\n16",
+      "claim_class": "commercial_numeric"
+    },
+    "table": {
+      "text": "## BV\n### HK1410\n16",
+      "claim_class": "commercial_numeric"
+    },
+    "pass": true
+  },
+  "classifier_red_signed_edges": {
+    "spans": [
+      {
+        "span": "BV: +16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "{\"bvPoints\":\"+16\"}",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "{\"ibvPercent\":\"+8.8397\"}",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP: +181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price: +29.99",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "售價：+181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "售價為181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "售價：一百八十一港元",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "售價每瓶181元",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP amounts to 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP: one hundred eighty-one Hong Kong dollars.",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV value: 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "IBV percentage: 8.8397%",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV value = 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Business Volume: +16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Business Volume = 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "UC value: 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "批發價=181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "超連鎖成本價：181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "UC (HK$): 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV: .5",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP: .5",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price: €29.99",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV = .5",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "IBV = .5",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "UC = .5",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price: £29.99",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price = €29.99",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price is £29.99",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV value is 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "The IBV points are 16.",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "The IBV percentage is 8.8397%.",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP = €181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV value equals 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Business Volume (BV) = 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "UC (HKD) = 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP equals 181.",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price equals 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price is EUR 29.99",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "IBV: -.5",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price (USD): 29.99",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "IBV points equal 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "UC: €181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Price: ¥181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "Business Volume is +16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "IBV points equals 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV points of 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "BV value of 16",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP value is 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP value equals 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP value of 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "UC (HK$) = 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      },
+      {
+        "span": "SRP (HK$) = 181",
+        "detectCommercialNumeric": true,
+        "classified": "commercial_numeric",
+        "red_if_stored_as_operator_synthesis_only": false
+      }
+    ],
+    "pass": true
+  },
+  "deliberate_ingest_mislabel_red": {
+    "manifest_title": "SRP: +181",
+    "chunk": {
+      "chunk_id": "mislabel_title_fallback",
+      "source_id": "oracle_mislabel_title",
+      "text": "Operator pitch without inline price table.",
+      "claim_class": "operator_synthesis",
+      "doc_version": "oracle-mislabel"
+    },
+    "chunkRetrievalEligible": false,
+    "production_index_count": 0,
+    "kb_get_null": true,
+    "kb_search_empty": true,
+    "pass": true
+  },
+  "deliberate_ingest_text_mislabel": {
+    "text": "Retail note. SRP: +181 ends promo window.",
+    "classified": "commercial_numeric",
+    "retrieve_guard_blocks": true,
+    "pass": true
+  },
+  "classifier_oracle_observed_red": {
+    "injected_defect": "detectCommercialNumeric forced false for 批發價：181 rule",
+    "independent_classifier_failures": [
+      "classifier_only_miss:批發價：181"
+    ],
+    "pass": true
+  },
+  "classifier_oracle_observed_green": {
+    "detectCommercialNumeric": true,
+    "independentOraclePass": true,
+    "pass": true
+  },
+  "classifier_oracle_green_phase": {
+    "independentOraclePass": true,
+    "independentOracleFailures": [],
+    "pass": true
+  },
+  "a5_unicode_account_prose": {
+    "context": "Tool returned: {\"\\u0061ccountId\":\"u123\"}",
+    "isolation_ok": false,
+    "reason": "account_payload_in_generation_context",
+    "pass": true
+  },
+  "a5_generic_account_object": {
+    "context": "{\"account\":{\"id\":\"u123\",\"name\":\"Example\"}}",
+    "isolation_ok": false,
+    "reason": "account_payload_in_generation_context",
+    "pass": true
+  },
+  "a5_bare_cart_status_json": {
+    "context": "{\"status\":200,\"empty\":true}",
+    "isolation_ok": false,
+    "reason": "cart_status_json_in_generation_context",
+    "pass": true
+  },
+  "manual_0_4_bv_definition_guard": {
+    "chunk_id": "manual_ch_25_8a3fd765#1",
+    "doc_version": "manual-0.4",
+    "retrieve_guard_blocks": false,
+    "pass": true
+  },
+  "poisoned_source_id_guard": {
+    "source_id": "https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering",
+    "manifest_validate_ok": false,
+    "retrieve_guard_blocks": true,
+    "pass": true
+  },
+  "deliberate_ingest_bv_value_red": {
+    "text": "Policy framing only. BV value: 16 noted in margin.",
+    "classified": "commercial_numeric",
+    "chunkRetrievalEligible": false,
+    "production_index_count": 0,
+    "kb_get_null": true,
+    "kb_search_empty": true,
+    "pass": true
+  },
+  "classifier_oracle_green": {
+    "stats": {
+      "indexed": 5,
+      "total": 41
+    },
+    "forbiddenChunkCount": 36,
+    "pitchRetrieved": true,
+    "commercialSearchEmpty": true,
+    "policyHtmlRetrieved": true,
+    "flattenedBvClassified": true,
+    "forbiddenGetBlocked": true,
+    "forbiddenSearchBlocked": true,
+    "indexedForbiddenChunkIds": [],
+    "productionIndexExcludesForbidden": true,
+    "independentOraclePass": true,
+    "independentOracleFailures": []
+  },
+  "pass": true
+}

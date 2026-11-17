@@ -1,0 +1,7 @@
+npm run test:kb exit=0
+Input: manifest stale_obsolete superseded_by stale_current; chunk obs_1 text obsolete shipping v1
+Expected: kbGet(obs_1) null; indexed chunk cur_1 shipping v2 only
+Observe: npm run test:kb asserts kbGet superseded manifest rejected
+
+test-kb.mjs: all assertions passed
+

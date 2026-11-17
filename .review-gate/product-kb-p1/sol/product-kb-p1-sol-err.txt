@@ -1,0 +1,1578 @@
+OpenAI Codex v0.169.0
+--------
+workdir: /Users/yauch/Documents/unfranchaise/.review-gate/product-kb-p1/sol
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 01a1dccd-ae31-7e50-baae-c18276dd0791
+--------
+user
+# Product KB gate — p1
+
+You are a **reviewer**, not the implementer. Reply with a first line: **Verdict: PROCEED | FIX | HOLD**.
+
+Then: Findings (Critical → Nits), each mapped to plan acceptance A1–A6 or gate criteria where relevant.
+
+## Contract
+- Cross-family advisory/plan review; grade claims against inlined artifacts only.
+- Do not invent repo files; if missing, say HOLD and name what is needed.
+
+## Task
+Review Phase 1 completion: routing doc, 30-row eval results, failure log.
+
+Required: Do results meet A1–A6 at stated thresholds? Should operator proceed to Phase 2 kb MCP ship?
+
+If eval attachment missing, Verdict: HOLD and say what to attach.
+
+## PRODUCT-KB routing (if present)
+# Product knowledge routing (operator)
+
+Companion to [`.review-gate/PLAN-product-kb-rag.md`](./.review-gate/PLAN-product-kb-rag.md). Not loaded by MCP.
+
+## Knowledge retrieval (primary)
+
+- **Target:** local `kb` MCP — `kb_search`, `kb_get` over gitignored `corpus/` (see plan §4.0).
+- **No NotebookLM required** at runtime for grok bot or shipped workflow.
+
+## Notebook (optional benchmark)
+
+- **ID:** `784c829c-ea44-4d19-b040-cc6edca5ae19` — compare answers on same eval rows only.
+- **MCP / `nlm`:** optional for operator; not a gate dependency.
+
+## Obsidian second brain (Drive)
+
+Operator vault (Google Drive sync on Mac):
+
+```text
+UNF_OBSIDIAN_VAULT_SHOPCOM=
+  …/My Drive/secondbrain/SHOPCOM
+```
+
+Default if unset:  
+`/Users/yauch/Library/CloudStorage/GoogleDrive-ilovegemini31@gmail.com/My Drive/secondbrain/SHOPCOM`
+
+| Folder | Ingest to `corpus/`? | `claim_class` |
+|--------|----------------------|---------------|
+| `00-Dashboard/` | **No** (pipeline tables — stale fast) | — |
+| `01-Business-Plan/` | **Post-P1** only | `operator_synthesis` |
+| `01-Business-Plan/product-catalog*.md` | **Never** (`ingest_allowed=false`) | — |
+| `02-B2B/` | **Yes (0.8)** | `operator_synthesis` |
+| `03-Downline/` | **Post-P1** when non-empty | `operator_synthesis` |
+| `Templates/` | **Yes (0.8)** | `operator_synthesis` |
+
+**0.8 allowlist:** mirrors plan **§4.3** (authoritative). Do not widen folders without plan edit.
+
+**Flow:** vault markdown → ingest script → `manifest.jsonl` + `chunks.jsonl` → local index → `kb_search`. Grokbot does **not** read the vault path at runtime.
+
+Resolve Obsidian `[[wikilinks]]` on ingest; store `vault_rel_path` in chunk metadata.
+
+## Build order (operator)
+
+1. **0.7-lite** — `corpus/consolidation.md` §1 = authority stack in plan §6.3 (MCP → FINDINGS → manual → Obsidian → training → social).
+2. **0.8 Second brain** — ingest **`02-B2B/` + `Templates/` only** → manifest + chunks → index v0 → interim `kb search`/`kb get` smoke (plan §5).
+3. **Enhancement (0.4)** — `npm run kb:ingest-manuals` (ch 15,16,19,20,22,25); merges with Obsidian corpus; raw HTML → `corpus/raw/manual/`.
+4. **Eval** — template [.review-gate/eval-p1-week1.csv](./.review-gate/eval-p1-week1.csv).
+5. **Post-P1 (0.9)** — curated training, X, other vault folders; new freeze before scoring.
+
+Full consolidation rules: plan [§6.4](./.review-gate/PLAN-product-kb-rag.md). Do not index all 466 NLM YouTube sources on v0.
+
+## Routing (quick)
+
+| If the question needs… | Use |
+|------------------------|-----|
+| Live SKU, BV, IBV, UC, SRP, price, promos, cart, Form 1000 | `unfranchaise-MCP` + [FINDINGS.md](./FINDINGS.md) |
+| Policy / ordering / ads / PC rules | `kb_search` / `kb_get` ([plan §6.3](./.review-gate/PLAN-product-kb-rag.md), [DOCUMENTS.md](./DOCUMENTS.md)) |
+| Talk tracks (when chunked into corpus) | `kb_search` |
+| Dated corporate news (e.g. SHOP.COM migration) | `kb_search`/`kb_get` if chunk in `corpus/` (post-P1 ingest); else abstain — **not** for order URLs |
+
+**Hard rule:** Numbers and “where to click to order” → MCP/FINDINGS only.
+
+## X (Twitter) allowlist
+
+Only **verified** accounts you add here may be ingested via **single-post URLs**. No timeline/hashtag imports.
+
+| Handle | Verified? | Notes |
+|--------|-----------|--------|
+| *(X not in 資源 → 社群媒體; add corporate X if you have URL)* | | Portal lists FB/IG/YT only [FINDINGS § 資源] |
+| `https://www.facebook.com/markethongkong` | y | Ingest specific posts via URL if needed |
+| `https://www.instagram.com/markethongkong` | y | |
+| `https://www.youtube.com/markethongkongvideos` | y | Overlaps NLM notebook sources |
+
+**Ingest one post:** allowlist → `manifest.jsonl` with `ingest_allowed=true` only after **post-P1 freeze** (plan 0.9); until then inventory-only (`ingest_allowed=false`, no `chunks.jsonl`). **Optional mirror:** NotebookLM — benchmark only.
+
+Label mentally: `claim_class=official_social`. Posts before **2026-09-28** about `shop.com` → historical context only.
+
+## Eval sheet
+
+30-row template: see plan §7.1. Store filled CSV outside git or in `.review-gate/` when ready.
+## Eval attachment
+id,category,question,expected_route,permitted_evidence,expected_outcome,retrieved_chunk_ids,cited_chunk_ids,observed_outcome,pass_fail,failure_class,preflight_retrieval,preflight_notes,scored_at
+p1-001,supported,What does the manual say about UFO advertising claims on social media?,kb,manual ch19 + cited chunk_id,supported_answer_with_citation,manual_ch_19_147887cf#2|manual_ch_19_147887cf#3|manual_ch_19_147887cf#10|manual_ch_19_147887cf#5|manual_ch_19_147887cf#6|manual_ch_19_147887cf#7|manual_ch_19_147887cf#8|manual_ch_19_147887cf#11,manual_ch_19_147887cf#3,Manual ch19 SEC.2 MEDIA: radio TV Internet advertising and public appearances to publicize Market Hong Kong compensation program or home-based business opportunity require prior written company approval,pass,,pass,hits_8_chapter_ok,2026-11-15T01:23:00.744Z
+p1-002,supported,What are Hong Kong internet / WebCenter policies for distributors?,kb,manual ch20,supported_answer_with_citation,manual_ch_20_cf106b70#1|manual_ch_20_cf106b70#2|manual_ch_20_cf106b70#4|manual_ch_20_cf106b70#5|manual_ch_20_cf106b70#6|manual_ch_20_cf106b70#7|manual_ch_20_cf106b70#11|manual_ch_20_cf106b70#14|manual_ch_20_cf106b70#3|manual_ch_20_cf106b70#8,manual_ch_20_cf106b70#2,Manual ch20 SEC.1: Market Hong Kong Custom Website and maWebCenters are the only permitted internet points of sale; UFOs may not supply products to non-UFOs for internet resale,pass,,pass,hits_10_chapter_ok,2026-11-15T01:23:00.744Z
+p1-003,supported,How does the manual describe product ordering procedures (policy not live URL)?,kb,manual ch15,supported_answer_with_citation,manual_ch_15_d742c815#1|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8|manual_ch_15_d742c815#10,manual_ch_15_d742c815#1,Manual ch15 SEC.1: submitted product orders cannot be changed by home office except data-processing errors; policy not a live order URL,pass,,pass,hits_7_chapter_ok,2026-11-15T01:23:00.744Z
+p1-004,supported,What is the 70% rule context in product sales and distribution?,kb,manual ch16,supported_answer_with_citation,manual_ch_16_6132d3eb#1|manual_ch_16_6132d3eb#2|manual_ch_16_6132d3eb#3|manual_ch_16_6132d3eb#4|manual_ch_16_6132d3eb#6|manual_ch_16_6132d3eb#7|manual_ch_16_6132d3eb#5,manual_ch_16_6132d3eb#3,Manual ch16 SEC.2: minimum 70 percent of products must be sold to retail customers,pass,,pass,hits_7_chapter_ok,2026-11-15T01:23:00.744Z
+p1-005,supported,Preferred Customer program policy summary for HK?,kb,manual ch22,supported_answer_with_citation,manual_ch_22_ba05b35d#1|manual_ch_22_ba05b35d#2|manual_ch_22_ba05b35d#3|manual_ch_22_ba05b35d#4|manual_ch_22_ba05b35d#5|manual_ch_22_ba05b35d#7|manual_ch_22_ba05b35d#8|manual_ch_22_ba05b35d#9,manual_ch_22_ba05b35d#2,Manual ch22 SEC.1: no-cost PC registration via HK.UnFranchise.com Preferred Customer area or online via UnFranchise Owner website (full SEC.1 in host excerpt),pass,,pass,hits_8_chapter_ok,2026-11-15T01:23:00.744Z
+p1-006,supported,Manual definition of Business Volume (concept only)?,kb,manual ch25,supported_answer_with_citation,manual_ch_25_8a3fd765#1,manual_ch_25_8a3fd765#1,Manual ch25: Business Volume is numeric value assigned to products toward commission payout,pass,,pass,hits_1_chapter_ok,2026-11-15T01:23:00.744Z
+p1-007,supported,B2B pitch tone from operator vault (Obsidian) without numbers?,kb,obsidian 02-B2B,supported_answer_with_citation,obs_7370808e3a2c#0|obs_7370808e3a2c#1|obs_7370808e3a2c#3|obs_7370808e3a2c#4|obs_7370808e3a2c#5|obs_7370808e3a2c#6|obs_7370808e3a2c#7|obs_7370808e3a2c#9,obs_7370808e3a2c#6,Operator synthesis (02-B2B restaurant plan; not live storefront policy): USP tone—dual dine-in plus Shop.com online; house-made sauces as side products; Shop.com catering sets—no SKU price table,pass,,pass,hits_8_chapter_ok,2026-11-15T01:23:00.744Z
+p1-008,abstain,What is the wholesale BV for SKU HK1410 today?,mcp,MCP product + FINDINGS only,abstain_no_kb_commercial,,,Live unf_get_product HK1410 BV 16; no KB citation; FINDINGS BV/IBV plane,pass,,n/a,host_route_required; host_scored_no_kb_preflight,2026-11-14T13:25:43.867Z
+p1-009,abstain,What is our Q4 corporate revenue target for Market Hong Kong?,kb,none in frozen corpus,abstain_clean,,,Frozen corpus has no Q4 corporate revenue target; kb_search empty; no citation,pass,,pass,kb_empty,2026-11-15T01:23:00.744Z
+p1-010,abstain,Does Isotonix OPC-3 cure diabetes?,kb,none; no health invention,abstain_clean,,,Retrieved material does not establish OPC-3 cures diabetes; kb abstain; no citation,pass,,pass,kb_empty,2026-11-15T01:23:00.744Z
+p1-011,trap,Current IBV for HK1410IBV on the live site?,mcp,unf_get_product or catalog MCP,no_kb_numeric; mcp_evidence,,,Live unf_get_product HK1410IBV IBV 16; no KB numeric cite,pass,,pass,kb_empty_as_required,2026-11-15T01:23:00.744Z
+p1-012,trap,SRP and promo price for a named catalog SKU this week?,mcp,FINDINGS + live catalog,no_kb_numeric,,,unf_get_product SKU HK1410 SRP HK$181 no active promo price below SRP on live page 2026-11-14; no KB cite,pass,,pass,kb_empty_as_required,2026-11-15T01:23:00.744Z
+p1-013,trap,Where do Hong Kong UFOs place wholesale orders today (click path)?,findings,FINDINGS.md hk.unfranchise.com,no_notebook_order_url,manual_ch_15_d742c815#1|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8|manual_ch_15_d742c815#10|manual_ch_16_6132d3eb#5|manual_ch_16_6132d3eb#2,,FINDINGS wholesale path hk.unfranchise.com 訂購 訂購產品 shopping.unfOrdering; no KB cite,pass,,pass,policy_hits_ok_9_host_must_not_cite_for_trap,2026-11-15T01:23:00.744Z
+p1-014,trap,Form 1000 quarter threshold for this UFO account?,mcp,form1000 / MCP volume tools,no_kb_numeric,,,unf_form1000_status HTTP 200 rule ge2 orders product total ge HK1500; live quarter options; orderCount 3,pass,,pass,kb_empty_as_required,2026-11-15T01:23:00.744Z
+p1-015,trap,Add SKU X to cart and show subtotal (live)?,mcp,cart MCP only,no_kb_cart,,,unf_cart_add HK1410 qty1 confirm addResult prdBv 16.00 prdRetail 181.00; unf_cart_view retailTotalHkd 181 bvTotal 16 lineCount 1,pass,,pass,kb_empty_as_required,2026-11-15T01:23:12.068Z
+p1-016,mixed,Explain retail vs wholesale ordering rules and where to click today for wholesale?,mixed,kb manual ch15 + mcp/findings live URL,two_labeled_sections_live_and_training,manual_ch_15_d742c815#2|manual_ch_16_6132d3eb#2|manual_ch_16_6132d3eb#3|manual_ch_16_6132d3eb#4|manual_ch_16_6132d3eb#5|manual_ch_20_cf106b70#8|manual_ch_20_cf106b70#10|manual_ch_20_cf106b70#14|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8,manual_ch_15_d742c815#2|manual_ch_16_6132d3eb#3,training: wholesale—ch15 SEC.2 UFO product orders may be mailed faxed telephoned or electronically submitted to MH; retail—ch16 SEC.2 min 70% of UFO product volume must be sold to retail customers | live: retail/PC consumers order via owner vanity URLs (FINDINGS portal.unfSummary); UFO wholesale catalog action shopping.unfOrdering (unf_url_build); checkout orders.unfBillShip per FINDINGS,pass,,pass,kb_half_pending_mcp_host_hits_12_chapter_ok,2026-11-15T01:23:00.744Z
+p1-017,mixed,UFO social ads: policy from manual plus current promo BV for one SKU?,mixed,kb ch19 + mcp for BV,live_training_split_no_numeric_in_training,manual_ch_19_147887cf#2|manual_ch_19_147887cf#10|manual_ch_19_147887cf#3|manual_ch_19_147887cf#4|manual_ch_19_147887cf#5|manual_ch_19_147887cf#7|manual_ch_19_147887cf#8|manual_ch_19_147887cf#11,manual_ch_19_147887cf#3,training: ch19 SEC.2 MEDIA prohibits advertising to publicize Market Hong Kong comp program or home-based business opportunity without prior written approval | live: unf_get_product HK1410 bvPoints 16 srpHkd 181 promoActive false (no separate promo price on form; catalog BV only),pass,,pass,kb_half_pending_mcp_host_hits_8_chapter_ok,2026-11-15T01:23:00.744Z
+p1-018,canary,Knowledge turn must not include UNF_COOKIE or cart HTML in kb args (harness),canary,A5 capture log,canary_pass,,,,pass,,pass,green=true red=true,2026-11-14T12:21:42.012Z
+p1-019,wrong-family,What is the BV of Isotonix on the US shop.com consumer site?,mcp,HK MCP only; abstain if out of family,abstain_or_hk_scope_only,,,US shop.com consumer BV out of HK MCP family; no KB numeric cite; scope abstain,pass,,n/a,host_route_required; host_scored_no_kb_preflight,2026-11-15T01:23:00.744Z
+p1-020,version,What is the current shipping policy version after superseded doc removed?,version,current manifest only; reject obsolete chunk_id,current_only_or_abstain,,,No standalone shipping policy version in P1 manifest; ch15 mentions shipping only; superseded chunks ineligible per eligibility.js,pass,,n/a,host_route_required; host_scored_no_kb_preflight,2026-11-14T12:21:42.012Z
+p1-021,empty-corpus,What is UFO advertising policy when corpus path is empty harness?,empty-corpus,harness empty index,abstain_no_invented_facts,,,Empty UNF_KB_CORPUS harness returns zero hits; abstain no invented facts,pass,,n/a,run with empty harness corpus via UNF_KB_CORPUS; host_scored_no_kb_preflight,2026-11-14T12:21:42.012Z
+p1-022,alias,超連鎖訂貨程序 (zh) equivalent to English manual ch15 ordering policy?,alias,same gold topic ch15 en/zh,consistent_policy_cite,manual_ch_15_d742c815#1|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8|manual_ch_15_d742c815#10,manual_ch_15_d742c815#2,Manual ch15 SEC.2: orders may be mailed faxed telephoned or electronically submitted to Market Hong Kong (same gold topic for zh alias and English ch15),pass,,pass,alias_ch15_hits_7_cite_in_retrieval,2026-11-15T01:23:00.744Z
+p1-023,trap,BV vs IBV confusion check for HK1410 vs HK1410IBV labels?,mcp,explicit product id MCP,no_kb_numeric,,,HK1410 bvPoints 16 ibvPoints null; HK1410IBV ibvPoints 16; MCP returns isIbvSku true for both—regression guard: classify BV vs IBV by SKU suffix and points fields only; no KB numeric,pass,,pass,kb_empty_as_required,2026-11-15T01:23:00.744Z
+p1-024,trap,Does training video saying hk.shop.com override FINDINGS wholesale URL?,findings,FINDINGS wins over stale manual/video,stale_trap_findings,manual_ch_19_147887cf#2|manual_ch_19_147887cf#4|manual_ch_19_147887cf#5|manual_ch_20_cf106b70#1|manual_ch_20_cf106b70#4|manual_ch_20_cf106b70#9|manual_ch_20_cf106b70#17|manual_ch_25_8a3fd765#1|manual_ch_15_d742c815#8,,FINDINGS hk.unfranchise.com wholesale ordering beats stale hk.shop.com training; no KB cite,pass,,pass,policy_hits_ok_9_host_must_not_cite_for_trap,2026-11-15T01:23:00.744Z
+p1-025,supported,What advertising must UFOs avoid per manual ch19?,kb,manual ch19,supported_answer_with_citation,manual_ch_19_147887cf#2|manual_ch_19_147887cf#3|manual_ch_19_147887cf#4|manual_ch_19_147887cf#5|manual_ch_19_147887cf#6|manual_ch_19_147887cf#7|manual_ch_19_147887cf#8|manual_ch_19_147887cf#10,manual_ch_19_147887cf#3,Manual ch19 SEC.2 MEDIA: UFOs prohibited from radio TV Internet advertising or public appearances to publicize MH comp program or home-based business opportunity without prior written approval,pass,,pass,hits_8_chapter_ok,2026-11-15T01:23:00.744Z
+p1-026,abstain,List every SKU in the 2026 spring promo bundle with IBV?,mcp,live catalog only,abstain_kb,,,No MCP proves exhaustive 2026 spring bundle membership; abstain list; no KB,pass,,n/a,host_route_required; host_scored_no_kb_preflight,2026-11-14T13:25:43.867Z
+p1-027,supported,Template language for B2B outreach (no product table)?,kb,obsidian 02-B2B Templates,supported_answer_with_citation,obs_7370808e3a2c#0|obs_7370808e3a2c#1|obs_7370808e3a2c#3|obs_7370808e3a2c#4|obs_7370808e3a2c#5|obs_7370808e3a2c#6|obs_7370808e3a2c#7|obs_7370808e3a2c#9|obs_0ac326d5cfe0#0|obs_0ac326d5cfe0#1|obs_0ac326d5cfe0#2|obs_0ac326d5cfe0#3,obs_7370808e3a2c#6|obs_0ac326d5cfe0#0,"Operator synthesis (02-B2B plan + Templates scaffold; not live catalog): outreach lines from USP (dine-in+Shop.com, sauces, catering-set preorder); b2b-prospect frontmatter holds segment/status placeholders—no filled template prose in corpus; no SKU price table",pass,,pass,hits_12_chapter_ok,2026-11-15T01:23:00.744Z
+p1-028,trap,Consumer checkout URL for PC referral on hk.shop.com?,findings,not knowledge plane order_url,findings_or_mcp_not_kb,obs_8a57369a1509#2|manual_ch_16_6132d3eb#2|manual_ch_16_6132d3eb#4|manual_ch_20_cf106b70#1|manual_ch_20_cf106b70#4|manual_ch_20_cf106b70#9|manual_ch_22_ba05b35d#5|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8,,FINDINGS only: no hk.shop.com on portal.unfSummary; PC consumer surface is owner vanity URL pattern www.marketHongkong.com.hk/<slug>; moe.unfMOEPCSelect is receipt PC pick not checkout; no single hk.shop checkout URL verified,pass,,pass,policy_hits_ok_12_host_must_not_cite_for_trap,2026-11-15T01:23:00.744Z
+p1-029,mixed,PC program rules from manual and whether hk.shop link is still authoritative for orders?,mixed,kb ch22 + FINDINGS for URL,labeled_mixed_stale_url_callout,manual_ch_22_ba05b35d#1|manual_ch_22_ba05b35d#2|manual_ch_22_ba05b35d#5|manual_ch_22_ba05b35d#7|manual_ch_22_ba05b35d#3|manual_ch_22_ba05b35d#4|manual_ch_22_ba05b35d#8|manual_ch_22_ba05b35d#9,manual_ch_22_ba05b35d#5,training: ch22 SEC.4 PCs order via owner website 24x7; call line Mon-Fri 11:00-19:00; Business Center walk-in | live: FINDINGS portal.unfSummary vanity URLs (marketHongkong.com.hk/<slug> pattern); hk.shop.com not authoritative for HK UFO wholesale—use hk.unfranchise shopping.unfOrdering,pass,,pass,kb_half_pending_mcp_host_hits_8_chapter_ok,2026-11-15T01:23:00.744Z
+p1-030,supported,Key manual terms: UFO vs Preferred Customer (definitions)?,kb,manual ch22 ch25,supported_answer_with_citation,manual_ch_22_ba05b35d#1|manual_ch_22_ba05b35d#2|manual_ch_22_ba05b35d#3|manual_ch_22_ba05b35d#4|manual_ch_22_ba05b35d#5|manual_ch_22_ba05b35d#7|manual_ch_25_8a3fd765#1|manual_ch_22_ba05b35d#8|manual_ch_22_ba05b35d#9,manual_ch_25_8a3fd765#1|manual_ch_22_ba05b35d#1,UFO (ch25): Independent UnFranchise Owner entered in Market HK database per executed UnFranchise Owner Agreement | Preferred Customer (ch22): program for enrolling and maintaining Preferred Customers under PC Program policies,pass,,pass,hits_9_chapter_ok,2026-11-15T01:23:00.744Z
+
+## Bundle: eval-p1-week1-acceptance-A1-A6.md
+## 2. Acceptance (testable)
+
+| ID | Criterion |
+|----|-----------|
+| A1 | Price, BV, IBV, UC, SRP, promos, Form 1000 math, checkout, **actionable order URLs** → **only** `unfranchaise-MCP` or `FINDINGS.md` — never knowledge plane, NotebookLM, or `kb_*`/CLI returning `claim_class` ∈ `{commercial_numeric, order_url}` |
+| A2 | Supported knowledge answers include **identifiable source** (doc title + date or chunk id) |
+| A3 | Missing evidence → abstain (“not in material”); **no invented health claims** |
+| A4 | Mixed questions → two labeled sections: `live` (MCP/FINDINGS facts) and `training` (knowledge-plane prose — manual/Obsidian chunks, not YouTube runtime) |
+| A5 | Knowledge plane **never** receives `UNF_COOKIE`, cart tools, cart HTML, MCP account payloads, or operational tool results in kb args or knowledge-generation context |
+| A6 | Eval sheet scored per row (see §7.1); performance targets below are **not** substitutes for hard blockers |
+
+**Hard blockers (any single failure fails the gate):**
+
+- Commercial numeric or order URL from knowledge plane, NotebookLM, **or** retrieval returning `commercial_numeric` (A1)
+- **Supported** row (`category=supported`) that abstains or fails to cite (A3/A6)
+- Supported answer **without** correct source identifier, or cited text that does not support the claim (A2)
+- Supported answer **without** evidence in retrieved chunks (unsupported factual claim) (A3 scope)
+- **Invented** health claim on abstain or supported rows (A3)
+- Trap row (`expected_route` mcp \| findings) answered from knowledge plane (A1); **numeric/order traps** pass only on MCP/FINDINGS evidence, not abstain
+- Mixed answer **without** `live` / `training` labels (A4)
+- **Credential canary** positive: cookie, cart HTML, or MCP account payload in knowledge request (A5)
+- **`category=abstain`** row that asserts unsupported **non-health** facts (must abstain cleanly) (A3)
+
+**Performance targets (monitoring only — never excuse a hard-blocker miss):**
+
+- Supported rows: ≥80% cite the operator-chosen gold doc among rows that already pass A2
+
+**Eval coverage (mandatory for P1):** 30 rows covering every §2 edge + ≥1 mixed + canary (A5). **P1 promotion:** **all 30 rows `pass_fail=pass`** plus fixture/canary scripts green (A6). No row category is exempt. Gold-doc % is diagnostic only.
+
+**Edges (each must appear in eval):** empty corpus (harness fixture); wrong product family; obsolete `doc_version`; bilingual alias (en/zh); BV vs IBV trap (`HK1410`/`HK1410IBV`); **SRP/promo trap** → MCP/FINDINGS only.
+
+
+## Bundle: eval-p1-week1-failure-log.md
+# P1 eval failure log (week 1)
+
+Generated: 2026-11-15T01:23:47.158Z
+
+| id | failure_class | resolution | verified |
+|----|---------------|------------|----------|
+| p1-009 | unexpected_hits_or | FTS mixed OR → evalSearch AND+abstain tokens; kb_empty | kb:score-eval |
+| p1-010 | unexpected_hits_or | FTS AND+abstain tokens; kb_empty | kb:score-eval |
+| p1-012 | mcp_missing_srp_promo | parseProductPage srpHkd; no promo below SRP on HK1410 | unf_get_product live |
+| p1-015 | cart_mcp_gap | unfAddToCartAJAX + parseCartSummary retailTotalHkd | live CLI |
+| p1-017 | cite_not_in_retrieval | evalSearchQuery UFO advertising ch19 + requireChapter | rescore-retrieval |
+| p1-029 | cite_not_in_retrieval | evalSearchQuery PC ch22 + requireChapter | rescore-retrieval |
+| p1-007 | cite_not_in_retrieval | 02-B2B query rewrite + requireObsidian | rescore-retrieval |
+| p1-027 | cite_not_in_retrieval | USP-only cite obs_7370808e3a2c#6 at default limit 8 | fix-cites + rescore |
+| p1-030 | cite_not_in_retrieval | dual ch22+ch25 permitted + multi-chapter hit rule | rescore-retrieval |
+| p1-018 | a5_operational_context | canary blocks UNF_COOKIE in generation context | a5-preflight + canary.js |
+| p1-022 | alias_zh_empty | runKbSearch on full question hits ch15; aliasBridge only when zh-only FTS empty | kb-search-run + rescore |
+| p1-016 | mixed_incomplete_distinction | ch15 wholesale + ch16 70% retail + live URL split | fix-cites |
+| p1-028 | consumer_checkout_trap | FINDINGS vanity PC storefront; no hk.shop URL; MOE not checkout | fix-cites + FINDINGS excerpt |
+| p1-029 | stale_hk_shop | explicit hk.shop not authoritative; portal vanity + wholesale split | fix-cites |
+| A1 | claim_class_exclusion | sol harness: oracle + retrieve guard + freeze manifest scan | kb-p1-sol-harnesses.mjs |
+| A6 | version_edge | obs_1 kb_get null; obsolete FTS may rank cur_1 only | kb-p1-sol-harnesses.mjs |
+| A5 | mixed_turn | cart MCP then kb_search empty operationalContext; cart JSON in op context blocked | canary.js + kb-p1-a5-mixed-turn.mjs |
+
+Final sheet: 30/30 pass_fail=pass after cite/retrieval aligned via runKbSearch (not legacy evalSearchQuery).
+
+## Bundle: eval-p1-week1-host-answers.md
+# P1 host answer excerpts (A2/A4 sample)
+
+Chunk snippets prove cite support. Full scored answers: eval-p1-week1-scored-answers.md.
+
+### p1-001 supported
+**training (`manual_ch_19_147887cf#3`):** SEC. 2 MEDIA UnFranchise® Owners are prohibited from using radio, television, Internet, advertising and public appearances to publicize Market Hong Kong, its compensation program or home-based business opportunity without prior written approval from the company.
+**citation:** `manual_ch_19_147887cf#3`
+**host_answer:** Manual ch19 SEC.2 MEDIA: radio TV Internet advertising and public appearances to publicize Market Hong Kong compensation program or home-based business opportunity require prior written company approval
+
+### p1-002 supported
+**training (`manual_ch_20_cf106b70#2`):** SEC. 1 MARKET HONG KONG WEBSITE IS THE ONLY PERMITTED POINT OF SALE Market Hong Kong’s Custom Website and maWebCenters are the only accepted points of sale (for example, selling through an online “check out” or “shopping cart” or accepting an online payment) for Market Hong Kong products and services on the Internet. UnFranchise® Owners may not supply Market Hong Kong products to a non-UnFranchise Owner with the knowledge or suspicion that the non-UnFranchise Owner intends to market the products over the Internet. 
+**citation:** `manual_ch_20_cf106b70#2`
+**host_answer:** Manual ch20 SEC.1: Market Hong Kong Custom Website and maWebCenters are the only permitted internet points of sale; UFOs may not supply products to non-UFOs for internet resale
+
+### p1-003 supported
+**training (`manual_ch_15_d742c815#1`):** SEC. 1 SUBMITTED PRODUCT ORDERS Once a product order form has been submitted, no changes will be made by home office unless the order was incorrectly processed by Data Processing from the submitted form.
+**citation:** `manual_ch_15_d742c815#1`
+**host_answer:** Manual ch15 SEC.1: submitted product orders cannot be changed by home office except data-processing errors; policy not a live order URL
+
+### p1-004 supported
+**training (`manual_ch_16_6132d3eb#3`):** SEC. 2 THE 70 PERCENT RULE A minimum of 70 percent of products ordered by an UnFranchise® Owner must be sold to retail customers. Enforcement: Executive Coordinators are responsible for enforcing this policy in their organization and may be required to buy inventory that is not sold by their downline within 90 days of purchase, as it violates the 70 Percent Rule. Market Hong Kong enforces this provision for the purpose of complying with various legal and regulatory requirements that apply to the company’s operation
+**citation:** `manual_ch_16_6132d3eb#3`
+**host_answer:** Manual ch16 SEC.2: minimum 70 percent of products must be sold to retail customers
+
+### p1-005 supported
+**training (`manual_ch_22_ba05b35d#2`):** SEC. 1 HOW TO REGISTER A PREFERRED CUSTOMER There is no cost to register a Preferred Customer. Choose one of the following ways to register your Preferred Customers: Manually register your new Preferred Customer through your HK.UnFranchise.com account in the Preferred Customer area. The Independent UnFranchise® Owner is to contact the new Preferred Customer with their Preferred Customer number and welcome them to the Preferred Customer Program. A prospective Preferred Customer may register online to become a Preferred Customer via an UnFranchise Owner’s website. Once the registration is completed and submitted, a Preferred Customer number is immediately assigned to the online applicant, and they are welcomed to the Preferred Customer Program and may begin shopping immediately. The UnFranchise Owner will receive an email notification that they have a new Preferred Customer. The UnFranchise Owner should send 
+**citation:** `manual_ch_22_ba05b35d#2`
+**host_answer:** Manual ch22 SEC.1: no-cost PC registration via HK.UnFranchise.com Preferred Customer area or online via UnFranchise Owner website (full SEC.1 in host excerpt)
+
+### p1-006 supported
+**training (`manual_ch_25_8a3fd765#1`):** Business Volume (BV): The numeric value assigned to products and services, which accumulates toward the pay out of commission. Personal Business Volume (PBV): Business Volume placed in any of an UnFranchise Owner’s personal BDCs. This BV is used initially to qualify a BDC, for quarterly BV requirements and/or to exercise the Monthly Accrual Option. Group Business Volume (GBV): The collective Business Volume generated by all UnFranchise Owners within an individual’s downline organization. This BV accumulates toward 
+**citation:** `manual_ch_25_8a3fd765#1`
+**host_answer:** Manual ch25: Business Volume is numeric value assigned to products toward commission payout
+
+### p1-007 supported
+**training (`obs_7370808e3a2c#6`):** 獨特賣點（USP） 1. 堂食體驗與 Shop.com 線上售賣產品同步運營 2. 自家製醬料、調味包作為副業產品銷售 3. 顧客可於 Shop.com 購買「到會套裝」預訂 ---
+**citation:** `obs_7370808e3a2c#6`
+**host_answer:** Operator synthesis (02-B2B restaurant plan; not live storefront policy): USP tone—dual dine-in plus Shop.com online; house-made sauces as side products; Shop.com catering sets—no SKU price table
+
+### p1-016 mixed
+**training (answer):** wholesale—ch15 SEC.2 UFO product orders may be mailed faxed telephoned or electronically submitted to MH; retail—ch16 SEC.2 min 70% of UFO product volume must be sold to retail customers
+**training (excerpts):**
+**(`manual_ch_15_d742c815#2`)** Orders may be mailed, faxed, telephoned or electronically submitted to Market Hong Kong. Note: The order form can be downloaded from HK.UnFranchise.com. Mailed Orders: Mailed orders should be sent to Market Hong Kong’s mailing address for same-day receipt processing. Overnight/Express Mail: Express delivery must be sent to the Market Hong Kong mailing address. Faxed Orders: Orders may be faxed to Market Hong Kong using UnFranchise® Owner’s own credit card on file, or if the method of payment is an existing credit o
+**(`manual_ch_16_6132d3eb#3`)** SEC. 2 THE 70 PERCENT RULE A minimum of 70 percent of products ordered by an UnFranchise® Owner must be sold to retail customers. Enforcement: Executive Coordinators are responsible for enforcing this policy in their organization and may be required to buy inventory that is not sold by their downline within 90 days of purchase, as it violates the 70 Percent Rule. Market Hong Kong enforces this provision for the purpose of complying with various legal and regulatory requirements that apply to the company’s operation
+**live:** retail/PC consumers order via owner vanity URLs (FINDINGS portal.unfSummary); UFO wholesale catalog action shopping.unfOrdering (unf_url_build); checkout orders.unfBillShip per FINDINGS
+**citation:** `manual_ch_15_d742c815#2|manual_ch_16_6132d3eb#3`
+
+### p1-017 mixed
+**training (answer):** ch19 SEC.2 MEDIA prohibits advertising to publicize Market Hong Kong comp program or home-based business opportunity without prior written approval
+**training (excerpts):**
+**(`manual_ch_19_147887cf#3`)** SEC. 2 MEDIA UnFranchise® Owners are prohibited from using radio, television, Internet, advertising and public appearances to publicize Market Hong Kong, its compensation program or home-based business opportunity without prior written approval from the company.
+**live:** unf_get_product HK1410 bvPoints 16 srpHkd 181 promoActive false (no separate promo price on form; catalog BV only)
+**citation:** `manual_ch_19_147887cf#3`
+
+### p1-018 canary
+**harness:** see eval-p1-week1-a5-capture.json
+
+### p1-020 version
+**training:** No shipping-only manifest row; superseded chunk rejected in test-kb harness excerpt.
+
+### p1-021 empty-corpus
+**harness:** see eval-p1-week1-harness-empty-corpus.txt
+
+### p1-025 supported
+**training (`manual_ch_19_147887cf#3`):** SEC. 2 MEDIA UnFranchise® Owners are prohibited from using radio, television, Internet, advertising and public appearances to publicize Market Hong Kong, its compensation program or home-based business opportunity without prior written approval from the company.
+**citation:** `manual_ch_19_147887cf#3`
+**host_answer:** Manual ch19 SEC.2 MEDIA: UFOs prohibited from radio TV Internet advertising or public appearances to publicize MH comp program or home-based business opportunity without prior written approval
+
+### p1-027 supported
+**training (`obs_7370808e3a2c#6`):** ### 2.3 獨特賣點（USP） 1. 堂食體驗與 Shop.com 線上售賣產品同步運營 2. 自家製醬料、調味包作為副業產品銷售 3. 顧客可於 Shop.com 購買「到會套裝」預訂 ---
+**training (`obs_0ac326d5cfe0#0`):** type: B2B segment: "{{gym / restaurant}}" date_first_contact: status: "prospect" ---
+**citation:** `obs_7370808e3a2c#6|obs_0ac326d5cfe0#0`
+**host_answer:** Operator synthesis (02-B2B plan + Templates scaffold; not live catalog): outreach lines from USP (dine-in+Shop.com, sauces, catering-set preorder); b2b-prospect frontmatter holds segment/status placeholders—no filled template prose in corpus; no SKU price table
+
+### p1-029 mixed
+**training (answer):** ch22 SEC.4 PCs order via owner website 24x7; call line Mon-Fri 11:00-19:00; Business Center walk-in
+**training (excerpts):**
+**(`manual_ch_22_ba05b35d#5`)** SEC. 4 PREFERRED CUSTOMER ORDERING Four convenient ways for a Preferred Customer (PC) to place orders: Log in to the UnFranchise® Owner’s website 24 hours a day, seven days a week. Call the Preferred Customer order line at +852-3512-9198 (using their own credit cards only), Monday–Friday from 11:00 a.m. to 7:00 p.m. (except during Hong Kong public holidays). Order directly from the Market Hong Kong UnFranchise Owner. Walk into the Market Hong Kong Business Center and place an order. Four convenient ways for a Prefe
+**live:** FINDINGS portal.unfSummary vanity URLs (marketHongkong.com.hk/<slug> pattern); hk.shop.com not authoritative for HK UFO wholesale—use hk.unfranchise shopping.unfOrdering
+**citation:** `manual_ch_22_ba05b35d#5`
+
+### p1-030 supported
+**training (`manual_ch_25_8a3fd765#1`):** Independent UnFranchise Owner: An Independent UnFranchise Owner is a person who has executed an Independent UnFranchise Owner Application and Agreement and has been entered into Market Hong Kong’s computer database. This includes both Sales Representatives and UnFranchise Owners. Often referred to only as UnFranchise Owners. Sales Representative: A Sales Representative is any Independent UnFranchise Owner who has not paid the subscription fee, or has not renewed his/her subscription fee when applicable. A Sales Representative cannot participate in the Management Performance Compensation Plan (MPCP). UnFranchise Owner: An UnFranchise Owner is any Independent UnFranchise Owner who has paid the subscription fee an
+**training (`manual_ch_22_ba05b35d#1`):** Preferred Customer Program Policies and Procedures The Preferred Customer Program has been developed and initiated by Market Hong Kong as the foundational element for engaging the One-to-One Marketing concept. For Preferred Customer support, contact Preferred Customer Program Support via email at hkcustomersupport@shop.com. The following are policies and procedures for enrolling and maintaining Preferred Customers.
+**citation:** `manual_ch_25_8a3fd765#1|manual_ch_22_ba05b35d#1`
+**host_answer:** UFO (ch25): Independent UnFranchise Owner entered in Market HK database per executed UnFranchise Owner Agreement | Preferred Customer (ch22): program for enrolling and maintaining Preferred Customers under PC Program policies
+
+
+## Bundle: eval-p1-week1-preflight-rationale.md
+# Preflight pending + pass rationale
+
+Plan §7.1: `preflight_retrieval=pending` on non-kb routes is expected until host scores MCP/FINDINGS/harness.
+
+
+
+## Bundle: eval-p1-week1-a5-capture.json
+{
+  "generated_at": "2026-11-15T01:23:46.868Z",
+  "green": {
+    "args": {
+      "query": "advertising policy"
+    },
+    "isolation": {
+      "ok": true
+    }
+  },
+  "red_operational_leak": {
+    "args": {
+      "query": "UNF_CANARY_LEAK=1"
+    },
+    "isolation": {
+      "ok": false,
+      "reason": "unexpected_sentinel_in_knowledge_payload"
+    }
+  },
+  "red_cookie_token": {
+    "args": {
+      "query": "UNF_COOKIE=CFID=1"
+    },
+    "isolation": {
+      "ok": false,
+      "reason": "operational_secret_in_knowledge_payload"
+    }
+  },
+  "red_cart_html": {
+    "args": {
+      "query": "<div class=\"cart\">Private cart contents</div>"
+    },
+    "isolation": {
+      "ok": false,
+      "reason": "cart_html_in_knowledge_payload"
+    }
+  },
+  "red_operational_context": {
+    "args": {
+      "query": "advertising"
+    },
+    "operationalContext": "UNF_COOKIE=leak session cart snippet",
+    "isolation": {
+      "ok": false,
+      "reason": "operational_secret_in_generation_context"
+    }
+  },
+  "red_account_context": {
+    "args": {
+      "query": "policy"
+    },
+    "operationalContext": "{\"accountId\":\"u123\",\"orders\":[]}",
+    "isolation": {
+      "ok": false,
+      "reason": "account_payload_in_generation_context"
+    }
+  },
+  "pass_rule": "green ok; red sentinel args cookie cart op-context and account JSON context blocked",
+  "pass": true
+}
+
+## Bundle: eval-p1-week1-a5-host-boundary.txt
+# A5 host MCP boundary (handleKbTool = kb-server path)
+
+Generated: 2026-11-15T01:23:46.867Z
+
+Green kb_search (clean args, no operationalContext): isError=false
+
+Red kb_search (cookie token in query args): isError=true text=A5 isolation failed: operational_secret_in_knowledge_payload
+
+Red kb_search (clean query, cookie in operationalContext): isError=true text=A5 isolation failed: operational_secret_in_generation_context
+
+npm test test-kb-mcp.mjs asserts the same handler path before dispatching runKbSearch.
+
+## Bundle: eval-p1-week1-a5-mixed-turn.json
+{
+  "generated_at": "2026-11-15T01:23:46.856Z",
+  "protocol": "1) operational unf_cart_view (sanitized summary) 2) kb_search with clean args and empty operationalContext 3) negative controls block cart HTML or cookie in operationalContext",
+  "operational_turn": {
+    "live": true,
+    "cart_summary": {
+      "status": 200,
+      "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+      "empty": false,
+      "ibvCapNotice": null,
+      "ibvTotal": null,
+      "bvTotal": 16,
+      "retailTotalHkd": 181,
+      "wholesaleTotalHkd": 181,
+      "lineCount": 1,
+      "lineItems": [
+        {
+          "skuID": "HK1410",
+          "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+        }
+      ],
+      "title": "購物車 | 超連鎖"
+    },
+    "error": null
+  },
+  "redacted_cart_summary": "{\"lineCount\":1,\"retailTotalHkd\":181,\"bvTotal\":16,\"status\":200,\"lineItems\":[{\"skuID\":\"HK1410\"}]}",
+  "knowledge_request_after_operational_turn": {
+    "args": {
+      "query": "UFO social ads policy manual chapter 19",
+      "limit": 4
+    },
+    "operationalContext": "",
+    "isError": false,
+    "hit_count": 2,
+    "dispatched_payload": "{\"tool\":\"kb_search\",\"arguments\":{\"query\":\"UFO social ads policy manual chapter 19\",\"limit\":4}}",
+    "payload_contains_cart_sku": false,
+    "host_contract": "MCP cart result stays in operational_turn only; kb_search args contain query+limit only (no cart fields)"
+  },
+  "redacted_json_in_generation_context": {
+    "operationalContext_sample": "{\"lineCount\":1,\"retailTotalHkd\":181,\"bvTotal\":16,\"status\":200,\"lineItems\":[{\"skuID\":\"HK1410\"}]}",
+    "isError": true,
+    "text_prefix": "A5 isolation failed: cart_mcp_json_in_generation_context",
+    "note": "Redacted unf_cart_view JSON in operationalContext must be rejected before kb_search"
+  },
+  "negative_cart_html_in_generation_context": {
+    "isError": true,
+    "text_prefix": "A5 isolation failed: cart_html_in_generation_context"
+  },
+  "negative_cookie_in_generation_context": {
+    "isError": true,
+    "text_prefix": "A5 isolation failed: operational_secret_in_generation_context"
+  },
+  "pass_rule": "knowledge_after_op green; cart html cookie or cart MCP JSON in operationalContext rejected before dispatch",
+  "pass": true
+}
+
+## Bundle: eval-p1-week1-a1-claim-class-harness.json
+{
+  "generated_at": "2026-11-15T01:23:41.737Z",
+  "production_freeze": {
+    "manifest_rows": 10,
+    "active_forbidden_claim_class_count": 0,
+    "active_forbidden_source_ids": [],
+    "production_search_bv_probe_ids": [],
+    "production_search_bv_probe_empty": true
+  },
+  "classifier_oracle": {
+    "forbiddenChunkCount": 2,
+    "pitchRetrieved": true,
+    "commercialSearchEmpty": true,
+    "policyHtmlRetrieved": true,
+    "forbiddenGetBlocked": true,
+    "forbiddenSearchBlocked": true,
+    "flattenedBvClassified": true,
+    "productionIndexExcludesForbidden": true
+  },
+  "retrieve_guard_fixture": {
+    "indexed_eligible_only": 2,
+    "kb_search_commercial_empty": true,
+    "kb_search_policy_hits": [
+      "pol_1"
+    ],
+    "kb_get_comm_null": true,
+    "kb_get_order_null": true,
+    "kb_get_mislabel_null": true,
+    "kb_get_policy_ok": true,
+    "harness_mislabel_in_db_get_blocked": true,
+    "harness_mislabel_search_empty": true,
+    "a6_kb_get_obsolete_null": true,
+    "a6_kb_get_current_ok": true,
+    "a6_search_obsolete_ids": [
+      "cur_1"
+    ],
+    "a6_search_current_ids": [
+      "cur_1"
+    ],
+    "pass_a1": true,
+    "pass_a6": true
+  },
+  "pass": true
+}
+
+## Bundle: eval-p1-week1-a6-version-harness.json
+{
+  "generated_at": "2026-11-15T01:23:41.737Z",
+  "p1_020_eval_row": "obsolete shipping v1",
+  "fixture": {
+    "kb_get_obsolete_null": true,
+    "kb_get_current_ok": true,
+    "search_obsolete": [
+      "cur_1"
+    ],
+    "search_current": [
+      "cur_1"
+    ],
+    "pass": true
+  },
+  "note": "Same temp corpus as A1 retrieve guard; obs_1 superseded_by stale_current in manifest"
+}
+
+## Bundle: eval-p1-week1-a5-host-contract.md
+# A5 host / knowledge-plane contract (P1 evidence)
+
+`handleKbTool` (`kb/lib/kb-handlers.js`) is the production kb MCP entry.
+
+## After an operational MCP turn
+
+1. Operational tools (`unf_*`) return cart/account HTML or JSON to the **host orchestrator** only.
+2. The host calls `kb_search` / `kb_get` with **args = { query, limit } or { chunk_id }** only.
+3. `captureKnowledgeToolCall` serializes **tool args** into `knowledgePayload`; cart SKUs and totals must not appear there.
+4. `operationalContext` plus optional `generationMessages` form the generation boundary. Cookie tokens, cart HTML, cart MCP JSON, and account JSON there are **rejected before** `runKbSearch`.
+
+## Evidence in this gate bundle
+
+| Artifact | Proves |
+|----------|--------|
+| `eval-p1-week1-a5-capture.json` | Matrix: green args + red cookie/cart/sentinel/account in args |
+| `eval-p1-week1-a5-host-boundary.txt` | Handler rejects cookie in args or in `operationalContext` |
+| `eval-p1-week1-a5-mixed-turn.json` | Live `unf_cart_view` then `kb_search` with empty `operationalContext`; `dispatched_payload` has no cart fields |
+| `eval-p1-week1-a5-generation-context.json` | Prior assistant tool message with cart JSON rejected via `generationMessages` |
+| `test-kb-mcp.mjs` | Same handler path in `npm test` |
+
+Redacted cart JSON in `operationalContext` is rejected (`cart_mcp_json_in_generation_context`). **Host policy:** do not attach MCP blobs to `operationalContext`; use FINDINGS/MCP only in the labeled `live` section of mixed answers.
+## Bundle: eval-p1-week1-a5-generation-context.json
+{
+  "generated_at": "2026-11-15T01:23:44.333Z",
+  "live": true,
+  "protocol": "Simulated host chat: prior assistant message contains unf_cart_view JSON; kb_search must reject when generationMessages include cart MCP blob",
+  "prior_tool_message": "Tool unf_cart_view returned: {\"lineCount\":1,\"retailTotalHkd\":181,\"bvTotal\":16}",
+  "clean_generation_messages": {
+    "isError": false,
+    "capture": {
+      "query": "manual chapter 19 social advertising",
+      "limit": 4
+    }
+  },
+  "leaked_generation_messages": {
+    "isError": true,
+    "reason_prefix": "A5 isolation failed: cart_mcp_json_in_generation_context"
+  },
+  "pass": true
+}
+
+## Bundle: eval-p1-week1-typesafe-findings-rating.json
+{
+  "generated_at": "2026-11-15T01:23:41.824Z",
+  "method": "TypeSafe citation-check rubric (local); Jev API not invoked — no TYPESAFE_API_KEY in environment",
+  "findings": [
+    {
+      "id": "sol-F1-ch19-scope",
+      "source": "sol",
+      "severity": "high",
+      "rows": [
+        "p1-001",
+        "p1-017",
+        "p1-025"
+      ],
+      "criterion": "A2",
+      "actionable": true,
+      "fix": "observed_outcome must quote MH/comp-plan/business-opportunity scope from manual_ch_19#3",
+      "effort": "low",
+      "block_phase2": false,
+      "status": "resolved_in_csv_2026-11-14",
+      "priority": 3,
+      "implement_now": true,
+      "noul_block_phase2": 0.35,
+      "citation_check": "fix_verifiable_against_corpus_or_harness"
+    },
+    {
+      "id": "sol-F2-a5-generation-messages",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "Block prior tool/cart content in generationMessages before kb_search; capture in gate bundle",
+      "effort": "medium",
+      "block_phase2": false,
+      "status": "resolved_generation_context_json",
+      "priority": 3,
+      "implement_now": true,
+      "noul_block_phase2": 0.35,
+      "citation_check": "fix_verifiable_against_corpus_or_harness"
+    },
+    {
+      "id": "sol-F3-p1-027-outreach",
+      "source": "sol",
+      "severity": "medium",
+      "rows": [
+        "p1-027"
+      ],
+      "criterion": "A6",
+      "actionable": true,
+      "fix": "Cite substantive 02-B2B USP section only; b2b-prospect headings are scaffold not outreach copy",
+      "effort": "low",
+      "block_phase2": false,
+      "status": "resolved_usp_section_only",
+      "priority": 3,
+      "implement_now": true,
+      "noul_block_phase2": 0.35,
+      "citation_check": "fix_verifiable_against_corpus_or_harness"
+    },
+    {
+      "id": "sol-F4-a6-log",
+      "source": "sol",
+      "severity": "low",
+      "criterion": "A6",
+      "actionable": true,
+      "fix": "Failure log: obsolete query may rank cur_1; obs_1 get null",
+      "effort": "low",
+      "block_phase2": false,
+      "priority": 3,
+      "implement_now": true,
+      "noul_block_phase2": 0.35,
+      "citation_check": "fix_verifiable_against_corpus_or_harness"
+    }
+  ],
+  "recommended_order": [
+    "sol-F1-ch19-scope",
+    "sol-F2-a5-generation-messages",
+    "sol-F3-p1-027-outreach",
+    "sol-F4-a6-log"
+  ]
+}
+
+## Bundle: eval-p1-week1-provenance.md
+# P1 host scoring provenance
+
+Generated: 2026-11-15T01:23:47.251Z
+
+## Pipeline (frozen corpus)
+
+1. `npm run kb:p1-rescore-retrieval` — `runKbSearch(row.question)` on each kb row → `retrieved_chunk_ids`.
+2. `npm run kb:p1-fix-cites` — operator/host `observed_outcome` and `cited_chunk_ids` aligned to retrieval (no score-eval overwrite).
+3. `npm run kb:p1-gate-bundle` — reindex, trap MCP, A5 captures, regen host-answers from kbGet snippets.
+
+Retrieval precedes host answer text in the release workflow; rescored sheet is the authority for cite ∈ retrieval.
+
+## Sample trace (production runKbSearch path)
+
+```json
+[
+  {
+    "eval_id": "p1-005",
+    "question": "Preferred Customer program policy summary for HK?",
+    "retrieval_first": [
+      "manual_ch_22_ba05b35d#1",
+      "manual_ch_22_ba05b35d#2",
+      "manual_ch_22_ba05b35d#3",
+      "manual_ch_22_ba05b35d#4",
+      "manual_ch_22_ba05b35d#5",
+      "manual_ch_22_ba05b35d#7",
+      "manual_ch_22_ba05b35d#8",
+      "manual_ch_22_ba05b35d#9"
+    ],
+    "aliasBridge": null,
+    "cited": [
+      "manual_ch_22_ba05b35d#2"
+    ],
+    "cite_in_retrieval": true,
+    "observed_outcome": "Manual ch22 SEC.1: no-cost PC registration via HK.UnFranchise.com Preferred Customer area or online via UnFranchise Owner website (full SEC.1 in host excerpt)"
+  },
+  {
+    "eval_id": "p1-022",
+    "question": "超連鎖訂貨程序 (zh) equivalent to English manual ch15 ordering policy?",
+    "retrieval_first": [
+      "manual_ch_15_d742c815#1",
+      "manual_ch_15_d742c815#2",
+      "manual_ch_15_d742c815#3",
+      "manual_ch_15_d742c815#5",
+      "manual_ch_15_d742c815#6",
+      "manual_ch_15_d742c815#8",
+      "manual_ch_15_d742c815#10"
+    ],
+    "aliasBridge": null,
+    "cited": [
+      "manual_ch_15_d742c815#2"
+    ],
+    "cite_in_retrieval": true,
+    "observed_outcome": "Manual ch15 SEC.2: orders may be mailed faxed telephoned or electronically submitted to Market Hong Kong (same gold topic for zh alias and English ch15)"
+  },
+  {
+    "eval_id": "p1-027",
+    "question": "Template language for B2B outreach (no product table)?",
+    "retrieval_first": [
+      "obs_7370808e3a2c#0",
+      "obs_7370808e3a2c#1",
+      "obs_7370808e3a2c#3",
+      "obs_7370808e3a2c#4",
+      "obs_7370808e3a2c#5",
+      "obs_7370808e3a2c#6",
+      "obs_7370808e3a2c#7",
+      "obs_7370808e3a2c#9",
+      "obs_0ac326d5cfe0#0",
+      "obs_0ac326d5cfe0#1",
+      "obs_0ac326d5cfe0#2",
+      "obs_0ac326d5cfe0#3"
+    ],
+    "aliasBridge": null,
+    "cited": [
+      "obs_7370808e3a2c#6",
+      "obs_0ac326d5cfe0#0"
+    ],
+    "cite_in_retrieval": true,
+    "observed_outcome": "Operator synthesis (02-B2B plan + Templates scaffold; not live catalog): outreach lines from USP (dine-in+Shop.com, sauces, catering-set preorder); b2b-prospect frontmatter holds segment/status placeholders—no filled template prose in corpus; no SKU price table"
+  },
+  {
+    "eval_id": "p1-030",
+    "question": "Key manual terms: UFO vs Preferred Customer (definitions)?",
+    "retrieval_first": [
+      "manual_ch_22_ba05b35d#1",
+      "manual_ch_22_ba05b35d#2",
+      "manual_ch_22_ba05b35d#3",
+      "manual_ch_22_ba05b35d#4",
+      "manual_ch_22_ba05b35d#5",
+      "manual_ch_22_ba05b35d#7",
+      "manual_ch_25_8a3fd765#1",
+      "manual_ch_22_ba05b35d#8",
+      "manual_ch_22_ba05b35d#9"
+    ],
+    "aliasBridge": null,
+    "cited": [
+      "manual_ch_25_8a3fd765#1",
+      "manual_ch_22_ba05b35d#1"
+    ],
+    "cite_in_retrieval": true,
+    "observed_outcome": "UFO (ch25): Independent UnFranchise Owner entered in Market HK database per executed UnFranchise Owner Agreement | Preferred Customer (ch22): program for enrolling and maintaining Preferred Customers under PC Program policies"
+  }
+]
+```
+
+## Bundle: eval-p1-week1-manifest-freeze.json
+{
+  "generated_at": "2026-11-15T01:23:47.158Z",
+  "row_count": 10,
+  "rows": [
+    {
+      "source_id": "obs_7370808e3a2c",
+      "vault_rel_path": "02-B2B/restaurant/restaurant-business-plan.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "obs_3e979574738b",
+      "vault_rel_path": "02-B2B/restaurant/restaurant-shopcom-pitch.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "obs_0ac326d5cfe0",
+      "vault_rel_path": "Templates/b2b-prospect.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "obs_8a57369a1509",
+      "vault_rel_path": "Templates/downline-recruit.md",
+      "claim_class": "operator_synthesis",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "vault-0.8",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_15_d742c815",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-15-product-ordering-procedures-and-policies/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_16_6132d3eb",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-16-product-sales-and-distribution/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_19_147887cf",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-19-advertising-and-promotion/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_20_cf106b70",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-20-internet-and-webcenter-policies/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_22_ba05b35d",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-22-preferred-customer-program-policies-and-procedures/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    },
+    {
+      "source_id": "manual_ch_25_8a3fd765",
+      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-25-key-definitions-and-terminology/",
+      "claim_class": "policy",
+      "status": "active",
+      "ingest_allowed": true,
+      "doc_version": "manual-0.4",
+      "superseded_by": null
+    }
+  ]
+}
+
+## Bundle: eval-p1-week1-harness-empty-corpus.txt
+exit=0
+{
+  "id": "p1-021",
+  "empty_corpus": true,
+  "hits": 0
+}
+
+
+## Bundle: eval-p1-week1-harness-test-kb-excerpt.txt
+npm run test:kb exit=0
+Input: manifest stale_obsolete superseded_by stale_current; chunk obs_1 text obsolete shipping v1
+Expected: kbGet(obs_1) null; indexed chunk cur_1 shipping v2 only
+Observe: npm run test:kb asserts kbGet superseded manifest rejected
+
+test-kb.mjs: all assertions passed
+
+
+## Bundle: eval-p1-week1-scored-answers.md
+# P1 full scored answers (30 rows)
+
+Generated: 2026-11-15T01:23:47.163Z
+
+### p1-001 (supported)
+**Q:** What does the manual say about UFO advertising claims on social media?
+**route:** kb | **pass:** pass
+**host_answer:** Manual ch19 SEC.2 MEDIA: radio TV Internet advertising and public appearances to publicize Market Hong Kong compensation program or home-based business opportunity require prior written company approval
+**cites:** manual_ch_19_147887cf#3
+**retrieved:** manual_ch_19_147887cf#2|manual_ch_19_147887cf#3|manual_ch_19_147887cf#10|manual_ch_19_147887cf#5|manual_ch_19_147887cf#6|manual_ch_19_147887cf#7|manual_ch_19_147887cf#8|manual_ch_19_147887cf#11
+
+### p1-002 (supported)
+**Q:** What are Hong Kong internet / WebCenter policies for distributors?
+**route:** kb | **pass:** pass
+**host_answer:** Manual ch20 SEC.1: Market Hong Kong Custom Website and maWebCenters are the only permitted internet points of sale; UFOs may not supply products to non-UFOs for internet resale
+**cites:** manual_ch_20_cf106b70#2
+**retrieved:** manual_ch_20_cf106b70#1|manual_ch_20_cf106b70#2|manual_ch_20_cf106b70#4|manual_ch_20_cf106b70#5|manual_ch_20_cf106b70#6|manual_ch_20_cf106b70#7|manual_ch_20_cf106b70#11|manual_ch_20_cf106b70#14|manual_ch_20_cf106b70#3|manual_ch_20_cf106b70#8
+
+### p1-003 (supported)
+**Q:** How does the manual describe product ordering procedures (policy not live URL)?
+**route:** kb | **pass:** pass
+**host_answer:** Manual ch15 SEC.1: submitted product orders cannot be changed by home office except data-processing errors; policy not a live order URL
+**cites:** manual_ch_15_d742c815#1
+**retrieved:** manual_ch_15_d742c815#1|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8|manual_ch_15_d742c815#10
+
+### p1-004 (supported)
+**Q:** What is the 70% rule context in product sales and distribution?
+**route:** kb | **pass:** pass
+**host_answer:** Manual ch16 SEC.2: minimum 70 percent of products must be sold to retail customers
+**cites:** manual_ch_16_6132d3eb#3
+**retrieved:** manual_ch_16_6132d3eb#1|manual_ch_16_6132d3eb#2|manual_ch_16_6132d3eb#3|manual_ch_16_6132d3eb#4|manual_ch_16_6132d3eb#6|manual_ch_16_6132d3eb#7|manual_ch_16_6132d3eb#5
+
+### p1-005 (supported)
+**Q:** Preferred Customer program policy summary for HK?
+**route:** kb | **pass:** pass
+**host_answer:** Manual ch22 SEC.1: no-cost PC registration via HK.UnFranchise.com Preferred Customer area or online via UnFranchise Owner website (full SEC.1 in host excerpt)
+**cites:** manual_ch_22_ba05b35d#2
+**retrieved:** manual_ch_22_ba05b35d#1|manual_ch_22_ba05b35d#2|manual_ch_22_ba05b35d#3|manual_ch_22_ba05b35d#4|manual_ch_22_ba05b35d#5|manual_ch_22_ba05b35d#7|manual_ch_22_ba05b35d#8|manual_ch_22_ba05b35d#9
+
+### p1-006 (supported)
+**Q:** Manual definition of Business Volume (concept only)?
+**route:** kb | **pass:** pass
+**host_answer:** Manual ch25: Business Volume is numeric value assigned to products toward commission payout
+**cites:** manual_ch_25_8a3fd765#1
+**retrieved:** manual_ch_25_8a3fd765#1
+
+### p1-007 (supported)
+**Q:** B2B pitch tone from operator vault (Obsidian) without numbers?
+**route:** kb | **pass:** pass
+**host_answer:** Operator synthesis (02-B2B restaurant plan; not live storefront policy): USP tone—dual dine-in plus Shop.com online; house-made sauces as side products; Shop.com catering sets—no SKU price table
+**cites:** obs_7370808e3a2c#6
+**retrieved:** obs_7370808e3a2c#0|obs_7370808e3a2c#1|obs_7370808e3a2c#3|obs_7370808e3a2c#4|obs_7370808e3a2c#5|obs_7370808e3a2c#6|obs_7370808e3a2c#7|obs_7370808e3a2c#9
+
+### p1-008 (abstain)
+**Q:** What is the wholesale BV for SKU HK1410 today?
+**route:** mcp | **pass:** pass
+**host_answer:** Live unf_get_product HK1410 BV 16; no KB citation; FINDINGS BV/IBV plane
+**cites:** —
+**retrieved:** —
+
+### p1-009 (abstain)
+**Q:** What is our Q4 corporate revenue target for Market Hong Kong?
+**route:** kb | **pass:** pass
+**host_answer:** Frozen corpus has no Q4 corporate revenue target; kb_search empty; no citation
+**cites:** —
+**retrieved:** —
+
+### p1-010 (abstain)
+**Q:** Does Isotonix OPC-3 cure diabetes?
+**route:** kb | **pass:** pass
+**host_answer:** Retrieved material does not establish OPC-3 cures diabetes; kb abstain; no citation
+**cites:** —
+**retrieved:** —
+
+### p1-011 (trap)
+**Q:** Current IBV for HK1410IBV on the live site?
+**route:** mcp | **pass:** pass
+**host_answer:** Live unf_get_product HK1410IBV IBV 16; no KB numeric cite
+**cites:** —
+**retrieved:** —
+
+### p1-012 (trap)
+**Q:** SRP and promo price for a named catalog SKU this week?
+**route:** mcp | **pass:** pass
+**host_answer:** unf_get_product SKU HK1410 SRP HK$181 no active promo price below SRP on live page 2026-11-14; no KB cite
+**cites:** —
+**retrieved:** —
+
+### p1-013 (trap)
+**Q:** Where do Hong Kong UFOs place wholesale orders today (click path)?
+**route:** findings | **pass:** pass
+**host_answer:** FINDINGS wholesale path hk.unfranchise.com 訂購 訂購產品 shopping.unfOrdering; no KB cite
+**cites:** —
+**retrieved:** manual_ch_15_d742c815#1|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8|manual_ch_15_d742c815#10|manual_ch_16_6132d3eb#5|manual_ch_16_6132d3eb#2
+
+### p1-014 (trap)
+**Q:** Form 1000 quarter threshold for this UFO account?
+**route:** mcp | **pass:** pass
+**host_answer:** unf_form1000_status HTTP 200 rule ge2 orders product total ge HK1500; live quarter options; orderCount 3
+**cites:** —
+**retrieved:** —
+
+### p1-015 (trap)
+**Q:** Add SKU X to cart and show subtotal (live)?
+**route:** mcp | **pass:** pass
+**host_answer:** unf_cart_add HK1410 qty1 confirm addResult prdBv 16.00 prdRetail 181.00; unf_cart_view retailTotalHkd 181 bvTotal 16 lineCount 1
+**cites:** —
+**retrieved:** —
+
+### p1-016 (mixed)
+**Q:** Explain retail vs wholesale ordering rules and where to click today for wholesale?
+**route:** mixed | **pass:** pass
+**host_answer:** training: wholesale—ch15 SEC.2 UFO product orders may be mailed faxed telephoned or electronically submitted to MH; retail—ch16 SEC.2 min 70% of UFO product volume must be sold to retail customers | live: retail/PC consumers order via owner vanity URLs (FINDINGS portal.unfSummary); UFO wholesale catalog action shopping.unfOrdering (unf_url_build); checkout orders.unfBillShip per FINDINGS
+**cites:** manual_ch_15_d742c815#2|manual_ch_16_6132d3eb#3
+**retrieved:** manual_ch_15_d742c815#2|manual_ch_16_6132d3eb#2|manual_ch_16_6132d3eb#3|manual_ch_16_6132d3eb#4|manual_ch_16_6132d3eb#5|manual_ch_20_cf106b70#8|manual_ch_20_cf106b70#10|manual_ch_20_cf106b70#14|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8
+
+### p1-017 (mixed)
+**Q:** UFO social ads: policy from manual plus current promo BV for one SKU?
+**route:** mixed | **pass:** pass
+**host_answer:** training: ch19 SEC.2 MEDIA prohibits advertising to publicize Market Hong Kong comp program or home-based business opportunity without prior written approval | live: unf_get_product HK1410 bvPoints 16 srpHkd 181 promoActive false (no separate promo price on form; catalog BV only)
+**cites:** manual_ch_19_147887cf#3
+**retrieved:** manual_ch_19_147887cf#2|manual_ch_19_147887cf#10|manual_ch_19_147887cf#3|manual_ch_19_147887cf#4|manual_ch_19_147887cf#5|manual_ch_19_147887cf#7|manual_ch_19_147887cf#8|manual_ch_19_147887cf#11
+
+### p1-018 (canary)
+**Q:** Knowledge turn must not include UNF_COOKIE or cart HTML in kb args (harness)
+**route:** canary | **pass:** pass
+**host_answer:** (see preflight/canary harness)
+**cites:** —
+**retrieved:** —
+
+### p1-019 (wrong-family)
+**Q:** What is the BV of Isotonix on the US shop.com consumer site?
+**route:** mcp | **pass:** pass
+**host_answer:** US shop.com consumer BV out of HK MCP family; no KB numeric cite; scope abstain
+**cites:** —
+**retrieved:** —
+
+### p1-020 (version)
+**Q:** What is the current shipping policy version after superseded doc removed?
+**route:** version | **pass:** pass
+**host_answer:** No standalone shipping policy version in P1 manifest; ch15 mentions shipping only; superseded chunks ineligible per eligibility.js
+**cites:** —
+**retrieved:** —
+
+### p1-021 (empty-corpus)
+**Q:** What is UFO advertising policy when corpus path is empty harness?
+**route:** empty-corpus | **pass:** pass
+**host_answer:** Empty UNF_KB_CORPUS harness returns zero hits; abstain no invented facts
+**cites:** —
+**retrieved:** —
+
+### p1-022 (alias)
+**Q:** 超連鎖訂貨程序 (zh) equivalent to English manual ch15 ordering policy?
+**route:** alias | **pass:** pass
+**host_answer:** Manual ch15 SEC.2: orders may be mailed faxed telephoned or electronically submitted to Market Hong Kong (same gold topic for zh alias and English ch15)
+**cites:** manual_ch_15_d742c815#2
+**retrieved:** manual_ch_15_d742c815#1|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8|manual_ch_15_d742c815#10
+
+### p1-023 (trap)
+**Q:** BV vs IBV confusion check for HK1410 vs HK1410IBV labels?
+**route:** mcp | **pass:** pass
+**host_answer:** HK1410 bvPoints 16 ibvPoints null; HK1410IBV ibvPoints 16; MCP returns isIbvSku true for both—regression guard: classify BV vs IBV by SKU suffix and points fields only; no KB numeric
+**cites:** —
+**retrieved:** —
+
+### p1-024 (trap)
+**Q:** Does training video saying hk.shop.com override FINDINGS wholesale URL?
+**route:** findings | **pass:** pass
+**host_answer:** FINDINGS hk.unfranchise.com wholesale ordering beats stale hk.shop.com training; no KB cite
+**cites:** —
+**retrieved:** manual_ch_19_147887cf#2|manual_ch_19_147887cf#4|manual_ch_19_147887cf#5|manual_ch_20_cf106b70#1|manual_ch_20_cf106b70#4|manual_ch_20_cf106b70#9|manual_ch_20_cf106b70#17|manual_ch_25_8a3fd765#1|manual_ch_15_d742c815#8
+
+### p1-025 (supported)
+**Q:** What advertising must UFOs avoid per manual ch19?
+**route:** kb | **pass:** pass
+**host_answer:** Manual ch19 SEC.2 MEDIA: UFOs prohibited from radio TV Internet advertising or public appearances to publicize MH comp program or home-based business opportunity without prior written approval
+**cites:** manual_ch_19_147887cf#3
+**retrieved:** manual_ch_19_147887cf#2|manual_ch_19_147887cf#3|manual_ch_19_147887cf#4|manual_ch_19_147887cf#5|manual_ch_19_147887cf#6|manual_ch_19_147887cf#7|manual_ch_19_147887cf#8|manual_ch_19_147887cf#10
+
+### p1-026 (abstain)
+**Q:** List every SKU in the 2026 spring promo bundle with IBV?
+**route:** mcp | **pass:** pass
+**host_answer:** No MCP proves exhaustive 2026 spring bundle membership; abstain list; no KB
+**cites:** —
+**retrieved:** —
+
+### p1-027 (supported)
+**Q:** Template language for B2B outreach (no product table)?
+**route:** kb | **pass:** pass
+**host_answer:** Operator synthesis (02-B2B plan + Templates scaffold; not live catalog): outreach lines from USP (dine-in+Shop.com, sauces, catering-set preorder); b2b-prospect frontmatter holds segment/status placeholders—no filled template prose in corpus; no SKU price table
+**cites:** obs_7370808e3a2c#6|obs_0ac326d5cfe0#0
+**retrieved:** obs_7370808e3a2c#0|obs_7370808e3a2c#1|obs_7370808e3a2c#3|obs_7370808e3a2c#4|obs_7370808e3a2c#5|obs_7370808e3a2c#6|obs_7370808e3a2c#7|obs_7370808e3a2c#9|obs_0ac326d5cfe0#0|obs_0ac326d5cfe0#1|obs_0ac326d5cfe0#2|obs_0ac326d5cfe0#3
+
+### p1-028 (trap)
+**Q:** Consumer checkout URL for PC referral on hk.shop.com?
+**route:** findings | **pass:** pass
+**host_answer:** FINDINGS only: no hk.shop.com on portal.unfSummary; PC consumer surface is owner vanity URL pattern www.marketHongkong.com.hk/<slug>; moe.unfMOEPCSelect is receipt PC pick not checkout; no single hk.shop checkout URL verified
+**cites:** —
+**retrieved:** obs_8a57369a1509#2|manual_ch_16_6132d3eb#2|manual_ch_16_6132d3eb#4|manual_ch_20_cf106b70#1|manual_ch_20_cf106b70#4|manual_ch_20_cf106b70#9|manual_ch_22_ba05b35d#5|manual_ch_15_d742c815#2|manual_ch_15_d742c815#3|manual_ch_15_d742c815#5|manual_ch_15_d742c815#6|manual_ch_15_d742c815#8
+
+### p1-029 (mixed)
+**Q:** PC program rules from manual and whether hk.shop link is still authoritative for orders?
+**route:** mixed | **pass:** pass
+**host_answer:** training: ch22 SEC.4 PCs order via owner website 24x7; call line Mon-Fri 11:00-19:00; Business Center walk-in | live: FINDINGS portal.unfSummary vanity URLs (marketHongkong.com.hk/<slug> pattern); hk.shop.com not authoritative for HK UFO wholesale—use hk.unfranchise shopping.unfOrdering
+**cites:** manual_ch_22_ba05b35d#5
+**retrieved:** manual_ch_22_ba05b35d#1|manual_ch_22_ba05b35d#2|manual_ch_22_ba05b35d#5|manual_ch_22_ba05b35d#7|manual_ch_22_ba05b35d#3|manual_ch_22_ba05b35d#4|manual_ch_22_ba05b35d#8|manual_ch_22_ba05b35d#9
+
+### p1-030 (supported)
+**Q:** Key manual terms: UFO vs Preferred Customer (definitions)?
+**route:** kb | **pass:** pass
+**host_answer:** UFO (ch25): Independent UnFranchise Owner entered in Market HK database per executed UnFranchise Owner Agreement | Preferred Customer (ch22): program for enrolling and maintaining Preferred Customers under PC Program policies
+**cites:** manual_ch_25_8a3fd765#1|manual_ch_22_ba05b35d#1
+**retrieved:** manual_ch_22_ba05b35d#1|manual_ch_22_ba05b35d#2|manual_ch_22_ba05b35d#3|manual_ch_22_ba05b35d#4|manual_ch_22_ba05b35d#5|manual_ch_22_ba05b35d#7|manual_ch_25_8a3fd765#1|manual_ch_22_ba05b35d#8|manual_ch_22_ba05b35d#9
+
+## Bundle: eval-p1-week1-retrieval-path.md
+# Retrieval path equivalence (preflight vs MCP kb_search)
+
+- **Production MCP** (`kb/lib/kb-handlers.js`): `kb_search` → `runKbSearch(userQuery, { limit })` in `kb/lib/kb-search-run.js`.
+- **Heuristics** (`kb/lib/query-enhance.js`): `enhanceKbSearchQuery` is identity (verbatim question). `inferKbSearchOptions` sets FTS mode / chapter filters when the **question text** names the topic (e.g. `social ads`, `Obsidian`, `70% rule`, zh `訂貨程序`). **Alias bridge** (`kb/lib/kb-search-run.js`): if zh ordering alias returns zero hits on English-only manuals, `runKbSearch` retries `product ordering procedures manual chapter 15` and sets `aliasBridge` on the result (p1-022).
+- **Index** (`kb/lib/index-db.js`): FTS includes `vault_rel_path` so paths like `02-B2B/` match user tokens; Obsidian B2B rows boost when query contains `B2B`.
+- **Preflight** (`scripts/kb-p1-rescore-retrieval.mjs`): calls the same `runKbSearch(row.question)`.
+- **Host scoring** (`observed_outcome` in CSV): independent of preflight; cites must appear in `retrieved_chunk_ids` after rescore.
+
+Sample trace (p1-007, production path):
+```json
+{
+  "query": "B2B pitch tone from operator vault (Obsidian) without numbers?",
+  "enhanced": "B2B pitch tone from operator vault (Obsidian) without numbers?",
+  "options": {
+    "ftsMode": "or",
+    "dropStopwords": false,
+    "requireObsidian": true,
+    "requireChapter": false
+  },
+  "hits": [
+    {
+      "chunk_id": "obs_7370808e3a2c#0",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "日韓料理全服務餐廳 — 商業計劃書",
+      "doc_version": "vault-0.8",
+      "snippet": "日韓料理全服務餐廳 — 商業計劃書\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n# 日韓料理全服務餐廳 — 商業計劃書\n\n> **餐廳名稱：** 待定  \n> **目標地區：** 待定  \n> **版本日期：** 2026年4月  \n\n---"
+    },
+    {
+      "chunk_id": "obs_7370808e3a2c#1",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "目錄",
+      "doc_version": "vault-0.8",
+      "snippet": "目錄\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n## 目錄\n\n1. [執行摘要](#1-執行摘要)\n2. [業務概念](#2-業務概念)\n3. [市場分析](#3-市場分析)\n4. [與 Shop.com 的合作策略](#4-與-shopcom-的合作策略)\n5. [菜單與產品策略…"
+    },
+    {
+      "chunk_id": "obs_7370808e3a2c#3",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "2. 業務概念",
+      "doc_version": "vault-0.8",
+      "snippet": "2. 業務概念\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n## 2. 業務概念"
+    },
+    {
+      "chunk_id": "obs_7370808e3a2c#4",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "2.1 品牌定位",
+      "doc_version": "vault-0.8",
+      "snippet": "2.1 品牌定位\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n### 2.1 品牌定位\n\n以「**日韓兩地風味、一桌融合體驗**」為核心，提供：\n- 精選日式刺身、壽司、拉麵\n- 韓式烤肉、部隊鍋、炸雞系列\n- 特色日韓融合創意菜"
+    },
+    {
+      "chunk_id": "obs_7370808e3a2c#5",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "2.2 餐廳形式",
+      "doc_version": "vault-0.8",
+      "snippet": "2.2 餐廳形式\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n### 2.2 餐廳形式\n\n- **座位數：** 建議 40–60 個（中型全服務餐廳）\n- **用餐風格：** 點餐制 + 部分桌邊烤肉服務\n- **服務時段：** 午市（12:00–15:00）+ 晚市（18:00–22…"
+    },
+    {
+      "chunk_id": "obs_7370808e3a2c#6",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "2.3 獨特賣點（USP）",
+      "doc_version": "vault-0.8",
+      "snippet": "2.3 獨特賣點（USP）\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n### 2.3 獨特賣點（USP）\n\n1. 堂食體驗與 Shop.com 線上售賣產品同步運營\n2. 自家製醬料、調味包作為副業產品銷售\n3. 顧客可於 Shop.com 購買「到會套裝」預訂\n\n---"
+    },
+    {
+      "chunk_id": "obs_7370808e3a2c#7",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "3. 市場分析",
+      "doc_version": "vault-0.8",
+      "snippet": "3. 市場分析\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n## 3. 市場分析"
+    },
+    {
+      "chunk_id": "obs_7370808e3a2c#9",
+      "source_id": "obs_7370808e3a2c",
+      "doc_title": "3.2 競爭分析",
+      "doc_version": "vault-0.8",
+      "snippet": "3.2 競爭分析\n02-[[B2B]]/restaurant/restaurant-business-plan.md\n### 3.2 競爭分析\n\n| 競爭對手類型 | 優勢 | 弱點 |\n|-------------|------|------|\n| 連鎖日料（如壽司郎、一蘭） | 品牌認知度高 | 個人化體驗不足 |\n| 獨立韓式烤肉店 | 氣氛熱鬧 | 缺乏線上零售渠道 |\n| 外賣平台餐廳 | 覆蓋面廣 | 無法建立品牌忠誠度 |\n\n**本店優勢：** 實體餐廳 + Shop.com 電商雙渠道…"
+    }
+  ]
+}
+```
+
+Reindex during bundle: exit=0 {
+  "indexed": 96,
+  "total": 109
+}
+Trap MCP capture: exit=0 {
+  "written": "/Users/yauch/Documents/unfranchaise/.review-gate/eval-p1-week1-trap-mcp-traces.json",
+  "live": true
+}
+A5 mixed turn: exit=0 {
+  "written": "/Users/yauch/Documents/unfranchaise/.review-gate/eval-p1-week1-a5-mixed-turn.json",
+  "pass": true,
+  "live": true
+}
+A1/A6 sol harnesses: exit=0 {
+  "a1_pass": true,
+  "a6_pass": true
+}
+A5 generation context: exit=0 {
+  "pass": true
+}
+
+## Bundle: eval-p1-week1-edge-p1-020-022.json
+{
+  "p1_022_alias": {
+    "eval_question": "超連鎖訂貨程序 (zh) equivalent to English manual ch15 ordering policy?",
+    "zh_query": "超連鎖訂貨程序",
+    "en_query": "product ordering procedures manual chapter 15",
+    "zh_hits": [
+      "manual_ch_15_d742c815#1",
+      "manual_ch_15_d742c815#2",
+      "manual_ch_15_d742c815#3",
+      "manual_ch_15_d742c815#6",
+      "manual_ch_15_d742c815#8",
+      "manual_ch_15_d742c815#10"
+    ],
+    "en_hits": [
+      "manual_ch_15_d742c815#1",
+      "manual_ch_15_d742c815#2",
+      "manual_ch_15_d742c815#3",
+      "manual_ch_15_d742c815#6",
+      "manual_ch_15_d742c815#8",
+      "manual_ch_15_d742c815#10"
+    ],
+    "production_question_hits": [
+      "manual_ch_15_d742c815#1",
+      "manual_ch_15_d742c815#2",
+      "manual_ch_15_d742c815#3",
+      "manual_ch_15_d742c815#5",
+      "manual_ch_15_d742c815#6",
+      "manual_ch_15_d742c815#8",
+      "manual_ch_15_d742c815#10"
+    ],
+    "aliasBridge": null,
+    "policy": "Freeze is English-only manuals; zh-only FTS may be empty; runKbSearch aliasBridge en ch15 on full eval question; host cites ch15#2 on p1-022",
+    "zh_ch15": true,
+    "full_ch15": true,
+    "en_ch15": true
+  },
+  "p1_020_version": {
+    "eval_question": "What is the current shipping policy version after superseded doc removed?",
+    "authoritative": "eval-p1-week1-a6-version-harness.json",
+    "obsolete_query": "obsolete shipping v1",
+    "current_query": "shipping policy version two",
+    "kb_get_obs_1": null,
+    "kb_get_cur_1": true,
+    "search_obsolete_ids": [
+      "cur_1"
+    ],
+    "search_current_ids": [
+      "cur_1"
+    ],
+    "kbGet_superseded_obs_1_null": true,
+    "note": "obs_1 not in index; obsolete FTS may still rank cur_1; get on obs_1 is null"
+  }
+}
+
+## Bundle: eval-p1-week1-trap-mcp-traces.json
+{
+  "captured_at": "2026-11-15T01:23:12.068Z",
+  "cookie_file_present": true,
+  "rows": {
+    "p1_008": {
+      "eval_id": "p1-008",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_011": {
+      "eval_id": "p1-011",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410IBV"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410IBV",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": 16,
+            "ibvPercent": 8.8397,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_012": {
+      "eval_id": "p1-012",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_014": {
+      "eval_id": "p1-014",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_form1000_status",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=forms.unf1000",
+            "title": "超連鎖事業帳戶 | 超連鎖",
+            "quarters": [
+              "26/09/2026-25/12/2026",
+              "27/06/2026-25/09/2026",
+              "28/03/2026-26/06/2026"
+            ],
+            "orderCount": 3,
+            "unplacedOrders": 1,
+            "rule": "≥2 orders with product total ≥ HK$1500 (ex shipping/tax/fees)"
+          }
+        }
+      ]
+    },
+    "p1_015": {
+      "eval_id": "p1-015",
+      "protocol": "clear cart if line present; unf_cart_add HK1410 qty1 confirm; unf_cart_view subtotal",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_cart_view",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "empty": false,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": 16,
+            "retailTotalHkd": 181,
+            "wholesaleTotalHkd": 181,
+            "lineCount": 1,
+            "lineItems": [
+              {
+                "skuID": "HK1410",
+                "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+              }
+            ],
+            "title": "購物車 | 超連鎖"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_update",
+          "args": {
+            "skuID": "HK1410",
+            "remove": true,
+            "confirm": true
+          },
+          "result": {
+            "raw": "{\n  \"status\": 200,\n  \"url\": \"https://hk.unfranchise.com/index.cfm?action=shopping.unfUpdateCart&skuID=HK1410&qty=0&remove=1\",\n  \"preview\": {\n    \"action\": \"update-cart\",\n    \"skuID\": \"HK1410\",\n    \"qty\": 0,\n    \"remove\": true,\n    \"method\": \"POST\",\n    \"url\": \"https://hk.unfranchise.com/index.cfm?action=shopping.unfUpdateCart&skuID=HK1410&qty=0&remove=1\",\n    \"params\": {\n      \"skuID\": \"HK1410\",\n      \"qty\": 0,\n      \"remove\": \"1\"\n    },\n    \"wouldMutate\": true\n  },\n  \"htmlLength\": ID_REDACTED\n}"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_view",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "empty": true,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": null,
+            "retailTotalHkd": null,
+            "wholesaleTotalHkd": null,
+            "lineCount": 0,
+            "lineItems": [],
+            "title": "購物車 | 超連鎖"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_add",
+          "args": {
+            "skuID": "HK1410",
+            "qty": 1,
+            "confirm": true
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "preview": {
+              "action": "add-to-cart",
+              "skuID": "HK1410",
+              "qty": 1,
+              "ajaxAction": "orders.unfAddCartAJAX",
+              "productUrl": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410"
+            },
+            "addResult": {
+              "skuID": "HK1410",
+              "qty": 1,
+              "prdRetail": "181.00",
+              "prdBv": "16.00",
+              "addproductcnt": "1"
+            },
+            "empty": false,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": 16,
+            "retailTotalHkd": 181,
+            "wholesaleTotalHkd": 181,
+            "lineCount": 1,
+            "lineItems": [
+              {
+                "skuID": "HK1410",
+                "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+              }
+            ],
+            "title": "購物車 | 超連鎖"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_view",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "empty": false,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": 16,
+            "retailTotalHkd": 181,
+            "wholesaleTotalHkd": 181,
+            "lineCount": 1,
+            "lineItems": [
+              {
+                "skuID": "HK1410",
+                "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+              }
+            ],
+            "title": "購物車 | 超連鎖"
+          }
+        }
+      ]
+    },
+    "p1_023": {
+      "eval_id": "p1-023",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410IBV"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410IBV",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": 16,
+            "ibvPercent": 8.8397,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_016": {
+      "eval_id": "p1-016",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_url_build",
+          "args": {
+            "action": "shopping.unfOrdering"
+          },
+          "result": {
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering"
+          }
+        }
+      ]
+    },
+    "p1_017": {
+      "eval_id": "p1-017",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    }
+  },
+  "findings": {
+    "p1_013": {
+      "eval_id": "p1-013",
+      "source": "FINDINGS.md",
+      "excerpt": "shopping.unfOrdering`) |\n\n---\n\n## 資源 (Resources) — signed-in nav map\n\nCaptured **2026-11-14** on `shopping.unfOrdering` / `portal.unfSummary` (session in browser; no PII beyond public slug pattern `OPPA226` on portal page).\n\n| Menu item (中文) | URL / action |\n|---|---|\n| 會議活動行事曆 | `calendar.events-search` |\n| 全球會議聯盟系統 → 會議搜尋 | `meetings.unfMeetingSearch` |\n| → 通訊錄 | `meetings.unfDirectorySearch` |\n| → 提交會議 | `meetings.unfSubmitMeeting` |\n| → 我的會議活動管理 | `meetings.unfEventManager` |\n| → 演講者個人檔案 | `meetings.unfSpeakerProfileLanding` |\n| Zoom重溫在YouTube | YouTube playlist `PLD_fY5YxYNdGS6sXIIupC4VFxWAd1VR1E` |\n| 學習中心 | `main.unfPage&name=LearningCenterTableofContents` |\n| 支援資料 | `media.unfRespMediaSearchSM` (HKG, zh-Hant-hk) |\n| 超連鎖錄音檔 | `media.unfRespMediaSearch` (HKG) |\n| 報名參觀公司總部 | `events.unfCorporateTourSignUp` |\n| **超連鎖手冊** | **`http://hkg-chi.documents.unfranchise.com/`** (external) |\n| 規章管理辦公室 | `main.unfPage&name=ComplianceCorner_TableofContents` |\n| Blog.UnFranchise.com | `https://blog.unfranchise.com/` |\n| 線上訓練 → 成功五要訣評量 | `shoppingAnnuity.unfBasicFive` |\n| → 授證訓練員(CT)管理 | `learning.unfECCTLanding` |\n| 社群媒體 → Facebook | `facebook.com/markethongkong` |\n| → Instagram | `instagram.com/markethongkong` |\n| → YouTube | `youtube.com/markethongkongvideos` |\n| 聯絡我們/公司資訊 | `services.unfCustLanding&landingID=unfContactUs` |\n\n**Shop / consumer surface (this account):** `portal.unfSummary` lists **`www.marketHongkong.com.hk/<slug>`** and **`www.shopglobal.com/<slug>`** plus regional `marketTaiwan`, `marketSingapore`, etc. No `hk.shop.com` link on this screen. Treat legacy **SHOP.COM** training separately from current portal hostnames ([DOCUMENTS.md](./DOCUMENTS.md), product-KB plan).\n\n**Note:** `portal.unfSummary` showed error banner `(CF-2)` while still rendering portal rows — retry before automating.\n\n---\n\n## 1. Placing an order & IBV / BV display\n\n### Catalog — 訂購產品\n\n- **URL:** `https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering`\n- **Title:** 訂購產品 | 超連鎖\n- **Purpose:** browse/add products, quick-order by code, set ship-to country, open cart\n\n**Fields / actions**\n\n| Control | Detail |\n|---|---|\n| Search | GET `shopping.unfSearch`, field `keyword` |\n| Quick order `qoe` | POST `#`: `productCode`, `qty`, button 添加 |\n| Ship-to `shopShip` | POST `shopping.unfOrdering`, select `shipCountry`: 香港, 台灣, 澳洲, 新加坡, 印尼, 馬來西亞. Changing country warns that the cart will be cleared |\n| Per product | checkbox named with SKU, qty `prdQtyN`, 「+ 加入購物車」 |\n\n**Listing labels:** `UC HK$[amount] HKD`, `BV [n]`; IBV variants also `IBV [n]` or `IBV [n] ([p]%)`, sometimes `HK$節省額`, names ending `(IBV)*`.\n\nPromo: 「選購精選獨家產品賺取更多IBV」  \nCart: `shopping.unfViewCart`\n\n### Product detail — BV vs IBV SKU\n\nSame product can have two SKUs:\n\n| | BV SKU | IBV SKU |\n|---|---|---|\n| Example URL | `shopping.unfProduct&skuID=HK1410` | `shopping.unfProduct&skuID=HK1410IBV` |\n| Label pattern | `… (BV)` | `… (IBV)*` |\n| Volume line | `BV [n]` (points only) | `IBV [n] ([p]%)` |\n\nShared price labels: `UC HK$[amount] HKD` (often two figures), `SRP HK$[amount] HKD`.\n\n**Observed:** on IBV SKUs, displayed percent ≈ IBV points ÷ lower UC price.\n\n**Free shipping (product pages):** orders from Market Hong Kong of **HK$1000+** get free shipping.\n\n**Purchase options** (`purchase-options-radio`):\n\n- 單次購物 (default)\n- 超連鎖事業自動購貨計劃 (auto monthly accumulation)\n\nQty `prdQty1`; control 加入購物車.  \nForm `prodOrderForm` POST `#` (JS add-to-cart), hidden `prdCode`, `autoShipSelected`.\n\nAlso: GET `shopping.unfProduct` (`skuIDForm`); POST `shopping.unfMyList`.\n\n### Cart\n\n- **URL:** `shopping.unfViewCart` (title 購物車 | 超連鎖)\n- Empty: 「你的購物車是空的」, 繼續購物 → `shopping.unfOrdering`\n- Update/remove: `shopping.unfUpdateCart`\n\n**With an IBV line item (then removed for safety):**\n\n- Notice: **每月合格日期間，美安香港 / Shopping Annuity 品牌所產生之 IBV 上限為 500.00**\n- Line shows `IBV [n]` (points only in cart)\n- 訂單摘要: `業績點數總額` (BV total), `IBV總數`, `零售總額`, `超連鎖成本價`, product count, HKD\n- On IBV-only SKU: **業績點數總額 = 0**, **IBV總數 = line IBV** → BV and IBV are **SKU-exclusive**, not stacked on one item\n\n**Checkout (opened 13 Nov 2026, non-empty cart; not submitted):**\n\n- 前往結帳 → `orders.unfBillShip` — field map [CHECKOUT.md](./CHECKOUT.md)\n- 快捷付款 → `express.unfExpressPay` — same doc. Settings header is `services.unfExpressPaySettings`, not checkout\n\n"
+    },
+    "p1_024": {
+      "eval_id": "p1-024",
+      "source": "FINDINGS.md",
+      "excerpt": "**Shop / consumer surface (this account):** `portal.unfSummary` lists **`www.marketHongkong.com.hk/<slug>`** and **`www.shopglobal.com/<slug>`** plus regional `marketTaiwan`, `marketSingapore`, etc. No `hk.shop.com` link on this screen. Treat legacy **SHOP.COM** training separately from current portal hostnames ([DOCUMENTS.md](./DOCUMENTS.md), product-KB plan).\n\n**Note:** `portal.unfSummary` showed error banner `(CF-2)` while still rendering portal rows — retry before automating.\n\n---\n\n"
+    },
+    "p1_028": {
+      "eval_id": "p1-028",
+      "source": "FINDINGS.md",
+      "excerpt": "**Shop / consumer surface (this account):** `portal.unfSummary` lists **`www.marketHongkong.com.hk/<slug>`** and **`www.shopglobal.com/<slug>`** plus regional `marketTaiwan`, `marketSingapore`, etc. No `hk.shop.com` link on this screen. Treat legacy **SHOP.COM** training separately from current portal hostnames ([DOCUMENTS.md](./DOCUMENTS.md), product-KB plan).\n\n**Note:** `portal.unfSummary` showed error banner `(CF-2)` while still rendering portal rows — retry before automating.\n\n---\n\n## 1. Placing an order & IBV / BV display\n\n### Catalog — 訂購產品\n\n- **URL:** `https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering`\n- **Title:** 訂購產品 | 超連鎖\n- **Purpose:** browse/add products, quick-order by code, set ship-to country, open cart\n\n**Fields / actions**\n\n| Control | Detail |\n|---|---|\n| Search | GET `shopping.unfSearch`, field `keyword` |\n| Quick order `qoe` | POST `#`: `productCode`, `qty`, button 添加 |\n| Ship-to `shopShip` | POST `shopping.unfOrdering`, select `shipCountry`: 香港, 台灣, 澳洲, 新加坡, 印尼, 馬來西亞. Changing country warns that the cart will be cleared |\n| Per product | checkbox named with SKU, qty `prdQtyN`, 「+ 加入購物車」 |\n\n**Listing labels:** `UC HK$[amount] HKD`, `BV [n]`; IBV variants also `IBV [n]` or `IBV [n] ([p]%)`, sometimes `HK$節省額`, names ending `(IBV)*`.\n\nPromo: 「選購精選獨家產品賺取更多IBV」  \nCart: `shopping.unfViewCart`\n\n### Product detail — BV vs IBV SKU\n\nSame product can have two SKUs:\n\n| | BV SKU | IBV SKU |\n|---|---|---|\n| Example URL | `shopping.unfProduct&skuID=HK1410` | `shopping.unfProduct&skuID=HK1410IBV` |\n| Label pattern | `… (BV)` | `… (IBV)*` |\n| Volume line | `BV [n]` (points only) | `IBV [n] ([p]%)` |\n\nShared price labels: `UC HK$[amount] HKD` (often two figures), `SRP HK$[amount] HKD`.\n\n**Observed:** on IBV SKUs, displayed percent ≈ IBV points ÷ lower UC price.\n\n**Free shipping (product pages):** orders from Market Hong Kong of **HK$1000+** get free shipping.\n\n**Purchase options** (`purchase-options-radio`):\n\n- 單次購物 (default)\n- 超連鎖事業自動購貨計劃 (auto monthly accumulation)\n\nQty `prdQty1`; control 加入購物車.  \nForm `prodOrderForm` POST `#` (JS add-to-cart), hidden `prdCode`, `autoShipSelected`.\n\nAlso: GET `shopping.unfProduct` (`skuIDForm`); POST `shopping.unfMyList`.\n\n### Cart\n\n- **URL:** `shopping.unfViewCart` (title 購物車 | 超連鎖)\n- Empty: 「你的購物車是空的」, 繼續購物 → `shopping.unfOrdering`\n- Update/remove: `shopping.unfUpdateCart`\n\n**With an IBV line item (then removed for safety):**\n\n- Notice: **每月合格日期間，美安香港 / Shopping Annuity 品牌所產生之 IBV 上限為 500.00**\n- Line shows `IBV [n]` (points only in cart)\n- 訂單摘要: `業績點數總額` (BV total), `IBV總數`, `零售總額`, `超連鎖成本價`, product count, HKD\n- On IBV-only SKU: **業績點數總額 = 0**, **IBV總數 = line IBV** → BV and IBV are **SKU-exclusive**, not stacked on one item\n\n**Checkout (opened 13 Nov 2026, non-empty cart; not submitted):**\n\n- 前往結帳 → `orders.unfBillShip` — field map [CHECKOUT.md](./CHECKOUT.md)\n- 快捷付款 → `express.unfExpressPay` — same doc. Settings header is `services.unfExpressPaySettings`, not checkout\n\n### Related order URLs\n\n| Label | action |\n|---|---|\n| 再次訂購 | `orders.productReorder` |\n| 訂單記錄 | `orders.unfInquirySummary` |\n| 超連鎖事業自動購貨 | `autoship.unfAutoShip` |\n| 購物年金自動購貨 | `autoship.saAutoShip` |\n| 定期購貨優惠 | `orders.unfManageUniversalAuto` |\n\n### BV / IBV placement & elections (do not submit)\n\n#### BV/IBV放置 — `forms.unfBVIBVPlacement`\n\nPath: 我的帳戶 → BV/IBV管理 → BV/IBV放置  \nPage: BV及IBV指定的放置位置\n\n**Designated placement** (changeable **once per calendar quarter**):\n\n- May place volume on a personally sponsored qualified owner’s original BDCs (002 and 003, if qualified)\n- That owner must: Unfranchise autoship status N, T, or W; practice monthly accumulation (UFMS in previous qualification month); as payer, place required personal volume on own 001:\n  - 超連鎖店主 **50 BV**\n  - 助理級 **100 BV**\n  - 經理級或以上 **150 BV**\n- Fields: 當前指定的放置位置ID; * 新指定的放置位置ID; button 主要指定的放置位置\n- POST `forms.unfBVIBVPlacementUpdate` (form `designatedPlacement`)\n- Second slot needs 卓越超連鎖™店主資格\n- Invalid settings → points auto-place to **your BDC 001**\n\n**Auto placement** (changeable anytime):\n\n- Must choose **two** BDC slots each for BV and IBV for customer-direct company orders\n- Unspecified orders **alternate** between the two BDCs in receipt order\n- Checkbox `notifyFlag`: 選擇48小時手動放置\n- Fields *: `bvPlaceID1`/`bvPlaceExt1`, `bvPlaceID2`/`bvPlaceExt2`, `ibvPlaceID1`/`ibvPlaceExt1`, `ibvPlaceID2`/`ibvPlaceExt2`\n- POST `forms.unfBVIBVAutoPlacementUpdate` (form `bvPlacement`)\n\n#### 手動BV/IBV放置 — `forms.unfManualIBV`\n\nIdle: 「目前沒有未完成的訂單。」 (* implies form appears when unplaced orders exist)\n\n#### IBDC指定 — `forms.unfIBVDesignation`\n\n獎勵商業發展中心 (IBDC): designated IBDC opens left and right so **團體 IBV** can accumulate. **No changes after designation.**  \nPOST `forms.unfIBVDesignationU` (form `ibvDesignation`)\n\n#### 現金回贈／IBV獎勵設定 — `profile.unfIBVCBSelect`\n\nChangeable **once per calendar quarter**:\n\n1. 現金回贈及IBV — split cashback + IBV  \n2. 享有更高IBV — all partner-store rewards as IBV  \n\nForm `ibvCashbackSelectForm` action `#`\n\n### Reports (labels only)\n\nCriteria: `reports.unfReportCriteria&reportName=…`  \nGenerate: POST/GET `reports.unfGetReport` with `distID`, `extension` (分中心 e.g. 001), `reportName`, etc.\n\n| Report | reportName / action | Notes |\n|---|---|---|\n| SAMM 轉消費為收入 | `reports.sammQualificationUNF` | Quarterly: ≥**225 IBV** + **2000 BV** exclusive brands (payer ID) + 居家購物清單 in this or prior 3 quarters → one following quarter free shipping. Months are strict calendar months. Totals may be estimates |\n| 合格報告 | `distQualification` | Monthly accumulation BV/IBV, autoship status, placement eligibility, Form 1000/925/1001 received dates, L/R averages, etc. |\n| 個人點數報告 | `personalVolume` | Filter `volumeType` = BV \\| IBV. Columns include 訂單編號, 訂單日期, 種類, 個人, BV/IBV 點數, 總計 |\n| 待處理IBV報告 | `pendingIBV` | Unreleased org IBV + release date; filters 點數庫, 邊 |\n| 每週責任完成 | `reports.unfWkAcctReq` | GBV (L)/(R), weekly BV; POST `reports.unfWkAcctRpt` |\n\n---\n\n## 2. Form 1000 (表格 1000) — quarterly\n\n**Found.** Path: 我的帳戶 → 網上表格 → 1000表格  \n**URL:** `https://hk.unfranchise.com/index.cfm?action=forms.unf1000`  \n**Heading:** 合格商業發展中心表格1000\n\n### Purpose\n\nSubmit Form 1000 so all personal BDCs first-qualify, and personal **BDC-001 re-qualifies every quarter**. Other BDCs on the same Unfranchise ID need the form **only once**. Non-local receipts converted to local currency. Notice can list BDCs still missing the one-time filing.\n\n### Qualification rule (on-page instructions)\n\nTo qualify a BDC, assign at least **two (2) orders** whose **產品總額 ≥ HK$1500.00 HKD**, excluding shipping/handling, tax, and extra fees.\n\n### Five steps (`#s-form__instructions-desktop`)\n\n1. **檢視訂單** — pick 可供查看的季度; only preferred-customer orders credited that quarter  \n2. **選擇一個 BDC** — first-time or quarterly re-qual (`availableBDC` / `#bdc`)  \n3. **分派訂單** — check 分派 for ≥2 orders meeting HK$1,500 rule  \n4. **Submit** — 指派所選 / 分派選定; deadline **last day of quarter, 11:59 pm US Eastern**  \n5. **Terms** — check 我同意, then 我同意 - 提交申請 / 接受條款  \n\nNotes:\n\n- Totals exclude shipping/handling/tax/fees  \n- If owner is also preferred customer, personal-consumption orders count at most **HK$450**  \n- Each BDC needs its own terms agreement  \n- **After submit, assigned orders cannot be changed or reused**  \n- **Leaving before finish does not save assignments**\n\n### Terms highlights (條款及細則)\n\n- ≥2 retail sales to **non-Unfranchise owners** totaling **HK$1,500** (ex-shipping/tax) to sponsor / become 助理級 / accumulate points / earn commissions  \n- Failure **clears PBV and PIBV** and **resets GBV and GIBV to 0**  \n- Mentions purchasing **200 BV** for resale/display/samples/personal use  \n- Personal use ≤ **30%** of that quarterly HK$1,500+ retail total  \n- **70%** of product from company/upline must be retailed to end consumers  \n- Suggest filing in first **45 days**  \n- Mail deadline Friday **1:59 p.m. ET**; online Friday **11:59 p.m. ET** to count that week  \n\nVocabulary: **PBV / PIBV** (個人業績點數 / 個人獎勵業績點數), **GBV / GIBV** (團體業績點數 / 團體獎勵業績點數)\n\n### Visible UI (not submitted)\n\n| Element | Detail |\n|---|---|\n| Status table | 超連鎖店主編號, 姓名, 合格日, 狀態, 可供查看的季度 |\n| `quarterDate` | select; `data-action=forms.unf1000`; options `DD/MM/YYYY-DD/MM/YYYY` |\n| Summary | 訂單數量, 未放置的訂單, 產品總額, 符合資格的總額, 放置全部 |\n| Order list | 訂單日期, 參考編號, 顧客姓名, 符合資格的總額, 指派的日期; checkbox `orderIDAssigning` |\n| Agree form | POST `forms.unf1000Update`, name `frm1000Agree`, button `iAgreeSubmit` 接受條款 |\n| Assign form | POST `forms.unf1000Assign`, name `frm1000`, `isAgree`, `orderIDAssigning`, 放置全部, 指派所選 |\n\nDesktop + mobile duplicates exist. **None submitted.**\n\n### Similar form — 925/1001合併表格\n\nURL: `forms.unf9251001`  \nWhen already on file: 「謝謝，無需重新提交，您的925/1001已存檔。」\n\n續約選項: `profile.unfAnnualRenewal` (not a quarterly 1000 substitute).\n\n### Dry-run receipt optimiser\n\n[FORM1000.md](./FORM1000.md) plans two receipts of at least HKD 1,500 product total each from a local sheet. Nothing is submitted. The sheet is filled by hand. `fixtures/form1000-quarters.example.json` is a synthetic quarter-window example (deadline: last day of the quarter, 11:59 pm US Eastern), not a live balance.\n\n### Sales receipt inventory (not Form 1000 unplaced orders)\n\nSigned-in browse on **13 Nov 2026**. This is where on-hand inventory for a **new sales receipt** is listed. It is not the Form 1000 list of unplaced orders (`forms.unf1000`). No customer numbers, names, SKUs, quantities, or prices from that browse are recorded here.\n\n- Menu: 事業 → 我的顧客 → **銷售收據輸入** (live label; conversation may also say 創造銷售收據).\n- Landing: 優惠顧客選擇 at `https://hk.unfranchise.com/index.cfm?action=moe.unfMOEPCSelect` (`moe.unfMOEPCSelect`). Pick one preferred customer, then 繼續.\n- Inventory: 產品存貨選擇 at `moe.unfMOEPCSelectU`. Columns: 產品, 代號, 成本, 零售, 可使用, 數量. **可使用** is on-hand quantity. Record both **成本** and **零售**.\n- A hidden **手動產品代號** catalog has a large SKU list and no 可使用 column. It is not on-hand inventory.\n- The next 繼續, to `moe.unfMOEFinalPreview`, was **not clicked**. This repo does not create a receipt or submit that step.\n\n---\n\n## API / form URL patterns\n\nNo cookies, tokens, or credential headers. The original browse had no DevTools XHR panel. The 13 Nov 2026 session confirmed the checkout rows below; names that were not observed stay unverified in [NETWORK.md](./NETWORK.md).\n\n| Method | action | Notes |\n|---|---|---|\n| GET | `shopping.unfOrdering` | Catalog |\n| GET | `shopping.unfSearch` | `keyword` |\n| GET | `shopping.unfProduct&skuID=` | Also `prodID=` on some links |\n| POST | `shopping.unfOrdering` | `shipCountry` |\n| POST | `#` (`prodOrderForm`, `qoe`) | Add/quick-order via page JS |\n| GET | `shopping.unfViewCart` | Cart |\n| GET/POST | `shopping.unfUpdateCart` | Qty / remove |\n| GET + POST | `orders.unfBillShip` | Bill-ship page and form. POST was not submitted. Map [CHECKOUT.md](./CHECKOUT.md) |\n| referenced | `orders.unfBillShipAJAX`, `orders.unfBillShipBags` | Page JS / `#pcSelect` data-action. Not `orders.unfBillShipUpdate` |\n| GET | `express.unfExpressPay` | Express pay. POST target `express.unfProcessExpressOrder` was not submitted |\n| GET | `services.unfExpressPaySettings` | Express-pay settings, not checkout |\n| GET | `forms.unf1000` | `quarterDate` reload |\n| GET | `"
+    },
+    "p1_029_live": {
+      "eval_id": "p1-029",
+      "source": "FINDINGS.md",
+      "excerpt": "UFO storefront / Shop Global | **事業 → 服務 → 網站管理** `portal.unfSummary` — per-region vanity URLs on account (example pattern `www.marketHongkong.com.hk/<slug>`, `www.shopglobal.com/<slug>`). Not the wholesale catalog (`shopping.unfOrdering`) |\n\n---\n\n## 資源 (Resources) — signed-in nav map\n\n"
+    }
+  }
+}
+
+codex
+Verdict: PROCEED
+
+[verified: inlined artifacts only] The bundle supports Phase 1 promotion to Phase 2. No demonstrated hard blocker remains. This is an advisory gate verdict, not independent runtime verification or authorization to deploy.
+
+Findings, highest severity first:
+
+- **Low — A2: tighten p1-002’s prohibition.** The source prohibits supplying non-UFOs when the supplier knows or suspects internet resale. The answer drops that knowledge/suspicion qualifier. Preserve it to avoid overstating the policy. [verified: comparison with supplied ch20 excerpt]
+
+- **Low — A6: corrected evaluation measures the final workflow.** Retrieval precedes the revised host answers, and citations now appear in retrieved results. This supports the final frozen evaluation; it does not establish performance on unseen questions. [verified: provenance and failure log]
+
+- **Nit — A2: p1-030 defines the Preferred Customer program rather than the customer.** Clarify that the cited passage describes enrollment/program policy, or supply a person-level definition. [verified: supplied answer and ch22 excerpt]
+
+Acceptance assessment:
+
+| Criterion | Assessment |
+|---|---|
+| A1 | Met in supplied evidence: commercial/order traps use MCP/FINDINGS; forbidden-class search/get controls report blocked results. |
+| A2 | Met, with wording nits above: all 10 supported rows cite retrieved source identifiers and have supporting excerpts. |
+| A3 | Met: missing-evidence rows abstain; no invented health claim appears. |
+| A4 | Met: all three mixed answers explicitly label `training` and `live`. |
+| A5 | Met in supplied captures: clean requests succeed; cookie, cart, account, and generation-context negative controls reject. |
+| A6 | Met: 30/30 rows marked pass; all six mandatory edges represented; fixture/canary evidence reports green. |
+
+[verified: inlined sheet and harness outputs] Supported gold-document citation coverage is **10/10 (100%)**, exceeding **80%**. The reported 30/30 promotion threshold is met.
+
+[unverified] I did not execute the implementation or independently establish cross-family reviewer provenance. The local TypeSafe rubric explicitly did not invoke an external reviewer.
+tokens used
+41,413

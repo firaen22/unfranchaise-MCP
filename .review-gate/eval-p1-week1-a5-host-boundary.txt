@@ -1,0 +1,11 @@
+# A5 host MCP boundary (handleKbTool = kb-server path)
+
+Generated: 2026-11-15T01:23:46.867Z
+
+Green kb_search (clean args, no operationalContext): isError=false
+
+Red kb_search (cookie token in query args): isError=true text=A5 isolation failed: operational_secret_in_knowledge_payload
+
+Red kb_search (clean query, cookie in operationalContext): isError=true text=A5 isolation failed: operational_secret_in_generation_context
+
+npm test test-kb-mcp.mjs asserts the same handler path before dispatching runKbSearch.

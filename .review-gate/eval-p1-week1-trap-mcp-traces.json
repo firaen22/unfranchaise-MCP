@@ -1,0 +1,340 @@
+{
+  "captured_at": "2026-11-17T07:52:50.188Z",
+  "cookie_file_present": true,
+  "rows": {
+    "p1_008": {
+      "eval_id": "p1-008",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_011": {
+      "eval_id": "p1-011",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410IBV"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410IBV",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": 16,
+            "ibvPercent": 8.8397,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_012": {
+      "eval_id": "p1-012",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_014": {
+      "eval_id": "p1-014",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_form1000_status",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=forms.unf1000",
+            "title": "超連鎖事業帳戶 | 超連鎖",
+            "quarters": [
+              "26/09/2026-25/12/2026",
+              "27/06/2026-25/09/2026",
+              "28/03/2026-26/06/2026"
+            ],
+            "orderCount": 3,
+            "unplacedOrders": 1,
+            "rule": "≥2 orders with product total ≥ HK$1500 (ex shipping/tax/fees)"
+          }
+        }
+      ]
+    },
+    "p1_015": {
+      "eval_id": "p1-015",
+      "protocol": "clear cart if line present; unf_cart_add HK1410 qty1 confirm; unf_cart_view subtotal",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_cart_view",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "empty": false,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": 16,
+            "retailTotalHkd": 181,
+            "wholesaleTotalHkd": 181,
+            "lineCount": 1,
+            "lineItems": [
+              {
+                "skuID": "HK1410",
+                "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+              }
+            ],
+            "title": "購物車 | 超連鎖"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_update",
+          "args": {
+            "skuID": "HK1410",
+            "remove": true,
+            "confirm": true
+          },
+          "result": {
+            "raw": "{\n  \"status\": 200,\n  \"url\": \"https://hk.unfranchise.com/index.cfm?action=shopping.unfUpdateCart&skuID=HK1410&qty=0&remove=1\",\n  \"preview\": {\n    \"action\": \"update-cart\",\n    \"skuID\": \"HK1410\",\n    \"qty\": 0,\n    \"remove\": true,\n    \"method\": \"POST\",\n    \"url\": \"https://hk.unfranchise.com/index.cfm?action=shopping.unfUpdateCart&skuID=HK1410&qty=0&remove=1\",\n    \"params\": {\n      \"skuID\": \"HK1410\",\n      \"qty\": 0,\n      \"remove\": \"1\"\n    },\n    \"wouldMutate\": true\n  },\n  \"htmlLength\": ID_REDACTED\n}"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_view",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "empty": true,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": null,
+            "retailTotalHkd": null,
+            "wholesaleTotalHkd": null,
+            "lineCount": 0,
+            "lineItems": [],
+            "title": "購物車 | 超連鎖"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_add",
+          "args": {
+            "skuID": "HK1410",
+            "qty": 1,
+            "confirm": true
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "preview": {
+              "action": "add-to-cart",
+              "skuID": "HK1410",
+              "qty": 1,
+              "ajaxAction": "orders.unfAddCartAJAX",
+              "productUrl": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410"
+            },
+            "addResult": {
+              "skuID": "HK1410",
+              "qty": 1,
+              "prdRetail": "181.00",
+              "prdBv": "16.00",
+              "addproductcnt": "1"
+            },
+            "empty": false,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": 16,
+            "retailTotalHkd": 181,
+            "wholesaleTotalHkd": 181,
+            "lineCount": 1,
+            "lineItems": [
+              {
+                "skuID": "HK1410",
+                "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+              }
+            ],
+            "title": "購物車 | 超連鎖"
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_cart_view",
+          "args": {},
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+            "empty": false,
+            "ibvCapNotice": null,
+            "ibvTotal": null,
+            "bvTotal": 16,
+            "retailTotalHkd": 181,
+            "wholesaleTotalHkd": 181,
+            "lineCount": 1,
+            "lineItems": [
+              {
+                "skuID": "HK1410",
+                "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+              }
+            ],
+            "title": "購物車 | 超連鎖"
+          }
+        }
+      ]
+    },
+    "p1_023": {
+      "eval_id": "p1-023",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        },
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410IBV"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410IBV",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": 16,
+            "ibvPercent": 8.8397,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    },
+    "p1_016": {
+      "eval_id": "p1-016",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_url_build",
+          "args": {
+            "action": "shopping.unfOrdering"
+          },
+          "result": {
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering"
+          }
+        }
+      ]
+    },
+    "p1_017": {
+      "eval_id": "p1-017",
+      "calls": [
+        {
+          "ok": true,
+          "tool": "unf_get_product",
+          "args": {
+            "skuID": "HK1410"
+          },
+          "result": {
+            "status": 200,
+            "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfProduct&skuID=HK1410",
+            "title": "Shopping Annuity™ 強健免疫配方+ | 超連鎖",
+            "bvPoints": 16,
+            "ibvPoints": null,
+            "ibvPercent": null,
+            "ucHkd": null,
+            "srpHkd": 181,
+            "promoPriceHkd": null,
+            "promoActive": false,
+            "isIbvSku": true
+          }
+        }
+      ]
+    }
+  },
+  "findings": {
+    "p1_013": {
+      "eval_id": "p1-013",
+      "source": "FINDINGS.md",
+      "excerpt": "shopping.unfOrdering`) |\n\n---\n\n## 資源 (Resources) — signed-in nav map\n\nCaptured **2026-11-14** on `shopping.unfOrdering` / `portal.unfSummary` (session in browser; no PII beyond public slug pattern `OPPA226` on portal page).\n\n| Menu item (中文) | URL / action |\n|---|---|\n| 會議活動行事曆 | `calendar.events-search` |\n| 全球會議聯盟系統 → 會議搜尋 | `meetings.unfMeetingSearch` |\n| → 通訊錄 | `meetings.unfDirectorySearch` |\n| → 提交會議 | `meetings.unfSubmitMeeting` |\n| → 我的會議活動管理 | `meetings.unfEventManager` |\n| → 演講者個人檔案 | `meetings.unfSpeakerProfileLanding` |\n| Zoom重溫在YouTube | YouTube playlist `PLD_fY5YxYNdGS6sXIIupC4VFxWAd1VR1E` |\n| 學習中心 | `main.unfPage&name=LearningCenterTableofContents` |\n| 支援資料 | `media.unfRespMediaSearchSM` (HKG, zh-Hant-hk) |\n| 超連鎖錄音檔 | `media.unfRespMediaSearch` (HKG) |\n| 報名參觀公司總部 | `events.unfCorporateTourSignUp` |\n| **超連鎖手冊** | **`http://hkg-chi.documents.unfranchise.com/`** (external) |\n| 規章管理辦公室 | `main.unfPage&name=ComplianceCorner_TableofContents` |\n| Blog.UnFranchise.com | `https://blog.unfranchise.com/` |\n| 線上訓練 → 成功五要訣評量 | `shoppingAnnuity.unfBasicFive` |\n| → 授證訓練員(CT)管理 | `learning.unfECCTLanding` |\n| 社群媒體 → Facebook | `facebook.com/markethongkong` |\n| → Instagram | `instagram.com/markethongkong` |\n| → YouTube | `youtube.com/markethongkongvideos` |\n| 聯絡我們/公司資訊 | `services.unfCustLanding&landingID=unfContactUs` |\n\n**Shop / consumer surface (this account):** `portal.unfSummary` lists **`www.marketHongkong.com.hk/<slug>`** and **`www.shopglobal.com/<slug>`** plus regional `marketTaiwan`, `marketSingapore`, etc. No `hk.shop.com` link on this screen. Treat legacy **SHOP.COM** training separately from current portal hostnames ([DOCUMENTS.md](./DOCUMENTS.md), product-KB plan).\n\n**Note:** `portal.unfSummary` showed error banner `(CF-2)` while still rendering portal rows — retry before automating.\n\n---\n\n## 1. Placing an order & IBV / BV display\n\n### Catalog — 訂購產品\n\n- **URL:** `https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering`\n- **Title:** 訂購產品 | 超連鎖\n- **Purpose:** browse/add products, quick-order by code, set ship-to country, open cart\n\n**Fields / actions**\n\n| Control | Detail |\n|---|---|\n| Search | GET `shopping.unfSearch`, field `keyword` |\n| Quick order `qoe` | POST `#`: `productCode`, `qty`, button 添加 |\n| Ship-to `shopShip` | POST `shopping.unfOrdering`, select `shipCountry`: 香港, 台灣, 澳洲, 新加坡, 印尼, 馬來西亞. Changing country warns that the cart will be cleared |\n| Per product | checkbox named with SKU, qty `prdQtyN`, 「+ 加入購物車」 |\n\n**Listing labels:** `UC HK$[amount] HKD`, `BV [n]`; IBV variants also `IBV [n]` or `IBV [n] ([p]%)`, sometimes `HK$節省額`, names ending `(IBV)*`.\n\nPromo: 「選購精選獨家產品賺取更多IBV」  \nCart: `shopping.unfViewCart`\n\n### Product detail — BV vs IBV SKU\n\nSame product can have two SKUs:\n\n| | BV SKU | IBV SKU |\n|---|---|---|\n| Example URL | `shopping.unfProduct&skuID=HK1410` | `shopping.unfProduct&skuID=HK1410IBV` |\n| Label pattern | `… (BV)` | `… (IBV)*` |\n| Volume line | `BV [n]` (points only) | `IBV [n] ([p]%)` |\n\nShared price labels: `UC HK$[amount] HKD` (often two figures), `SRP HK$[amount] HKD`.\n\n**Observed:** on IBV SKUs, displayed percent ≈ IBV points ÷ lower UC price.\n\n**Free shipping (product pages):** orders from Market Hong Kong of **HK$1000+** get free shipping.\n\n**Purchase options** (`purchase-options-radio`):\n\n- 單次購物 (default)\n- 超連鎖事業自動購貨計劃 (auto monthly accumulation)\n\nQty `prdQty1`; control 加入購物車.  \nForm `prodOrderForm` POST `#` (JS add-to-cart), hidden `prdCode`, `autoShipSelected`.\n\nAlso: GET `shopping.unfProduct` (`skuIDForm`); POST `shopping.unfMyList`.\n\n### Cart\n\n- **URL:** `shopping.unfViewCart` (title 購物車 | 超連鎖)\n- Empty: 「你的購物車是空的」, 繼續購物 → `shopping.unfOrdering`\n- Update/remove: `shopping.unfUpdateCart`\n\n**With an IBV line item (then removed for safety):**\n\n- Notice: **每月合格日期間，美安香港 / Shopping Annuity 品牌所產生之 IBV 上限為 500.00**\n- Line shows `IBV [n]` (points only in cart)\n- 訂單摘要: `業績點數總額` (BV total), `IBV總數`, `零售總額`, `超連鎖成本價`, product count, HKD\n- On IBV-only SKU: **業績點數總額 = 0**, **IBV總數 = line IBV** → BV and IBV are **SKU-exclusive**, not stacked on one item\n\n**Checkout (opened 13 Nov 2026, non-empty cart; not submitted):**\n\n- 前往結帳 → `orders.unfBillShip` — field map [CHECKOUT.md](./CHECKOUT.md)\n- 快捷付款 → `express.unfExpressPay` — same doc. Settings header is `services.unfExpressPaySettings`, not checkout\n\n"
+    },
+    "p1_024": {
+      "eval_id": "p1-024",
+      "source": "FINDINGS.md",
+      "excerpt": "**Shop / consumer surface (this account):** `portal.unfSummary` lists **`www.marketHongkong.com.hk/<slug>`** and **`www.shopglobal.com/<slug>`** plus regional `marketTaiwan`, `marketSingapore`, etc. No `hk.shop.com` link on this screen. Treat legacy **SHOP.COM** training separately from current portal hostnames ([DOCUMENTS.md](./DOCUMENTS.md), product-KB plan).\n\n**Note:** `portal.unfSummary` showed error banner `(CF-2)` while still rendering portal rows — retry before automating.\n\n---\n\n"
+    },
+    "p1_028": {
+      "eval_id": "p1-028",
+      "source": "FINDINGS.md",
+      "excerpt": "**Shop / consumer surface (this account):** `portal.unfSummary` lists **`www.marketHongkong.com.hk/<slug>`** and **`www.shopglobal.com/<slug>`** plus regional `marketTaiwan`, `marketSingapore`, etc. No `hk.shop.com` link on this screen. Treat legacy **SHOP.COM** training separately from current portal hostnames ([DOCUMENTS.md](./DOCUMENTS.md), product-KB plan).\n\n**Note:** `portal.unfSummary` showed error banner `(CF-2)` while still rendering portal rows — retry before automating.\n\n---\n\n## 1. Placing an order & IBV / BV display\n\n### Catalog — 訂購產品\n\n- **URL:** `https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering`\n- **Title:** 訂購產品 | 超連鎖\n- **Purpose:** browse/add products, quick-order by code, set ship-to country, open cart\n\n**Fields / actions**\n\n| Control | Detail |\n|---|---|\n| Search | GET `shopping.unfSearch`, field `keyword` |\n| Quick order `qoe` | POST `#`: `productCode`, `qty`, button 添加 |\n| Ship-to `shopShip` | POST `shopping.unfOrdering`, select `shipCountry`: 香港, 台灣, 澳洲, 新加坡, 印尼, 馬來西亞. Changing country warns that the cart will be cleared |\n| Per product | checkbox named with SKU, qty `prdQtyN`, 「+ 加入購物車」 |\n\n**Listing labels:** `UC HK$[amount] HKD`, `BV [n]`; IBV variants also `IBV [n]` or `IBV [n] ([p]%)`, sometimes `HK$節省額`, names ending `(IBV)*`.\n\nPromo: 「選購精選獨家產品賺取更多IBV」  \nCart: `shopping.unfViewCart`\n\n### Product detail — BV vs IBV SKU\n\nSame product can have two SKUs:\n\n| | BV SKU | IBV SKU |\n|---|---|---|\n| Example URL | `shopping.unfProduct&skuID=HK1410` | `shopping.unfProduct&skuID=HK1410IBV` |\n| Label pattern | `… (BV)` | `… (IBV)*` |\n| Volume line | `BV [n]` (points only) | `IBV [n] ([p]%)` |\n\nShared price labels: `UC HK$[amount] HKD` (often two figures), `SRP HK$[amount] HKD`.\n\n**Observed:** on IBV SKUs, displayed percent ≈ IBV points ÷ lower UC price.\n\n**Free shipping (product pages):** orders from Market Hong Kong of **HK$1000+** get free shipping.\n\n**Purchase options** (`purchase-options-radio`):\n\n- 單次購物 (default)\n- 超連鎖事業自動購貨計劃 (auto monthly accumulation)\n\nQty `prdQty1`; control 加入購物車.  \nForm `prodOrderForm` POST `#` (JS add-to-cart), hidden `prdCode`, `autoShipSelected`.\n\nAlso: GET `shopping.unfProduct` (`skuIDForm`); POST `shopping.unfMyList`.\n\n### Cart\n\n- **URL:** `shopping.unfViewCart` (title 購物車 | 超連鎖)\n- Empty: 「你的購物車是空的」, 繼續購物 → `shopping.unfOrdering`\n- Update/remove: `shopping.unfUpdateCart`\n\n**With an IBV line item (then removed for safety):**\n\n- Notice: **每月合格日期間，美安香港 / Shopping Annuity 品牌所產生之 IBV 上限為 500.00**\n- Line shows `IBV [n]` (points only in cart)\n- 訂單摘要: `業績點數總額` (BV total), `IBV總數`, `零售總額`, `超連鎖成本價`, product count, HKD\n- On IBV-only SKU: **業績點數總額 = 0**, **IBV總數 = line IBV** → BV and IBV are **SKU-exclusive**, not stacked on one item\n\n**Checkout (opened 13 Nov 2026, non-empty cart; not submitted):**\n\n- 前往結帳 → `orders.unfBillShip` — field map [CHECKOUT.md](./CHECKOUT.md)\n- 快捷付款 → `express.unfExpressPay` — same doc. Settings header is `services.unfExpressPaySettings`, not checkout\n\n### Related order URLs\n\n| Label | action |\n|---|---|\n| 再次訂購 | `orders.productReorder` |\n| 訂單記錄 | `orders.unfInquirySummary` |\n| 超連鎖事業自動購貨 | `autoship.unfAutoShip` |\n| 購物年金自動購貨 | `autoship.saAutoShip` |\n| 定期購貨優惠 | `orders.unfManageUniversalAuto` |\n\n### BV / IBV placement & elections (do not submit)\n\n#### BV/IBV放置 — `forms.unfBVIBVPlacement`\n\nPath: 我的帳戶 → BV/IBV管理 → BV/IBV放置  \nPage: BV及IBV指定的放置位置\n\n**Designated placement** (changeable **once per calendar quarter**):\n\n- May place volume on a personally sponsored qualified owner’s original BDCs (002 and 003, if qualified)\n- That owner must: Unfranchise autoship status N, T, or W; practice monthly accumulation (UFMS in previous qualification month); as payer, place required personal volume on own 001:\n  - 超連鎖店主 **50 BV**\n  - 助理級 **100 BV**\n  - 經理級或以上 **150 BV**\n- Fields: 當前指定的放置位置ID; * 新指定的放置位置ID; button 主要指定的放置位置\n- POST `forms.unfBVIBVPlacementUpdate` (form `designatedPlacement`)\n- Second slot needs 卓越超連鎖™店主資格\n- Invalid settings → points auto-place to **your BDC 001**\n\n**Auto placement** (changeable anytime):\n\n- Must choose **two** BDC slots each for BV and IBV for customer-direct company orders\n- Unspecified orders **alternate** between the two BDCs in receipt order\n- Checkbox `notifyFlag`: 選擇48小時手動放置\n- Fields *: `bvPlaceID1`/`bvPlaceExt1`, `bvPlaceID2`/`bvPlaceExt2`, `ibvPlaceID1`/`ibvPlaceExt1`, `ibvPlaceID2`/`ibvPlaceExt2`\n- POST `forms.unfBVIBVAutoPlacementUpdate` (form `bvPlacement`)\n\n#### 手動BV/IBV放置 — `forms.unfManualIBV`\n\nIdle: 「目前沒有未完成的訂單。」 (* implies form appears when unplaced orders exist)\n\n#### IBDC指定 — `forms.unfIBVDesignation`\n\n獎勵商業發展中心 (IBDC): designated IBDC opens left and right so **團體 IBV** can accumulate. **No changes after designation.**  \nPOST `forms.unfIBVDesignationU` (form `ibvDesignation`)\n\n#### 現金回贈／IBV獎勵設定 — `profile.unfIBVCBSelect`\n\nChangeable **once per calendar quarter**:\n\n1. 現金回贈及IBV — split cashback + IBV  \n2. 享有更高IBV — all partner-store rewards as IBV  \n\nForm `ibvCashbackSelectForm` action `#`\n\n### Reports (labels only)\n\nCriteria: `reports.unfReportCriteria&reportName=…`  \nGenerate: POST/GET `reports.unfGetReport` with `distID`, `extension` (分中心 e.g. 001), `reportName`, etc.\n\n| Report | reportName / action | Notes |\n|---|---|---|\n| SAMM 轉消費為收入 | `reports.sammQualificationUNF` | Quarterly: ≥**225 IBV** + **2000 BV** exclusive brands (payer ID) + 居家購物清單 in this or prior 3 quarters → one following quarter free shipping. Months are strict calendar months. Totals may be estimates |\n| 合格報告 | `distQualification` | Monthly accumulation BV/IBV, autoship status, placement eligibility, Form 1000/925/1001 received dates, L/R averages, etc. |\n| 個人點數報告 | `personalVolume` | Filter `volumeType` = BV \\| IBV. Columns include 訂單編號, 訂單日期, 種類, 個人, BV/IBV 點數, 總計 |\n| 待處理IBV報告 | `pendingIBV` | Unreleased org IBV + release date; filters 點數庫, 邊 |\n| 每週責任完成 | `reports.unfWkAcctReq` | GBV (L)/(R), weekly BV; POST `reports.unfWkAcctRpt` |\n\n---\n\n## 2. Form 1000 (表格 1000) — quarterly\n\n**Found.** Path: 我的帳戶 → 網上表格 → 1000表格  \n**URL:** `https://hk.unfranchise.com/index.cfm?action=forms.unf1000`  \n**Heading:** 合格商業發展中心表格1000\n\n### Purpose\n\nSubmit Form 1000 so all personal BDCs first-qualify, and personal **BDC-001 re-qualifies every quarter**. Other BDCs on the same Unfranchise ID need the form **only once**. Non-local receipts converted to local currency. Notice can list BDCs still missing the one-time filing.\n\n### Qualification rule (on-page instructions)\n\nTo qualify a BDC, assign at least **two (2) orders** whose **產品總額 ≥ HK$1500.00 HKD**, excluding shipping/handling, tax, and extra fees.\n\n### Five steps (`#s-form__instructions-desktop`)\n\n1. **檢視訂單** — pick 可供查看的季度; only preferred-customer orders credited that quarter  \n2. **選擇一個 BDC** — first-time or quarterly re-qual (`availableBDC` / `#bdc`)  \n3. **分派訂單** — check 分派 for ≥2 orders meeting HK$1,500 rule  \n4. **Submit** — 指派所選 / 分派選定; deadline **last day of quarter, 11:59 pm US Eastern**  \n5. **Terms** — check 我同意, then 我同意 - 提交申請 / 接受條款  \n\nNotes:\n\n- Totals exclude shipping/handling/tax/fees  \n- If owner is also preferred customer, personal-consumption orders count at most **HK$450**  \n- Each BDC needs its own terms agreement  \n- **After submit, assigned orders cannot be changed or reused**  \n- **Leaving before finish does not save assignments**\n\n### Terms highlights (條款及細則)\n\n- ≥2 retail sales to **non-Unfranchise owners** totaling **HK$1,500** (ex-shipping/tax) to sponsor / become 助理級 / accumulate points / earn commissions  \n- Failure **clears PBV and PIBV** and **resets GBV and GIBV to 0**  \n- Mentions purchasing **200 BV** for resale/display/samples/personal use  \n- Personal use ≤ **30%** of that quarterly HK$1,500+ retail total  \n- **70%** of product from company/upline must be retailed to end consumers  \n- Suggest filing in first **45 days**  \n- Mail deadline Friday **1:59 p.m. ET**; online Friday **11:59 p.m. ET** to count that week  \n\nVocabulary: **PBV / PIBV** (個人業績點數 / 個人獎勵業績點數), **GBV / GIBV** (團體業績點數 / 團體獎勵業績點數)\n\n### Visible UI (not submitted)\n\n| Element | Detail |\n|---|---|\n| Status table | 超連鎖店主編號, 姓名, 合格日, 狀態, 可供查看的季度 |\n| `quarterDate` | select; `data-action=forms.unf1000`; options `DD/MM/YYYY-DD/MM/YYYY` |\n| Summary | 訂單數量, 未放置的訂單, 產品總額, 符合資格的總額, 放置全部 |\n| Order list | 訂單日期, 參考編號, 顧客姓名, 符合資格的總額, 指派的日期; checkbox `orderIDAssigning` |\n| Agree form | POST `forms.unf1000Update`, name `frm1000Agree`, button `iAgreeSubmit` 接受條款 |\n| Assign form | POST `forms.unf1000Assign`, name `frm1000`, `isAgree`, `orderIDAssigning`, 放置全部, 指派所選 |\n\nDesktop + mobile duplicates exist. **None submitted.**\n\n### Similar form — 925/1001合併表格\n\nURL: `forms.unf9251001`  \nWhen already on file: 「謝謝，無需重新提交，您的925/1001已存檔。」\n\n續約選項: `profile.unfAnnualRenewal` (not a quarterly 1000 substitute).\n\n### Dry-run receipt optimiser\n\n[FORM1000.md](./FORM1000.md) plans two receipts of at least HKD 1,500 product total each from a local sheet. Nothing is submitted. The sheet is filled by hand. `fixtures/form1000-quarters.example.json` is a synthetic quarter-window example (deadline: last day of the quarter, 11:59 pm US Eastern), not a live balance.\n\n### Sales receipt inventory (not Form 1000 unplaced orders)\n\nSigned-in browse on **13 Nov 2026**. This is where on-hand inventory for a **new sales receipt** is listed. It is not the Form 1000 list of unplaced orders (`forms.unf1000`). No customer numbers, names, SKUs, quantities, or prices from that browse are recorded here.\n\n- Menu: 事業 → 我的顧客 → **銷售收據輸入** (live label; conversation may also say 創造銷售收據).\n- Landing: 優惠顧客選擇 at `https://hk.unfranchise.com/index.cfm?action=moe.unfMOEPCSelect` (`moe.unfMOEPCSelect`). Pick one preferred customer, then 繼續.\n- Inventory: 產品存貨選擇 at `moe.unfMOEPCSelectU`. Columns: 產品, 代號, 成本, 零售, 可使用, 數量. **可使用** is on-hand quantity. Record both **成本** and **零售**.\n- A hidden **手動產品代號** catalog has a large SKU list and no 可使用 column. It is not on-hand inventory.\n- The next 繼續, to `moe.unfMOEFinalPreview`, was **not clicked**. This repo does not create a receipt or submit that step.\n\n---\n\n## API / form URL patterns\n\nNo cookies, tokens, or credential headers. The original browse had no DevTools XHR panel. The 13 Nov 2026 session confirmed the checkout rows below; names that were not observed stay unverified in [NETWORK.md](./NETWORK.md).\n\n| Method | action | Notes |\n|---|---|---|\n| GET | `shopping.unfOrdering` | Catalog |\n| GET | `shopping.unfSearch` | `keyword` |\n| GET | `shopping.unfProduct&skuID=` | Also `prodID=` on some links |\n| POST | `shopping.unfOrdering` | `shipCountry` |\n| POST | `#` (`prodOrderForm`, `qoe`) | Add/quick-order via page JS |\n| GET | `shopping.unfViewCart` | Cart |\n| GET/POST | `shopping.unfUpdateCart` | Qty / remove |\n| GET + POST | `orders.unfBillShip` | Bill-ship page and form. POST was not submitted. Map [CHECKOUT.md](./CHECKOUT.md) |\n| referenced | `orders.unfBillShipAJAX`, `orders.unfBillShipBags` | Page JS / `#pcSelect` data-action. Not `orders.unfBillShipUpdate` |\n| GET | `express.unfExpressPay` | Express pay. POST target `express.unfProcessExpressOrder` was not submitted |\n| GET | `services.unfExpressPaySettings` | Express-pay settings, not checkout |\n| GET | `forms.unf1000` | `quarterDate` reload |\n| GET | `"
+    },
+    "p1_029_live": {
+      "eval_id": "p1-029",
+      "source": "FINDINGS.md",
+      "excerpt": "UFO storefront / Shop Global | **事業 → 服務 → 網站管理** `portal.unfSummary` — per-region vanity URLs on account (example pattern `www.marketHongkong.com.hk/<slug>`, `www.shopglobal.com/<slug>`). Not the wholesale catalog (`shopping.unfOrdering`) |\n\n---\n\n## 資源 (Resources) — signed-in nav map\n\n"
+    },
+    "p1_026": {
+      "eval_id": "p1-026",
+      "source": "PLAN §2 + abstain policy",
+      "rule": "category=abstain — exhaustive live catalog list not provable; trap MCP-only rule applies to category=trap",
+      "excerpt": "No MCP tool in repo returns full 2026 spring promo bundle SKU membership; row passes on clean abstain without KB numeric cites."
+    }
+  }
+}

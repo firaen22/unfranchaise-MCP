@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-11-15T01:23:46.856Z",
+  "protocol": "1) operational unf_cart_view (sanitized summary) 2) kb_search with clean args and empty operationalContext 3) negative controls block cart HTML or cookie in operationalContext",
+  "operational_turn": {
+    "live": true,
+    "cart_summary": {
+      "status": 200,
+      "url": "https://hk.unfranchise.com/index.cfm?action=shopping.unfViewCart",
+      "empty": false,
+      "ibvCapNotice": null,
+      "ibvTotal": null,
+      "bvTotal": 16,
+      "retailTotalHkd": 181,
+      "wholesaleTotalHkd": 181,
+      "lineCount": 1,
+      "lineItems": [
+        {
+          "skuID": "HK1410",
+          "name": "Shopping Annuity™ 強健免疫配方+ - 單瓶裝 - 30份"
+        }
+      ],
+      "title": "購物車 | 超連鎖"
+    },
+    "error": null
+  },
+  "redacted_cart_summary": "{\"lineCount\":1,\"retailTotalHkd\":181,\"bvTotal\":16,\"status\":200,\"lineItems\":[{\"skuID\":\"HK1410\"}]}",
+  "knowledge_request_after_operational_turn": {
+    "args": {
+      "query": "UFO social ads policy manual chapter 19",
+      "limit": 4
+    },
+    "operationalContext": "",
+    "isError": false,
+    "hit_count": 2,
+    "dispatched_payload": "{\"tool\":\"kb_search\",\"arguments\":{\"query\":\"UFO social ads policy manual chapter 19\",\"limit\":4}}",
+    "payload_contains_cart_sku": false,
+    "host_contract": "MCP cart result stays in operational_turn only; kb_search args contain query+limit only (no cart fields)"
+  },
+  "redacted_json_in_generation_context": {
+    "operationalContext_sample": "{\"lineCount\":1,\"retailTotalHkd\":181,\"bvTotal\":16,\"status\":200,\"lineItems\":[{\"skuID\":\"HK1410\"}]}",
+    "isError": true,
+    "text_prefix": "A5 isolation failed: cart_mcp_json_in_generation_context",
+    "note": "Redacted unf_cart_view JSON in operationalContext must be rejected before kb_search"
+  },
+  "negative_cart_html_in_generation_context": {
+    "isError": true,
+    "text_prefix": "A5 isolation failed: cart_html_in_generation_context"
+  },
+  "negative_cookie_in_generation_context": {
+    "isError": true,
+    "text_prefix": "A5 isolation failed: operational_secret_in_generation_context"
+  },
+  "pass_rule": "knowledge_after_op green; cart html cookie or cart MCP JSON in operationalContext rejected before dispatch",
+  "pass": true
+}

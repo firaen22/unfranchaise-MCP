@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { load } from 'cheerio';
 import { parseCheckoutPage, checkoutMapBlocker } from './lib/parse-checkout.js';
 import { liveBlockerHint } from './lib/tools.js';
-import { parseSearchResults } from './lib/client.js';
+import { parseCartSummary, parseProductPage, parseSearchResults } from './lib/client.js';
 import { actionUrl } from './lib/urls.js';
 import { runForm1000QuartersCli } from './lib/form1000-cli.js';
 
@@ -110,6 +110,35 @@ function assertBlockerNull(html) {
     console.error = origErr;
     console.log = origLog;
   }
+}
+
+// Product page — SRP near purchase block
+{
+  const html = `<html><body><form name="prodOrderForm">
+    <div>SRP</div><span>HK$199.00 HKD</span>
+    </form></body></html>`;
+  const prod = parseProductPage(load(html));
+  assert.equal(prod.srpHkd, 199);
+}
+
+// Cart summary — non-empty when 訂單摘要 totals exist (ignore mini-cart empty copy elsewhere)
+{
+  const emptyHtml =
+    '<html><body><title>購物車</title><p>你的購物車是空的</p></body></html>';
+  assert.equal(parseCartSummary(load(emptyHtml)).empty, true);
+
+  const fullHtml = `<html><body><title>購物車</title>
+    <p>你的購物車是空的</p>
+    <a href="index.cfm?action=shopping.unfProduct&skuID=HK1410">Shopping Annuity</a>
+    <div>業績點數總額: 16.00</div>
+    <div>零售總額: HK$181.00</div>
+    <div>超連鎖成本價: HK$181.00</div>
+    </body></html>`;
+  const cart = parseCartSummary(load(fullHtml));
+  assert.equal(cart.empty, false);
+  assert.equal(cart.bvTotal, 16);
+  assert.equal(cart.retailTotalHkd, 181);
+  assert.equal(cart.lineItems[0].skuID, 'HK1410');
 }
 
 console.log('bugfix-robustness: ok');

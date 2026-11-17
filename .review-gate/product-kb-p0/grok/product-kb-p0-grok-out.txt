@@ -1,0 +1,36 @@
+**Verdict: PROCEED**
+
+Reviewed the inlined phased plan only. Linked files (`PRODUCT-KB.md`, intel, prior sol/grok outs) were not in the packet and are not graded.
+
+### Critical
+None.
+
+### Major
+None.
+
+### Nits
+
+1. **§5 Phase 0, step 0.8 (gate P0 / A1 adjacent).** The 0.8 cell still says ingest “per PRODUCT-KB”, while §4.3 and the §6.4 bootstrap acceptance make the folder allowlist (`02-B2B/**`, `Templates/**` only; catalogs and other trees excluded) authoritative in §4.3. Point the 0.8 cell at §4.3 so path notes in `PRODUCT-KB.md` cannot widen ingest.
+
+2. **§5 Phase 1 freeze timing (A6).** Step 1.1 is titled “Frozen P1 corpus” and the phase intro locks the corpus at the start of 1.3. State that 1.1 is the membership rule (`ingest_allowed=true` from 0.8 Obsidian + 0.4 manuals only) and that the lock is 1.3, so a 1.2 oracle failure still rebuilds the index before the scored run.
+
+3. **§6.4 / §7.1 oracle timing (A1).** The mixed-content classifier oracle (md price table + HTML BV/order link) is step 1.2, after 0.8 and 0.4 have already written chunks. §6 already says production ingest omits `commercial_numeric` and `order_url` spans, and there is no host CLI until 1.2. Add one line under §6.3 Phase 0.4 acceptance that the chapter smoke is index presence only (raw FTS/SQLite), and that shipping `kb search` / `kb get` waits until the 1.2 filters exist.
+
+4. **§6.1 routing card (A4).** Mixed questions are specified in §2 A4, §4 A5 (fresh knowledge context, operational answer in a separate step), and §7.1. The routing card has no mixed row. Add one row: split `live` (MCP/FINDINGS) and `training` (kb spans) under those labels.
+
+5. **§2 hard-blocker bullet (A1).** Retrieval eligibility in §6 already rejects both `commercial_numeric` and `order_url` on search and get. The hard-blocker sentence names `order_url` for the knowledge plane and then only `commercial_numeric` for the retrieval clause. Name both classes in that retrieval clause so the blocker matches §6.
+
+### Requirement trace
+
+| Requirement | Where it holds |
+|-------------|----------------|
+| Scope: own RAG primary, local gitignored `corpus/`, NotebookLM benchmark-only | Header, §1, §4.0–4.1, §9, §13 |
+| Obsidian 0.8 bootstrap, manual 0.4 enhancement, kb MCP in Phase 2 | §5 (0.8, 0.4, 2.1), §4.3, §6.3 |
+| Ordering 0.7-lite → 0.8 → 0.4 | §5 table (0.7a → 0.8 → 0.7b → 0.4) and the operator-track sentence; full 0.7 (six manual manifest rows) sits between 0.8 and 0.4, which 0.4 needs |
+| Reviewer gates | §7 P0–P3, sol + grok, §8 runner; P0 before ingest-code merge; P2 `PROCEED` before sidecar merge |
+| Stop rules | §3 out of bounds; §5 embedding stop (≥3 supported misses with gold chunks present); §5 Phase 2 only after P1 green; §11 kill/re-gate table; 0.9 only after P1 |
+| A1–A6 | §2 table, hard blockers, 30-row all-pass promotion, gold-doc % diagnostic only |
+| Dual plane, no cookie on knowledge plane | §4 diagram and A5 host boundary (fresh context, allowlisted env, no `UNF_COOKIE*`); §7.1 poison canary on tool args and knowledge-generation request at P1 and P2 |
+| `commercial_numeric` blocked on search and get | §6 retrieval eligibility (also `order_url`; null/unknown fails closed); §7.1 commercial-red and classifier oracles; interim CLI in 1.2; `npm run test:kb` in 2.2 |
+
+P0 acceptance in §7 (“own RAG + Obsidian-first”, no unresolved FIX) is met by this text. Nits above are non-blocking.

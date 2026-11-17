@@ -106,7 +106,7 @@ function buildPromoPercentPatterns(copula) {
 
 const VOLUME_LABEL_ALT = '(?:BV|IBV|UC|PBV|GBV|PIBV)';
 
-/** Amount + volume label: verb-led, `per` unit, or period-terminated shelf tag. */
+/** Amount + volume label: verb-led, `per` unit, period tag, or bare amount+label. */
 function buildVolumeAmountPatterns() {
   const amountBeforeLabel = (tail) =>
     new RegExp(
@@ -120,6 +120,8 @@ function buildVolumeAmountPatterns() {
     ),
     amountBeforeLabel(`\\s+per\\s+\\w+\\.?\\b`),
     amountBeforeLabel(`\\.(?=\\s|$)`),
+    // Mirror digit path `\d+\s*(?:BV|IBV|UC)\b` — bare spelled amount + label (no period).
+    amountBeforeLabel(`\\b`),
   ];
 }
 

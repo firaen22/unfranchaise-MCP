@@ -3,14 +3,8 @@ import { enhanceKbSearchQuery, inferKbSearchOptions, chaptersInQuery } from './q
 
 /** Row-aware search options for Phase 1 preflight (uses same path as production kb_search). */
 export function evalSearchOptions(row) {
-  const cat = row.category ?? '';
-  const q = row.question ?? '';
-
-  if (cat === 'abstain' && row.expected_route === 'kb') {
-    return inferKbSearchOptions(q);
-  }
-
-  return inferKbSearchOptions(q);
+  // Formerly branched on abstain+kb; identical to default — collapsed after 150-case equivalence (Sol/Grok A3).
+  return inferKbSearchOptions(row.question ?? '');
 }
 
 export function evalSearchQuery(row) {

@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-11-17T08:11:19.827Z",
+  "protocol": "Spawn kb-server.js over MCP stdio; list_tools + kb_search clean/red UNF_KB_OP_CONTEXT",
+  "tool_names": [
+    "kb_get",
+    "kb_search"
+  ],
+  "inventory_ok": true,
+  "clean_search": {
+    "isError": false,
+    "text_prefix": "[\n  {\n    \"chunk_id\": \"manual_ch_19_147887cf#2\",\n    \"source_id\": \"manual_ch_19_"
+  },
+  "red_search": {
+    "isError": true,
+    "text_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+    "blocked": true
+  },
+  "clean_get": {
+    "isError": false,
+    "text_prefix": "{\n  \"chunk_id\": \"manual_ch_19_147887cf#2\",\n  \"doc_title\": \"ch19 SEC. 1 ADVERTISI"
+  },
+  "red_get": {
+    "isError": true,
+    "text_prefix": "A5 isolation failed: operational_secret_in_generation_context",
+    "blocked": true
+  },
+  "pass": true
+}

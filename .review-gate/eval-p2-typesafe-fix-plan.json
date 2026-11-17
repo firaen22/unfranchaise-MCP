@@ -1,0 +1,120 @@
+{
+  "generated_at": "2026-11-15T03:05:00.000Z",
+  "method": "TypeSafe-style fix-plan scoring (local rubric; citation_check = harness-verifiable)",
+  "rubric": {
+    "effectiveness_high": "addresses root mechanism; covered by npm test or gate artifact",
+    "effectiveness_medium": "closes reviewer path but edge remains",
+    "effectiveness_low": "docs/contract only"
+  },
+  "plans": [
+    {
+      "id": "FP-A1-json-numeric-edges",
+      "targets": ["sol-P2-F10", "grok-M1-partial"],
+      "criterion": "A1",
+      "fix": "normalize quoted numerics (space, comma, minus); patterns ibvPercent; harness classify tests",
+      "effectiveness": "high",
+      "citation_check": "test-kb-classify.mjs + oracle independent spans"
+    },
+    {
+      "id": "FP-A5-nested-flatten",
+      "targets": ["sol-P2-F11"],
+      "criterion": "A5",
+      "fix": "recursive flattenMessageContent for tool_result/content arrays",
+      "effectiveness": "high",
+      "citation_check": "test-kb-mcp nested tool_result"
+    },
+    {
+      "id": "FP-A5-classifier-on-context",
+      "targets": ["grok-M1"],
+      "criterion": "A5",
+      "fix": "assertKnowledgeIsolation calls detectCommercialNumeric/detectOrderUrl on op context + payload",
+      "effectiveness": "high",
+      "citation_check": "test-kb-mcp prose commercial red"
+    },
+    {
+      "id": "FP-A5-envelope-expand",
+      "targets": ["grok-M1"],
+      "criterion": "A5",
+      "fix": "cart add/update tools; product JSON field keys; unfViewCart action URL",
+      "effectiveness": "high",
+      "citation_check": "test-kb-mcp + eval-p2-host-wire"
+    },
+    {
+      "id": "FP-A5-live-host-gen",
+      "targets": ["sol-P2-F5", "sol-P2-F12"],
+      "criterion": "A5",
+      "effectiveness": "low",
+      "fix": "eval-p2-a5-sidecar-contract.json — host must supply outbound gen capture; not sidecar-implementable",
+      "citation_check": "closed_by_sidecar_addendum_embedded_matrix_and_host_stub"
+    },
+    {
+      "id": "FP-A1-srp-value-is",
+      "targets": ["sol-P2-F12-srp-value-is"],
+      "criterion": "A1",
+      "fix": "COMMERCIAL_PATTERNS SRP value is N; oracle span + mixed-policy line",
+      "effectiveness": "high",
+      "citation_check": "test-kb-classify.mjs + kb-p2-classifier-oracle-red.mjs"
+    },
+    {
+      "id": "FP-A5-details-name-decoy",
+      "targets": ["sol-P2-F13-details-name-decoy"],
+      "criterion": "A5",
+      "fix": "stripNestedEnvelopeFields includes details; tool name from top-level only; embedded matrix red",
+      "effectiveness": "high",
+      "citation_check": "test-kb-mcp.mjs + eval-p2-a5-embedded-generation.json"
+    },
+    {
+      "id": "FP-A1-srp-value-equals",
+      "targets": ["sol-P2-F14-srp-value-equals"],
+      "criterion": "A1",
+      "fix": "SRP value equals N pattern + oracle span",
+      "effectiveness": "high",
+      "citation_check": "test-kb-classify.mjs + classifier oracle"
+    },
+    {
+      "id": "FP-A5-top-level-tool-name-parse",
+      "targets": ["sol-P2-F15-provenance-name-decoy"],
+      "criterion": "A5",
+      "fix": "toolNameFromRoleSegment uses JSON.parse top-level name, not nested provenance/details",
+      "effectiveness": "high",
+      "citation_check": "test-kb-mcp provenance decoy + embedded matrix"
+    },
+    {
+      "id": "FP-A1-connector-normalizer",
+      "targets": ["sol-P2-A1-connector-gaps"],
+      "criterion": "A1",
+      "fix": "COMMERCIAL_CONNECTOR_RE label×connector×currency×number after normalizeForDetection; connector + benign rows in test-kb-classify",
+      "effectiveness": "high",
+      "citation_check": "test-kb-classify.mjs + kb-p2-classifier-oracle-red.mjs + chunkFailsCommercialGuard in test-kb.mjs"
+    },
+    {
+      "id": "FP-A5-kb-tool-result-citation-only",
+      "targets": ["grok-P2-A5-kb-id-prose", "sol-P2-A5-provenance"],
+      "criterion": "A5",
+      "fix": "kbInnerLooksLikeRetrievalCitation JSON schema for kb_get/search-labeled tool_result; reject bare prose (delivery, cart subtotal, portal)",
+      "effectiveness": "high",
+      "citation_check": "test-kb-mcp.mjs + eval-p2-a5-embedded-generation.json"
+    },
+    {
+      "id": "FP-A5-tool-role-unified-surface",
+      "targets": ["sol-P2-A5-args-query", "grok-P2-A5-op-context"],
+      "criterion": "A5",
+      "fix": "rejectNonKbToolRoles on operationalContext, knowledgePayload, and scanPayloadForLeaks raw args; embedded JSON + unicode role",
+      "effectiveness": "high",
+      "citation_check": "test-kb-mcp.mjs portal-in-query + eval-p2-host-wire.json"
+    }
+  ],
+  "recommended_implement_order": [
+    "FP-A1-json-numeric-edges",
+    "FP-A5-nested-flatten",
+    "FP-A5-classifier-on-context",
+    "FP-A5-envelope-expand",
+    "FP-A1-srp-value-is",
+    "FP-A5-details-name-decoy",
+    "FP-A1-srp-value-equals",
+    "FP-A5-top-level-tool-name-parse",
+    "FP-A5-kb-tool-result-citation-only",
+    "FP-A1-connector-normalizer",
+    "FP-A5-tool-role-unified-surface"
+  ]
+}

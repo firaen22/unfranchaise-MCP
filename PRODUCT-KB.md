@@ -78,3 +78,16 @@ Label mentally: `claim_class=official_social`. Posts before **2026-09-28** about
 ## Eval sheet
 
 30-row template: see plan §7.1. Store filled CSV outside git or in `.review-gate/` when ready.
+
+## P2 sidecar ship (operator)
+
+**Gate:** dual `PROCEED` on `.review-gate/product-kb-p2/{sol,grok}/` (2026-11-17). **Not required for daily use:** re-run `npm run kb:p2-gate` unless you change kb code.
+
+1. **Corpus:** `npm run kb:p1-prep` if `corpus/manifest.jsonl` is missing.
+2. **MCP:** add `unfranchaise-kb` in README `mcp.json` snippet (`node kb-server.js`).
+3. **Smoke:** `npm run kb:ship-smoke` before enabling in a host agent.
+4. **Mix plane:** live BV/price/cart → `unfranchaise-hk` MCP only; policy/manual → `kb_*`. Never pass `UNF_COOKIE` into kb args or `UNF_KB_OP_CONTEXT` poison.
+
+**Provenance nit (p1-029):** frozen eval `retrieved_chunk_ids` may differ from a fresh `runKbSearch` on uncited slots (`#8` vs `#10`); cited `#5` unchanged. Rescore only when rebasing the eval sheet — see `.review-gate/eval-p1-week1-provenance.md`.
+
+**Phase 3 (optional):** second product family, 60-row holdout, hybrid retrieval — plan §5 after operator sign-off.

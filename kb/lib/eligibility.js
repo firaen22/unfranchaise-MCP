@@ -18,13 +18,11 @@ export function chunkRetrievalEligible(manifestRow, chunk) {
   if (!manifestRetrievalEligible(manifestRow)) return false;
   if (!chunk?.chunk_id || !chunk?.text) return false;
   if (isForbiddenClaimClass(chunk.claim_class)) return false;
-  if (chunkFailsCommercialGuard(chunk)) return false;
-  if (
-    manifestRow.doc_version &&
-    chunk.doc_version &&
-    manifestRow.doc_version !== chunk.doc_version
-  ) {
-    return false;
+  if (chunkFailsCommercialGuard(chunk, manifestRow)) return false;
+  if (manifestRow.doc_version) {
+    if (!chunk.doc_version || chunk.doc_version !== manifestRow.doc_version) {
+      return false;
+    }
   }
   return true;
 }

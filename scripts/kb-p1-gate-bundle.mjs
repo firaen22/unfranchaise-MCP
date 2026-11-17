@@ -175,7 +175,7 @@ Generated: ${new Date().toISOString()}
 | p1-028 | consumer_checkout_trap | FINDINGS vanity PC storefront; no hk.shop URL; MOE not checkout | fix-cites + FINDINGS excerpt |
 | p1-029 | stale_hk_shop | explicit hk.shop not authoritative; portal vanity + wholesale split | fix-cites |
 | A1 | claim_class_exclusion | sol harness: oracle + retrieve guard + freeze manifest scan | kb-p1-sol-harnesses.mjs |
-| A6 | version_edge | obs_1 kb_get null; obsolete FTS may rank cur_1 only | kb-p1-sol-harnesses.mjs |
+| A6 | version_edge | obs_1 kb_get null; obsolete-only search abstains; dual-version cites cur_1 | kb-p1-sol-harnesses.mjs |
 | A5 | mixed_turn | cart MCP then kb_search empty operationalContext; cart JSON in op context blocked | canary.js + kb-p1-a5-mixed-turn.mjs |
 
 Final sheet: 30/30 pass_fail=pass after cite/retrieval aligned via runKbSearch (not legacy evalSearchQuery).
@@ -392,7 +392,7 @@ write(
         search_obsolete_ids: a6Fixture?.search_obsolete ?? [],
         search_current_ids: a6Fixture?.search_current ?? [],
         kbGet_superseded_obs_1_null: a6Fixture?.kb_get_obsolete_null ?? true,
-        note: 'obs_1 not in index; obsolete FTS may still rank cur_1; get on obs_1 is null',
+        note: 'obs_1 not in index; obsolete-only query abstains; dual-version query returns cur_1; get on obs_1 is null',
       },
     },
     null,

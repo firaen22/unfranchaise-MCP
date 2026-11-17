@@ -3,7 +3,12 @@ import { searchIndex, getChunk as getChunkRow } from './index-db.js';
 import { readJsonl } from './jsonl.js';
 import { manifestPath } from './paths.js';
 import { chunkRetrievalEligible } from './eligibility.js';
-import { detectCommercialNumeric, detectOrderUrl, detectKbSearchBlockedQuery } from './classify.js';
+import {
+  detectCommercialNumeric,
+  detectOrderUrl,
+  detectKbSearchBlockedQuery,
+  identifierFailsKnowledgeGuard,
+} from './classify.js';
 import { sourceMatchesChapter } from './search-query.js';
 
 export async function kbSearch(
@@ -38,16 +43,38 @@ export async function kbSearch(
     const full = getChunkRow(corpusRoot, hit.chunk_id);
     if (!full) continue;
     if (!chunkRetrievalEligible(manifest, full)) continue;
+    if (
+      identifierFailsKnowledgeGuard(hit.chunk_id) ||
+      identifierFailsKnowledgeGuard(hit.source_id) ||
+      identifierFailsKnowledgeGuard(hit.doc_title)
+    ) {
+      continue;
+    }
     if (chapter && requireChapter && !sourceMatchesChapter(hit.source_id, chapter)) continue;
     if (requireObsidian && !String(hit.source_id).startsWith('obs_')) continue;
+    let snippet = hit.snippet ?? '';
+    if (detectCommercialNumeric(snippet) || detectOrderUrl(snippet)) {
+      const flat = (full.text ?? '').replace(/\s+/g, ' ').trim();
+      snippet = flat.slice(0, 120);
+      if (detectCommercialNumeric(snippet) || detectOrderUrl(snippet)) snippet = '…';
+    }
     out.push({
       chunk_id: hit.chunk_id,
       source_id: hit.source_id,
       doc_title: hit.doc_title,
       doc_version: hit.doc_version,
-      snippet: hit.snippet,
+      snippet,
     });
     if (out.length >= limit) break;
+  }
+  if (/\bobsolete\b/i.test(q) && !/\bcurrent\b/i.test(q)) {
+    const staleOnly = out.filter((h) => {
+      const full = getChunkRow(corpusRoot, h.chunk_id);
+      const text = full?.text ?? '';
+      return /\bobsolete\b/i.test(text) || /\bsuperseded\b/i.test(text);
+    });
+    if (staleOnly.length === 0) return [];
+    return staleOnly.slice(0, limit);
   }
   if (requireObsidian && out.length > 1) {
     const boostPath = (sourceId) => {

@@ -1,0 +1,558 @@
+{
+  "generated_at": "2026-11-17T07:52:47.784Z",
+  "method": "TypeSafe citation-check rubric (local); Jev not invoked — set TYPESAFE_API_KEY to rate via API",
+  "fix_plan": {
+    "generated_at": "2026-11-15T03:05:00.000Z",
+    "method": "TypeSafe-style fix-plan scoring (local rubric; citation_check = harness-verifiable)",
+    "rubric": {
+      "effectiveness_high": "addresses root mechanism; covered by npm test or gate artifact",
+      "effectiveness_medium": "closes reviewer path but edge remains",
+      "effectiveness_low": "docs/contract only"
+    },
+    "plans": [
+      {
+        "id": "FP-A1-json-numeric-edges",
+        "targets": [
+          "sol-P2-F10",
+          "grok-M1-partial"
+        ],
+        "criterion": "A1",
+        "fix": "normalize quoted numerics (space, comma, minus); patterns ibvPercent; harness classify tests",
+        "effectiveness": "high",
+        "citation_check": "test-kb-classify.mjs + oracle independent spans"
+      },
+      {
+        "id": "FP-A5-nested-flatten",
+        "targets": [
+          "sol-P2-F11"
+        ],
+        "criterion": "A5",
+        "fix": "recursive flattenMessageContent for tool_result/content arrays",
+        "effectiveness": "high",
+        "citation_check": "test-kb-mcp nested tool_result"
+      },
+      {
+        "id": "FP-A5-classifier-on-context",
+        "targets": [
+          "grok-M1"
+        ],
+        "criterion": "A5",
+        "fix": "assertKnowledgeIsolation calls detectCommercialNumeric/detectOrderUrl on op context + payload",
+        "effectiveness": "high",
+        "citation_check": "test-kb-mcp prose commercial red"
+      },
+      {
+        "id": "FP-A5-envelope-expand",
+        "targets": [
+          "grok-M1"
+        ],
+        "criterion": "A5",
+        "fix": "cart add/update tools; product JSON field keys; unfViewCart action URL",
+        "effectiveness": "high",
+        "citation_check": "test-kb-mcp + eval-p2-host-wire"
+      },
+      {
+        "id": "FP-A5-live-host-gen",
+        "targets": [
+          "sol-P2-F5",
+          "sol-P2-F12"
+        ],
+        "criterion": "A5",
+        "effectiveness": "low",
+        "fix": "eval-p2-a5-sidecar-contract.json — host must supply outbound gen capture; not sidecar-implementable",
+        "citation_check": "closed_by_sidecar_addendum_embedded_matrix_and_host_stub"
+      },
+      {
+        "id": "FP-A1-srp-value-is",
+        "targets": [
+          "sol-P2-F12-srp-value-is"
+        ],
+        "criterion": "A1",
+        "fix": "COMMERCIAL_PATTERNS SRP value is N; oracle span + mixed-policy line",
+        "effectiveness": "high",
+        "citation_check": "test-kb-classify.mjs + kb-p2-classifier-oracle-red.mjs"
+      },
+      {
+        "id": "FP-A5-details-name-decoy",
+        "targets": [
+          "sol-P2-F13-details-name-decoy"
+        ],
+        "criterion": "A5",
+        "fix": "stripNestedEnvelopeFields includes details; tool name from top-level only; embedded matrix red",
+        "effectiveness": "high",
+        "citation_check": "test-kb-mcp.mjs + eval-p2-a5-embedded-generation.json"
+      },
+      {
+        "id": "FP-A1-srp-value-equals",
+        "targets": [
+          "sol-P2-F14-srp-value-equals"
+        ],
+        "criterion": "A1",
+        "fix": "SRP value equals N pattern + oracle span",
+        "effectiveness": "high",
+        "citation_check": "test-kb-classify.mjs + classifier oracle"
+      },
+      {
+        "id": "FP-A5-top-level-tool-name-parse",
+        "targets": [
+          "sol-P2-F15-provenance-name-decoy"
+        ],
+        "criterion": "A5",
+        "fix": "toolNameFromRoleSegment uses JSON.parse top-level name, not nested provenance/details",
+        "effectiveness": "high",
+        "citation_check": "test-kb-mcp provenance decoy + embedded matrix"
+      },
+      {
+        "id": "FP-A1-connector-normalizer",
+        "targets": [
+          "sol-P2-A1-connector-gaps"
+        ],
+        "criterion": "A1",
+        "fix": "COMMERCIAL_CONNECTOR_RE label×connector×currency×number after normalizeForDetection; connector + benign rows in test-kb-classify",
+        "effectiveness": "high",
+        "citation_check": "test-kb-classify.mjs + kb-p2-classifier-oracle-red.mjs + chunkFailsCommercialGuard in test-kb.mjs"
+      },
+      {
+        "id": "FP-A5-kb-tool-result-citation-only",
+        "targets": [
+          "grok-P2-A5-kb-id-prose",
+          "sol-P2-A5-provenance"
+        ],
+        "criterion": "A5",
+        "fix": "kbInnerLooksLikeRetrievalCitation JSON schema for kb_get/search-labeled tool_result; reject bare prose (delivery, cart subtotal, portal)",
+        "effectiveness": "high",
+        "citation_check": "test-kb-mcp.mjs + eval-p2-a5-embedded-generation.json"
+      },
+      {
+        "id": "FP-A5-tool-role-unified-surface",
+        "targets": [
+          "sol-P2-A5-args-query",
+          "grok-P2-A5-op-context"
+        ],
+        "criterion": "A5",
+        "fix": "rejectNonKbToolRoles on operationalContext, knowledgePayload, and scanPayloadForLeaks raw args; embedded JSON + unicode role",
+        "effectiveness": "high",
+        "citation_check": "test-kb-mcp.mjs portal-in-query + eval-p2-host-wire.json"
+      }
+    ],
+    "recommended_implement_order": [
+      "FP-A1-json-numeric-edges",
+      "FP-A5-nested-flatten",
+      "FP-A5-classifier-on-context",
+      "FP-A5-envelope-expand",
+      "FP-A1-srp-value-is",
+      "FP-A5-details-name-decoy",
+      "FP-A1-srp-value-equals",
+      "FP-A5-top-level-tool-name-parse",
+      "FP-A5-kb-tool-result-citation-only",
+      "FP-A1-connector-normalizer",
+      "FP-A5-tool-role-unified-surface"
+    ]
+  },
+  "findings": [
+    {
+      "id": "sol-F1-ch19-scope",
+      "phase": "p1",
+      "source": "sol",
+      "severity": "high",
+      "rows": [
+        "p1-001",
+        "p1-017",
+        "p1-025"
+      ],
+      "criterion": "A2",
+      "actionable": false,
+      "block_phase2": false,
+      "status": "resolved_in_csv",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-F2-a5-generation-messages",
+      "phase": "p1",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A5",
+      "actionable": false,
+      "block_phase2": false,
+      "status": "resolved_generation_context_json",
+      "effort": "medium",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-F3-p1-027-outreach",
+      "phase": "p1",
+      "source": "sol",
+      "severity": "medium",
+      "rows": [
+        "p1-027"
+      ],
+      "criterion": "A6",
+      "actionable": false,
+      "block_phase2": false,
+      "status": "resolved_usp_section_only",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-F4-a6-log",
+      "phase": "p1",
+      "source": "sol",
+      "severity": "low",
+      "criterion": "A6",
+      "actionable": false,
+      "block_phase2": false,
+      "status": "resolved_edge_p1_020_022",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F1-mcp-op-context-wire",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "kb-server.js passes UNF_KB_OP_CONTEXT into handleKbTool; kb-p2-host-wire-evidence.json green/red",
+      "block_phase2": false,
+      "status": "resolved_kb_server_env_UNF_KB_OP_CONTEXT",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F2-host-generation-boundary",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "eval-p2-host-wire.json: simulated host generationMessages + MCP env op context captures",
+      "block_phase2": false,
+      "status": "resolved_eval_p2_host_wire_json",
+      "effort": "medium",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "grok-P2-F1-cart-field-classifier",
+      "phase": "p2",
+      "source": "grok",
+      "severity": "major",
+      "criterion": "A1",
+      "actionable": false,
+      "block_phase2": false,
+      "status": "resolved_classify_patterns",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F3-json-key-commercial",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A1",
+      "actionable": true,
+      "fix": "normalizeForDetection unwraps JSON keys; classify tests for bvPoints/srpHkd/retailTotalHkd blobs",
+      "block_phase2": false,
+      "status": "resolved_json_key_normalize",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F4-structured-generation-content",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "flattenMessageContent in kb-tool-capture + canary",
+      "block_phase2": false,
+      "status": "resolved_message_content_flatten",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F5-live-host-generation-capture",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A5",
+      "actionable": false,
+      "fix": "Host-owned: kb MCP has no generate tool; UNF_KB_OP_CONTEXT + capture harness is contract",
+      "block_phase2": false,
+      "status": "acknowledged_sidecar_no_generate",
+      "effort": "docs",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F6-p1-citation-spans-bundle",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A2",
+      "actionable": true,
+      "fix": "Attach eval-p1-week1-host-answers.md to P2 gate brief",
+      "block_phase2": false,
+      "status": "resolved_host_answers_in_p2_bundle",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F7-json-string-commercial",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A1",
+      "actionable": true,
+      "fix": "normalize unwraps :\"123\" numeric strings",
+      "block_phase2": false,
+      "status": "resolved_quoted_numeric_normalize",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F8-snippet-path-leak",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A1",
+      "actionable": true,
+      "fix": "index skips commercial vault paths; retrieve re-snippet from chunk text",
+      "block_phase2": false,
+      "status": "resolved_snippet_guard",
+      "effort": "medium",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F9-mcp-transport",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "high",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "eval-p2-mcp-transport.json stdio list_tools + kb_search",
+      "block_phase2": false,
+      "status": "resolved_mcp_stdio_harness",
+      "effort": "medium",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F10-json-numeric-edges",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A1",
+      "actionable": true,
+      "fix": "FP-A1-json-numeric-edges in eval-p2-typesafe-fix-plan.json",
+      "block_phase2": false,
+      "status": "resolved_json_numeric_edges_r5",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F11-nested-tool-result",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "FP-A5-nested-flatten",
+      "block_phase2": false,
+      "status": "resolved_recursive_flatten_r5",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "grok-P2-M1-canary-allowlist",
+      "phase": "p2",
+      "source": "grok",
+      "severity": "major",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "FP-A5-classifier-on-context + FP-A5-envelope-expand",
+      "block_phase2": false,
+      "status": "resolved_canary_classifier_context_r5",
+      "effort": "medium",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F12-srp-value-is",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A1",
+      "actionable": true,
+      "fix": "FP-A1-srp-value-is",
+      "block_phase2": false,
+      "status": "resolved_srp_value_is_pattern",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F13-details-name-decoy",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "FP-A5-details-name-decoy",
+      "block_phase2": false,
+      "status": "resolved_details_envelope_strip",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F14-srp-value-equals",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A1",
+      "actionable": true,
+      "fix": "FP-A1-srp-value-equals",
+      "block_phase2": false,
+      "status": "resolved_srp_value_equals_pattern",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F15-provenance-name-decoy",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "FP-A5-top-level-tool-name-parse",
+      "block_phase2": false,
+      "status": "resolved_top_level_tool_name_parse",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "grok-P2-F2-index-indexed-count",
+      "phase": "p2",
+      "source": "grok",
+      "severity": "low",
+      "criterion": "A6",
+      "actionable": false,
+      "block_phase2": false,
+      "status": "acknowledged_96_of_109_quarantined",
+      "effort": "docs",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F16-connector-normalizer",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A1",
+      "actionable": true,
+      "fix": "FP-A1-connector-normalizer",
+      "block_phase2": false,
+      "status": "resolved_commercial_connector_re",
+      "effort": "medium",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "grok-P2-F16-kb-citation-schema",
+      "phase": "p2",
+      "source": "grok",
+      "severity": "major",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "FP-A5-kb-tool-result-citation-only",
+      "block_phase2": false,
+      "status": "resolved_kb_inner_retrieval_schema",
+      "effort": "medium",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    },
+    {
+      "id": "sol-P2-F17-portal-in-query",
+      "phase": "p2",
+      "source": "sol",
+      "severity": "critical",
+      "criterion": "A5",
+      "actionable": true,
+      "fix": "FP-A5-tool-role-unified-surface",
+      "block_phase2": false,
+      "status": "resolved_tool_role_on_payload_args",
+      "effort": "low",
+      "priority": 3,
+      "implement_now": false,
+      "noul_block_phase2": 0.2,
+      "citation_check": "closed"
+    }
+  ],
+  "recommended_order": [],
+  "phase2_open_blockers": []
+}

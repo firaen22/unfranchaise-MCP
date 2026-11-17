@@ -10,7 +10,7 @@ import { rebuildIndexHarness } from './kb/lib/index-harness.js';
 import { kbSearch, kbGet } from './kb/lib/retrieve.js';
 import { assertKnowledgeIsolation } from './kb/lib/canary.js';
 import { captureKnowledgeToolCall } from './kb/lib/kb-tool-capture.js';
-import { applyKnowledgeEnvSanitize } from './kb/lib/kb-env.js';
+import { applyKnowledgeEnvSanitize, sanitizeKnowledgeEnv } from './kb/lib/kb-env.js';
 import { runClassifierOracleFixtures } from './kb/ingest/oracle-fixtures.js';
 import { getRepoRoot } from './kb/lib/paths.js';
 
@@ -100,6 +100,14 @@ const chunks = [
     doc_version: 'test',
   },
   {
+    chunk_id: 'mislabel_zh_1',
+    source_id: commercialSource,
+    text: 'Outlet pitch. 會員價：181',
+    claim_class: 'operator_synthesis',
+    doc_title: 'mislabeled zh price',
+    doc_version: 'test',
+  },
+  {
     chunk_id: 'order_1',
     source_id: commercialSource,
     text: 'Click https://hk.unfranchise.com/Shopping/Cart now',
@@ -157,6 +165,14 @@ assert.equal(stats.indexed, 2, 'only policy + current stale indexed');
 
 assert.equal(await kbGet('obs_1'), null, 'superseded manifest rejected');
 
+const obsoleteOnlySearch = await kbSearch('obsolete shipping v1');
+assert.equal(obsoleteOnlySearch.length, 0, 'obsolete-only query abstains');
+const currentVersionSearch = await kbSearch('current shipping policy version two');
+assert.ok(
+  currentVersionSearch.some((h) => h.chunk_id === 'cur_1'),
+  'dual-version query returns current chunk',
+);
+
 const commercialHits = await kbSearch('BV 1288');
 assert.equal(commercialHits.length, 0, 'commercial not searchable');
 
@@ -174,8 +190,11 @@ assert.ok(got?.text.includes('advertising'));
 // Harness: deliberately index forbidden rows; retrieval still blocks (§7.1)
 await rebuildIndexHarness(tmpRoot);
 assert.equal(await kbGet('mislabel_1'), null, 'mislabel in DB but retrieve blocks');
+assert.equal(await kbGet('mislabel_zh_1'), null, 'mislabel zh colon price blocked at retrieve');
 const misSearch = await kbSearch('BV is 99 for this SKU');
 assert.equal(misSearch.length, 0);
+const misZhSearch = await kbSearch('會員價');
+assert.equal(misZhSearch.length, 0, 'mislabel zh price not searchable');
 
 // Classifier oracle through real ingest
 const oracleRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'unf-kb-oracle-'));
@@ -187,6 +206,7 @@ assert.ok(oracle.forbiddenGetBlocked, 'forbidden chunks blocked on get');
 assert.ok(oracle.forbiddenSearchBlocked, 'forbidden chunks blocked on search');
 assert.ok(oracle.flattenedBvClassified, 'flattened manual table rows classified commercial');
 assert.ok(oracle.productionIndexExcludesForbidden, 'production index skips forbidden set');
+assert.ok(oracle.independentOraclePass, `independent oracle: ${oracle.independentOracleFailures?.join(', ')}`);
 fs.rmSync(oracleRoot, { recursive: true, force: true });
 
 // Defense-in-depth classification (sol P2)
@@ -209,22 +229,99 @@ assert.ok(detectCommercialNumeric('BV | 12.5'));
 
 const titleOnly = { doc_title: 'BV 99 wholesale', text: 'Pitch only.' };
 const { chunkFailsCommercialGuard } = await import('./kb/lib/classify.js');
+const { chunkRetrievalEligible } = await import('./kb/lib/eligibility.js');
 assert.ok(chunkFailsCommercialGuard(titleOnly), 'commercial in title blocked');
+
+import { validateManifestRow } from './kb/lib/manifest-schema.js';
+const poisonedManifest = validateManifestRow({
+  source_id: 'https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering',
+  source_type: 'harness',
+  title: 'policy',
+  locale: 'en',
+  sku_ids: [],
+  product_family: null,
+  canonical_for_topic: null,
+  duplicate_of_source_id: null,
+  claim_class: 'policy',
+  status: 'active',
+  ingest_allowed: true,
+  doc_version: 't',
+});
+assert.equal(poisonedManifest.ok, false, 'order URL in source_id rejected');
+assert.ok(
+  chunkFailsCommercialGuard(
+    { chunk_id: 'benign_1', text: 'Advertising policy summary.', claim_class: 'policy', doc_version: 't' },
+    { source_id: 'https://hk.unfranchise.com/index.cfm?action=shopping.unfOrdering', title: 'policy' },
+  ),
+  'poisoned source_id blocks retrieval',
+);
+assert.ok(
+  chunkFailsCommercialGuard(
+    { text: 'Pitch only.', claim_class: 'operator_synthesis' },
+    { title: 'BV 99' },
+  ),
+  'manifest title commercial when chunk doc_title empty',
+);
+assert.equal(
+  chunkRetrievalEligible(
+    {
+      source_id: policySource,
+      ingest_allowed: true,
+      status: 'active',
+      title: 'BV 99',
+      claim_class: 'operator_synthesis',
+      doc_version: 'test',
+    },
+    {
+      chunk_id: 'manifest_title_bad',
+      source_id: policySource,
+      text: 'Pitch only.',
+      claim_class: 'operator_synthesis',
+      doc_version: 'test',
+    },
+  ),
+  false,
+  'eligibility rejects manifest title commercial fallback',
+);
+assert.ok(
+  chunkFailsCommercialGuard(
+    { doc_title: 'Retail note', text: 'Harmless policy prose.', claim_class: 'operator_synthesis' },
+    { title: 'SRP: +181' },
+  ),
+  'commercial manifest title blocked even when chunk doc_title is benign',
+);
+assert.equal(classifyChunkText('Price: -29.99 only'), 'commercial_numeric');
+assert.ok(detectCommercialNumeric('{"ibvPoints":"1e2"}'));
 assert.equal(classifyChunkText('本月折扣20'), 'commercial_numeric');
+assert.equal(classifyChunkText('Retail price (HKD): 181'), 'commercial_numeric');
+assert.equal(classifyChunkText('bvPoints 16 ibvPoints null'), 'commercial_numeric');
+assert.equal(classifyChunkText('retailTotalHkd: 181'), 'commercial_numeric');
+assert.equal(classifyChunkText('Business Volume is 16'), 'commercial_numeric');
+assert.equal(
+  classifyChunkText('PC link http://www.marketHongkong.com.hk/alice'),
+  'order_url',
+);
 
 const html = fs.readFileSync('kb/fixtures/mixed-manual.html', 'utf8');
 assert.ok(detectCommercialNumeric(html));
 assert.ok(detectOrderUrl(html));
 
 // A5 MCP path capture (kb-server uses same helpers)
+let cap = captureKnowledgeToolCall(
+  'kb_search',
+  { query: 'advertising' },
+  { operationalContext: 'prior turn: advertising policy only' },
+);
+assert.equal(cap.isolation.ok, true, 'green: clean host context');
+
 const op = 'session UNF_CANARY_COOKIE=1 cart snippet';
-let cap = captureKnowledgeToolCall('kb_search', { query: 'advertising' }, { operationalContext: op });
-assert.equal(cap.isolation.ok, true, 'green: clean tool args');
+cap = captureKnowledgeToolCall('kb_search', { query: 'advertising' }, { operationalContext: op });
+assert.equal(cap.isolation.ok, false, 'red: §7.1 poisoned host context');
 
 cap = captureKnowledgeToolCall(
   'kb_search',
   { query: 'leak UNF_CANARY_COOKIE=1' },
-  { operationalContext: op },
+  { operationalContext: 'prior turn: advertising policy only' },
 );
 assert.equal(cap.isolation.ok, false, 'red: sentinel in tool args');
 
@@ -235,9 +332,47 @@ cap = captureKnowledgeToolCall(
 );
 assert.equal(cap.isolation.ok, false, 'red: cookie in generation context');
 
+const bvCitationJson = JSON.stringify({
+  chunk_id: 'manual_ch_25_8a3fd765#1',
+  doc_title: 'Definitions',
+  doc_version: 'manual-0.4',
+  text: 'Business Volume (BV): The numeric value assigned to products and services, which accumulates toward the pay out of commission.',
+});
+const bvHistoryGreen = assertKnowledgeIsolation({
+  operationalContext: `prior kb_get citation: ${bvCitationJson}`,
+  knowledgePayload: JSON.stringify({ tool: 'kb_search', arguments: { query: 'advertising', limit: 3 } }),
+  knowledgeUserPayload: 'advertising',
+});
+assert.equal(
+  bvHistoryGreen.ok,
+  true,
+  'green: BV citation + manual-0.4 metadata not proximity-flagged in generation context',
+);
+const proseCommercialRed = assertKnowledgeIsolation({
+  operationalContext: 'user asked: retail SRP is 181 today',
+  knowledgePayload: JSON.stringify({ tool: 'kb_search', arguments: { query: 'policy', limit: 3 } }),
+  knowledgeUserPayload: 'policy',
+});
+assert.equal(proseCommercialRed.ok, false, 'red: commercial prose in generation context still blocked');
+
 process.env.UNF_COOKIE = 'secret=1';
 applyKnowledgeEnvSanitize();
 assert.equal(process.env.UNF_COOKIE, undefined, 'UNF_COOKIE stripped');
+
+const allowlisted = sanitizeKnowledgeEnv({
+  PATH: '/bin',
+  HTTP_COOKIE: 'CFID=1',
+  UNF_KB_OP_CONTEXT: 'summary',
+  SECRET_API_KEY: 'nope',
+});
+assert.equal(allowlisted.HTTP_COOKIE, undefined, 'HTTP_COOKIE not in kb allowlist');
+assert.equal(allowlisted.SECRET_API_KEY, undefined, 'unknown secret keys stripped');
+assert.equal(allowlisted.UNF_KB_OP_CONTEXT, 'summary', 'UNF_KB_OP_CONTEXT retained');
+assert.equal(
+  sanitizeKnowledgeEnv({ UNF_KB_COOKIE: 'CFID=1', UNF_KB_OP_CONTEXT: 'ok' }).UNF_KB_COOKIE,
+  undefined,
+  'UNF_KB_COOKIE not allowlisted',
+);
 
 console.log('test-kb.mjs: all assertions passed');
 fs.rmSync(tmpRoot, { recursive: true, force: true });

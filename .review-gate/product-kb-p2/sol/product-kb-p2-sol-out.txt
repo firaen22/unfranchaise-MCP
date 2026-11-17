@@ -1,0 +1,20 @@
+Verdict: PROCEED
+
+Findings, Critical → Nits:
+
+- **Critical/Major:** No blocking defect identified within the supplied P2 scope. [verified: static review of inlined sources and evidence]
+- **Nit — A6, retrieval provenance:** p1-029’s fresh retrieval includes `#10` and omits frozen `#8`; both provenance artifacts explicitly report the mismatch. Cited chunk `#5` remains in both sets, so this does not demonstrate an A2/A3 failure. Reconcile the retrieval column or document why the historical freeze remains authoritative. [verified: supplied p1-029 traces]
+
+Acceptance assessment:
+
+| Criterion | Assessment |
+|---|---|
+| A1 | Forbidden classes, mislabeled text, titles and identifiers are guarded at indexing and retrieval. English spelled amounts and digit-Chinese oracle evidence satisfy the addendum’s scope. |
+| A2–A3 | Supplied citation excerpts support the scored claims; abstain rows show clean abstention. |
+| A4 | Mixed answers carry `live` / `training` labels and separate commercial evidence. |
+| A5 | Tool inventory contains only search/get; environment sanitization and handler isolation are present. Supplied transport and poison matrices satisfy the approved sidecar substitute. |
+| A6 | Sheet records 30/30 passes, with green fixture/canary evidence and test output. Retrieval discrepancy noted above. |
+
+[verified: supplied source, sheet, excerpts and harness artifacts; test execution was not independently repeated]
+
+This is one review lens. Cross-family independence and the second reviewer’s PROCEED remain unverified; this verdict alone does not establish the required dual-review approval. [unverified]

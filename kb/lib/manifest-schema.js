@@ -1,3 +1,5 @@
+import { identifierFailsKnowledgeGuard } from './classify.js';
+
 const REQUIRED_STRING = ['source_id', 'source_type', 'title', 'locale', 'claim_class', 'status', 'doc_version'];
 
 export function validateManifestRow(row) {
@@ -17,6 +19,7 @@ export function validateManifestRow(row) {
   if (!('product_family' in row)) errors.push('missing_product_family');
   if (!('canonical_for_topic' in row)) errors.push('missing_canonical_for_topic');
   if (!('duplicate_of_source_id' in row)) errors.push('missing_duplicate_of_source_id');
+  if (identifierFailsKnowledgeGuard(row.source_id)) errors.push('source_id_poisoned');
   return { ok: errors.length === 0, errors };
 }
 

@@ -3,6 +3,7 @@
 set -euo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 GATE="$REPO/.review-gate"
+export UNF_GROK_VIA_CURSOR="${UNF_GROK_VIA_CURSOR:-1}"
 DISPATCH="$GATE/dispatch-medium.sh"
 ROUND="${1:-p0}"
 EVAL_ATTACHMENT="${EVAL_ATTACHMENT:-}"
@@ -127,6 +128,8 @@ Required: no session cookie; no generate tool; manifest metadata; commercial_num
 Grade implementation against plan acceptance A1–A6 (inlined below). Implementation sources are attached as files and summarized inline.
 
 Prerequisite: P1 promotion (30/30 pass) — eval sheet and bundle attached when present.
+
+Operator addendum `eval-p2-plan-71-sidecar-addendum.md` includes **English-primary manual + A1 oracle scope** — grade P2 A1 against that section, not full spelled-Chinese matrix.
 EOF
     echo "" >>"$PROMPT"
     echo "## Plan acceptance A1–A6 (excerpt)" >>"$PROMPT"
@@ -144,8 +147,25 @@ EOF
       "$GATE/eval-p1-week1-a5-generation-context.json"
       "$GATE/eval-p1-week1-a1-claim-class-harness.json"
       "$GATE/eval-p1-week1-a6-version-harness.json"
+      "$GATE/eval-p1-week1-host-answers.md"
+      "$GATE/eval-p1-week1-manifest-freeze.json"
+      "$GATE/eval-p1-week1-a5-host-boundary.txt"
+      "$GATE/eval-p1-week1-trap-mcp-traces.json"
+      "$GATE/eval-p1-week1-p1-026-rationale.md"
       "$GATE/eval-p1-week1-failure-log.md"
       "$GATE/eval-p1-week1-provenance.md"
+      "$GATE/eval-p2-host-wire.json"
+      "$GATE/eval-p2-mcp-transport.json"
+      "$GATE/eval-p2-a5-sidecar-contract.json"
+      "$GATE/eval-p2-host-generation-stub.json"
+      "$GATE/eval-p2-a5-embedded-generation.json"
+      "$GATE/eval-p2-plan-71-sidecar-addendum.md"
+      "$GATE/eval-p1-week1-harness-empty-corpus.txt"
+      "$GATE/eval-p2-retrieval-live-traces.json"
+      "$GATE/eval-p2-classifier-oracle-red-green.json"
+      "$GATE/eval-p2-product-family-wrong-family.json"
+      "$GATE/eval-p2-typesafe-findings-rating.json"
+      "$GATE/eval-p2-typesafe-fix-plan.json"
     )
     for bf in "${P2_BUNDLE[@]}"; do
       [[ -f "$bf" ]] || continue
@@ -167,19 +187,33 @@ EOF
     KB_INLINE=(
       "$REPO/kb-server.js"
       "$REPO/kb/lib/classify.js"
+      "$REPO/kb/lib/spelled-commercial-en.js"
+      "$REPO/kb/lib/guard-normalize.js"
       "$REPO/kb/lib/eligibility.js"
       "$REPO/kb/lib/index-db.js"
       "$REPO/kb/lib/retrieve.js"
+      "$REPO/kb/lib/kb-search-run.js"
+      "$REPO/kb/lib/search-query.js"
+      "$REPO/kb/lib/jsonl.js"
+      "$REPO/kb/lib/query-enhance.js"
+      "$REPO/kb/lib/chunk-markdown.js"
+      "$REPO/kb/lib/paths.js"
+      "$REPO/kb/lib/merge-corpus.js"
       "$REPO/kb/lib/canary.js"
       "$REPO/kb/ingest/obsidian.js"
       "$REPO/kb/ingest/oracle-fixtures.js"
       "$REPO/kb/ingest/manual-html.js"
+      "$REPO/kb/ingest/manual-chapters.js"
       "$REPO/kb/lib/index-harness.js"
       "$REPO/kb/lib/manifest-schema.js"
       "$REPO/kb/lib/kb-env.js"
       "$REPO/kb/lib/kb-tool-capture.js"
+      "$REPO/kb/lib/message-content.js"
       "$REPO/kb/lib/kb-handlers.js"
       "$REPO/test-kb-mcp.mjs"
+      "$REPO/test-kb-classify.mjs"
+      "$REPO/kb/fixtures/mixed-policy.md"
+      "$REPO/kb/fixtures/mixed-manual.html"
       "$REPO/kb/cli.js"
       "$REPO/test-kb.mjs"
       "$REPO/package.json"
@@ -207,16 +241,41 @@ done
   --prompt-file "$PROMPT" --outdir "$OUT/sol" --name "product-kb-$ROUND-sol" --timeout 1200 \
   --cwd "$OUT/sol" --files "${F_LIST[@]}" &
 
-"$DISPATCH" grok --model grok-4.7 \
-  --prompt-file "$PROMPT" --outdir "$OUT/grok" --name "product-kb-$ROUND-grok" --timeout 1200 \
-  --cwd "$OUT/grok" --files "${F_LIST[@]}" &
+# Default: Grok via Cursor CLI (avoids xAI Grok Build 402). Set UNF_GROK_VIA_CURSOR=0 for ~/.grok dispatch.
+# Set UNF_SKIP_GROK=1 to run Sol-only (e.g. close Sol FIX before Grok re-gate).
+if [[ "${UNF_SKIP_GROK:-0}" != "1" ]]; then
+  if [[ "${UNF_GROK_VIA_CURSOR:-1}" == "1" ]]; then
+    bash "$GATE/dispatch-grok-cursor.sh" "$PROMPT" "$OUT/grok" "product-kb-$ROUND-grok" 1200 &
+  else
+    "$DISPATCH" grok --model grok-4.7 \
+      --prompt-file "$PROMPT" --outdir "$OUT/grok" --name "product-kb-$ROUND-grok" --timeout 1200 \
+      --cwd "$OUT/grok" --files "${F_LIST[@]}" &
+  fi
+fi
 
 wait
 
+GATE_RC=0
+if [[ "${UNF_SKIP_GROK:-0}" != "1" ]]; then
+  GROK_RESULT="$OUT/grok/product-kb-$ROUND-grok-result.json"
+  if [[ -f "$GROK_RESULT" ]]; then
+    GROK_STATUS="$(python3 -c "import json; print(json.load(open('$GROK_RESULT'))['status'])")"
+    if [[ "$GROK_STATUS" != "PASS" ]]; then
+      echo "[grok] reviewer status=$GROK_STATUS (expected PASS; xAI 402 → keep UNF_GROK_VIA_CURSOR=1)" >&2
+      GATE_RC=1
+    fi
+  else
+    echo "[grok] missing $GROK_RESULT" >&2
+    GATE_RC=1
+  fi
+fi
+
 echo "=== product-kb gate $ROUND complete ==="
 for lens in sol grok; do
+  [[ "$lens" == grok && "${UNF_SKIP_GROK:-0}" == "1" ]] && continue
   f=$(ls "$OUT/$lens"/*-out.txt 2>/dev/null | head -1)
   echo "--- $lens ---"
   head -20 "$f" 2>/dev/null || echo "(no output)"
 done
 echo "Full paths: $OUT/{sol,grok}/"
+exit "$GATE_RC"

@@ -42,7 +42,16 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 }
 ```
 
-**Product knowledge (Phase 0.8):** gitignored `corpus/` + `kb` CLI (`npm run kb:ingest-obsidian`, `node kb/cli.js search "…"`). See [PRODUCT-KB.md](./PRODUCT-KB.md) and [plan](./.review-gate/PLAN-product-kb-rag.md). No cookie on `kb-server.js`.
+**Product knowledge (P2 sidecar):** `unfranchaise-kb` MCP exposes **`kb_search`** and **`kb_get` only** over gitignored `corpus/` (no cookie, no cart tools). Start: `npm run mcp:kb` or add `kb-server.js` beside `server.js` in MCP config.
+
+| Step | Command |
+|------|---------|
+| Build corpus (once) | `npm run kb:p1-prep` (Obsidian allowlist + six EN manual chapters → `corpus/`) |
+| Override corpus path | `export UNF_KB_CORPUS=/path/to/corpus` |
+| Ship smoke | `npm run kb:ship-smoke` (`test:kb` + MCP stdio + host wire + classifier oracle) |
+| Quick search | `node kb/cli.js search "ch19 advertising"` |
+
+Routing: [PRODUCT-KB.md](./PRODUCT-KB.md) · [plan](./.review-gate/PLAN-product-kb-rag.md) (**P2 PROCEED** 2026-11-17).
 
 **CLI:** `node cli.js unf_volume_explain` · `node cli.js unf_search_products '{"keyword":"omega"}'`
 

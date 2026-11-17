@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-11-15T01:23:41.737Z",
+  "generated_at": "2026-11-15T08:52:49.588Z",
   "p1_020_eval_row": "obsolete shipping v1",
   "fixture": {
     "kb_get_obsolete_null": true,
     "kb_get_current_ok": true,
-    "search_obsolete": [
-      "cur_1"
-    ],
+    "search_obsolete": [],
+    "search_obsolete_abstain": true,
     "search_current": [
       "cur_1"
     ],
+    "p1_020_dual_version_query": "current shipping policy version two",
     "pass": true
   },
   "note": "Same temp corpus as A1 retrieve guard; obs_1 superseded_by stale_current in manifest"

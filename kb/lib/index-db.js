@@ -5,6 +5,8 @@ import { indexDbPath, manifestPath, chunksPath } from './paths.js';
 import { readJsonl } from './jsonl.js';
 import { chunkRetrievalEligible } from './eligibility.js';
 import { buildFtsQuery } from './search-query.js';
+import { detectCommercialNumeric, detectOrderUrl } from './classify.js';
+import { stripObsidianWikilinks } from './chunk-markdown.js';
 
 export function initSchema(db) {
   db.exec(`
@@ -56,9 +58,14 @@ export async function rebuildIndex(corpusRoot) {
       chunk.claim_class,
       chunk.text,
     );
-    const pathHint =
+    let pathHint =
       manifest?.vault_rel_path ?? manifest?.rel_path ?? manifest?.source_path ?? '';
-    const ftsText = [chunk.doc_title, pathHint, chunk.text].filter(Boolean).join('\n');
+    pathHint = stripObsidianWikilinks(pathHint);
+    const pathOk =
+      pathHint &&
+      !detectCommercialNumeric(pathHint) &&
+      !detectOrderUrl(pathHint);
+    const ftsText = [chunk.doc_title, pathOk ? pathHint : '', chunk.text].filter(Boolean).join('\n');
     insertFts.run(chunk.chunk_id, ftsText);
     indexed += 1;
   }
@@ -105,6 +112,15 @@ export function searchIndex(
     : stmt.all(ftsQuery, limit);
   db.close();
   return rows;
+}
+
+export function listIndexedChunkIds(corpusRoot) {
+  const dbPath = indexDbPath(corpusRoot);
+  if (!fs.existsSync(dbPath)) return [];
+  const db = new DatabaseSync(dbPath, { readOnly: true });
+  const rows = db.prepare('SELECT chunk_id FROM chunks').all();
+  db.close();
+  return rows.map((r) => r.chunk_id);
 }
 
 export function getChunk(corpusRoot, chunkId) {

@@ -2,6 +2,7 @@ import { kbGet } from './retrieve.js';
 import { runKbSearch } from './kb-search-run.js';
 import { captureKnowledgeToolCall } from './kb-tool-capture.js';
 import { scanPayloadForLeaks } from './canary.js';
+import { A5_UNINSPECTABLE_MARKER } from './message-content.js';
 
 const KB_SEARCH_KEYS = new Set(['query', 'limit']);
 const KB_GET_KEYS = new Set(['chunk_id']);
@@ -16,6 +17,28 @@ function rejectExtraOrLeakyArgs(args, allowed) {
   return { ok: true };
 }
 
+function normalizeOperationalContext(operationalContext) {
+  if (operationalContext == null || operationalContext === '') return '';
+  if (typeof operationalContext === 'string') return operationalContext;
+  try {
+    return JSON.stringify(operationalContext);
+  } catch {
+    return A5_UNINSPECTABLE_MARKER;
+  }
+}
+
+function normalizeGenerationMessages(generationMessages) {
+  if (generationMessages == null || generationMessages === '') return [];
+  if (typeof generationMessages === 'string') {
+    return [{ role: 'assistant', content: generationMessages }];
+  }
+  if (!Array.isArray(generationMessages)) return null;
+  return generationMessages.map((m) => {
+    if (typeof m === 'string') return { role: 'assistant', content: m };
+    return m;
+  });
+}
+
 /**
  * Shared MCP + integration test entry (plan A5 capture on real tool path).
  */
@@ -24,6 +47,11 @@ export async function handleKbTool(
   args = {},
   { operationalContext = '', generationMessages = [] } = {},
 ) {
+  const opCtx = normalizeOperationalContext(operationalContext);
+  const genMsgs = normalizeGenerationMessages(generationMessages);
+  if (genMsgs === null) {
+    return { isError: true, text: 'A5 isolation failed: invalid_generation_messages_shape' };
+  }
   if (name === 'kb_search') {
     const pre = rejectExtraOrLeakyArgs(args, KB_SEARCH_KEYS);
     if (!pre.ok) {
@@ -39,7 +67,7 @@ export async function handleKbTool(
     const iso = captureKnowledgeToolCall(
       'kb_search',
       { query: q, limit },
-      { operationalContext, generationMessages },
+      { operationalContext: opCtx, generationMessages: genMsgs },
     );
     if (!iso.isolation.ok) {
       return { isError: true, text: `A5 isolation failed: ${iso.isolation.reason}` };
@@ -57,8 +85,8 @@ export async function handleKbTool(
       return { isError: true, text: 'chunk_id must be a non-empty string' };
     }
     const iso = captureKnowledgeToolCall('kb_get', { chunk_id: id }, {
-      operationalContext,
-      generationMessages,
+      operationalContext: opCtx,
+      generationMessages: genMsgs,
     });
     if (!iso.isolation.ok) {
       return { isError: true, text: `A5 isolation failed: ${iso.isolation.reason}` };

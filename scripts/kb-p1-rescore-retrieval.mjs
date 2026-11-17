@@ -42,7 +42,12 @@ async function preflightRetrieval(row, hits) {
         : !citeInHits
           ? `kb_half_pending_cite_not_in_retrieval_${hits.length}`
           : `kb_half_pending_mcp_host_hits_${hits.length}_chapter_ok`;
-    if (!citeInHits && cites.length) row.pass_fail = 'fail';
+    if (!citeInHits && cites.length) {
+      row.pass_fail = 'fail';
+    } else if (ok) {
+      row.pass_fail = 'pass';
+      row.failure_class = '';
+    }
     return;
   }
 
@@ -71,7 +76,12 @@ async function preflightRetrieval(row, hits) {
         : !citeInHits
           ? `hits_${hits.length}_cite_not_in_retrieval`
           : `hits_${hits.length}_chapter_ok`;
-    if (!citeInHits && cites.length) row.pass_fail = 'fail';
+    if (!citeInHits && cites.length) {
+      row.pass_fail = 'fail';
+    } else if (ok) {
+      row.pass_fail = 'pass';
+      row.failure_class = '';
+    }
     return;
   }
 

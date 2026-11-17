@@ -1,96 +1,215 @@
 {
-  "generated_at": "2026-11-15T01:23:47.158Z",
+  "generated_at": "2026-11-17T07:52:49.649Z",
   "row_count": 10,
   "rows": [
     {
       "source_id": "obs_7370808e3a2c",
+      "source_type": "obsidian_md",
       "vault_rel_path": "02-B2B/restaurant/restaurant-business-plan.md",
+      "title": "restaurant-business-plan",
+      "locale": "zh",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": null,
+      "duplicate_of_source_id": null,
       "claim_class": "operator_synthesis",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "vault-0.8",
-      "superseded_by": null
+      "doc_version": "vault-0.8"
     },
     {
       "source_id": "obs_3e979574738b",
+      "source_type": "obsidian_md",
       "vault_rel_path": "02-B2B/restaurant/restaurant-shopcom-pitch.md",
+      "title": "restaurant-shopcom-pitch",
+      "locale": "zh",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": null,
+      "duplicate_of_source_id": null,
       "claim_class": "operator_synthesis",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "vault-0.8",
-      "superseded_by": null
+      "doc_version": "vault-0.8"
     },
     {
       "source_id": "obs_0ac326d5cfe0",
+      "source_type": "obsidian_md",
       "vault_rel_path": "Templates/b2b-prospect.md",
+      "title": "b2b-prospect",
+      "locale": "zh",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": null,
+      "duplicate_of_source_id": null,
       "claim_class": "operator_synthesis",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "vault-0.8",
-      "superseded_by": null
+      "doc_version": "vault-0.8"
     },
     {
       "source_id": "obs_8a57369a1509",
+      "source_type": "obsidian_md",
       "vault_rel_path": "Templates/downline-recruit.md",
+      "title": "downline-recruit",
+      "locale": "zh",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": null,
+      "duplicate_of_source_id": null,
       "claim_class": "operator_synthesis",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "vault-0.8",
-      "superseded_by": null
+      "doc_version": "vault-0.8"
     },
     {
       "source_id": "manual_ch_15_d742c815",
-      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-15-product-ordering-procedures-and-policies/",
+      "source_type": "manual_html",
+      "url": "https://hkg-eng.documents.unfranchise.com/chapter-15-product-ordering-procedures-and-policies/",
+      "chapter": "15",
+      "title": "Product ordering",
+      "locale": "en",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": "manual_ch_15",
+      "duplicate_of_source_id": null,
       "claim_class": "policy",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "manual-0.4",
-      "superseded_by": null
+      "doc_version": "manual-0.4"
     },
     {
       "source_id": "manual_ch_16_6132d3eb",
-      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-16-product-sales-and-distribution/",
+      "source_type": "manual_html",
+      "url": "https://hkg-eng.documents.unfranchise.com/chapter-16-product-sales-and-distribution/",
+      "chapter": "16",
+      "title": "Sales & distribution",
+      "locale": "en",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": "manual_ch_16",
+      "duplicate_of_source_id": null,
       "claim_class": "policy",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "manual-0.4",
-      "superseded_by": null
+      "doc_version": "manual-0.4"
     },
     {
       "source_id": "manual_ch_19_147887cf",
-      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-19-advertising-and-promotion/",
+      "source_type": "manual_html",
+      "url": "https://hkg-eng.documents.unfranchise.com/chapter-19-advertising-and-promotion/",
+      "chapter": "19",
+      "title": "Advertising",
+      "locale": "en",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": "manual_ch_19",
+      "duplicate_of_source_id": null,
       "claim_class": "policy",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "manual-0.4",
-      "superseded_by": null
+      "doc_version": "manual-0.4"
     },
     {
       "source_id": "manual_ch_20_cf106b70",
-      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-20-internet-and-webcenter-policies/",
+      "source_type": "manual_html",
+      "url": "https://hkg-eng.documents.unfranchise.com/chapter-20-internet-and-webcenter-policies/",
+      "chapter": "20",
+      "title": "Internet / WebCenter",
+      "locale": "en",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": "manual_ch_20",
+      "duplicate_of_source_id": null,
       "claim_class": "policy",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "manual-0.4",
-      "superseded_by": null
+      "doc_version": "manual-0.4"
     },
     {
       "source_id": "manual_ch_22_ba05b35d",
-      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-22-preferred-customer-program-policies-and-procedures/",
+      "source_type": "manual_html",
+      "url": "https://hkg-eng.documents.unfranchise.com/chapter-22-preferred-customer-program-policies-and-procedures/",
+      "chapter": "22",
+      "title": "PC program",
+      "locale": "en",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": "manual_ch_22",
+      "duplicate_of_source_id": null,
       "claim_class": "policy",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "manual-0.4",
-      "superseded_by": null
+      "doc_version": "manual-0.4"
     },
     {
       "source_id": "manual_ch_25_8a3fd765",
-      "vault_rel_path": "https://hkg-eng.documents.unfranchise.com/chapter-25-key-definitions-and-terminology/",
+      "source_type": "manual_html",
+      "url": "https://hkg-eng.documents.unfranchise.com/chapter-25-key-definitions-and-terminology/",
+      "chapter": "25",
+      "title": "Definitions",
+      "locale": "en",
+      "product_family": null,
+      "sku_ids": [],
+      "canonical_for_topic": "manual_ch_25",
+      "duplicate_of_source_id": null,
       "claim_class": "policy",
       "status": "active",
       "ingest_allowed": true,
-      "doc_version": "manual-0.4",
-      "superseded_by": null
+      "doc_version": "manual-0.4"
     }
-  ]
+  ],
+  "validateManifestRow": [
+    {
+      "source_id": "obs_7370808e3a2c",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "obs_3e979574738b",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "obs_0ac326d5cfe0",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "obs_8a57369a1509",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "manual_ch_15_d742c815",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "manual_ch_16_6132d3eb",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "manual_ch_19_147887cf",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "manual_ch_20_cf106b70",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "manual_ch_22_ba05b35d",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "source_id": "manual_ch_25_8a3fd765",
+      "ok": true,
+      "errors": []
+    }
+  ],
+  "all_valid": true
 }

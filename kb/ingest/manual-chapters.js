@@ -9,7 +9,7 @@ import {
   chunksPath,
 } from '../lib/paths.js';
 import { readJsonl, writeJsonl } from '../lib/jsonl.js';
-import { classifyChunkText, detectCommercialNumeric } from '../lib/classify.js';
+import { classifyChunkText, detectCommercialNumeric, chunkFailsCommercialGuard } from '../lib/classify.js';
 import { assertManifestRow } from '../lib/manifest-schema.js';
 import { mergeManualIntoCorpus } from '../lib/merge-corpus.js';
 import { rebuildIndex } from '../lib/index-db.js';
@@ -27,7 +27,7 @@ export const MANUAL_CHAPTERS_04 = [
   { chapter: '25', slug: '/chapter-25-key-definitions-and-terminology/', title: 'Definitions' },
 ];
 
-function sanitizeDefinitionText(text) {
+function sanitizeManualPolicyText(text) {
   const lines = text.split('\n').filter((line) => !detectCommercialNumeric(line));
   return lines.join('\n').trim();
 }
@@ -43,11 +43,25 @@ export function chunkManualPageHtml(html, { docTitle = 'manual', chapter = '' } 
   const chunks = [];
   let buf = [];
   let heading = docTitle;
+  let currentHeadingLevel = 1;
+  const headingStack = [];
+
+  const headingBlobPrefix = () => {
+    if (currentHeadingLevel <= 1) return '';
+    const lines = [];
+    for (let level = 2; level < currentHeadingLevel; level++) {
+      const h = headingStack[level - 1];
+      if (h) lines.push(`${'#'.repeat(level)} ${h}`);
+    }
+    return lines.length ? `${lines.join('\n')}\n` : '';
+  };
 
   const flush = () => {
     const text = buf.join('\n').trim();
     if (!text) return;
-    const blob = `${heading}\n${text}`;
+    const headingLine =
+      currentHeadingLevel > 1 ? `${'#'.repeat(currentHeadingLevel)} ${heading}` : heading;
+    const blob = `${headingBlobPrefix()}${headingLine}\n${text}`;
     const claimClass = classifyChunkText(blob, { defaultClass: 'policy' });
     chunks.push({
       heading: `${chapter ? `ch${chapter} ` : ''}${heading}`,
@@ -63,11 +77,25 @@ export function chunkManualPageHtml(html, { docTitle = 'manual', chapter = '' } 
     if (!piece) return;
     if (tag?.startsWith('h')) {
       flush();
+      const level = Math.min(6, Number.parseInt(tag[1], 10) || 1);
+      currentHeadingLevel = level;
+      headingStack.length = level;
+      headingStack[level - 1] = piece;
       heading = piece;
     } else if (tag === 'table') {
       flush();
       const tableChunks = chunkManualHtml(`<table>${$(el).html()}</table>`, { docTitle: heading });
-      chunks.push(...tableChunks);
+      const headingLine =
+        currentHeadingLevel > 1 ? `${'#'.repeat(currentHeadingLevel)} ${heading}` : heading;
+      const prefix = headingBlobPrefix();
+      for (const tc of tableChunks) {
+        const blob = prefix ? `${prefix}${headingLine}\n${tc.text}` : `${headingLine}\n${tc.text}`;
+        chunks.push({
+          ...tc,
+          text: blob,
+          claim_class: classifyChunkText(blob, { defaultClass: 'policy' }),
+        });
+      }
     } else {
       buf.push(piece);
     }
@@ -137,21 +165,24 @@ export async function ingestManualChapters04({
       }),
     );
 
+    const manifestRow = manifest[manifest.length - 1];
     const sections = chunkManualPageHtml(html, { docTitle: ch.title, chapter: ch.chapter });
     const isDefinitionsChapter = ch.chapter === '25';
     sections.forEach((sec, i) => {
       let claimClass = sec.claim_class;
-      if (isDefinitionsChapter) {
-        claimClass = claimClass === 'order_url' ? 'order_url' : 'policy';
+      if (isDefinitionsChapter && claimClass !== 'order_url') {
+        claimClass = 'policy';
       }
       if (claimClass === 'order_url') return;
-      let text = sec.text;
+      let text = sanitizeManualPolicyText(sec.text);
+      if (!text) return;
       if (isDefinitionsChapter) {
-        text = sanitizeDefinitionText(text);
-        if (!text) return;
         claimClass = 'policy';
-      } else if (claimClass === 'commercial_numeric') return;
-      chunks.push({
+      } else {
+        claimClass = classifyChunkText(text, { defaultClass: 'policy' });
+        if (claimClass === 'order_url' || claimClass === 'commercial_numeric') return;
+      }
+      const row = {
         chunk_id: `${sourceId}#${i}`,
         source_id: sourceId,
         text,
@@ -159,7 +190,9 @@ export async function ingestManualChapters04({
         doc_type: 'manual_html',
         doc_title: sec.heading,
         doc_version: docVersion,
-      });
+      };
+      if (isDefinitionsChapter && chunkFailsCommercialGuard(row, manifestRow)) return;
+      chunks.push(row);
     });
   }
 

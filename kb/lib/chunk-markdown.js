@@ -7,19 +7,27 @@ export function stripObsidianWikilinks(markdown) {
 
 /**
  * Heading-based markdown chunks (## and ### boundaries).
+ * Child sections inherit ancestor heading lines for classification guards (plan §6).
  */
 export function chunkMarkdown(markdown, { docTitle = '' } = {}) {
   const lines = stripObsidianWikilinks(markdown).replace(/\r\n/g, '\n').split('\n');
   const sections = [];
-  let current = { heading: docTitle || '(root)', lines: [] };
+  const headingStack = [];
+  let current = { heading: docTitle || '(root)', lines: [], ancestors: [] };
 
   for (const line of lines) {
     const hm = line.match(/^(#{1,3})\s+(.+)$/);
     if (hm) {
+      const level = hm[1].length;
       if (current.lines.length > 0 || current.heading) {
         sections.push(current);
       }
-      current = { heading: hm[2].trim(), lines: [line] };
+      while (headingStack.length && headingStack[headingStack.length - 1].level >= level) {
+        headingStack.pop();
+      }
+      const ancestors = headingStack.map((h) => h.line);
+      headingStack.push({ level, line });
+      current = { heading: hm[2].trim(), lines: [line], ancestors };
     } else {
       current.lines.push(line);
     }
@@ -27,9 +35,11 @@ export function chunkMarkdown(markdown, { docTitle = '' } = {}) {
   if (current.lines.length > 0) sections.push(current);
 
   return sections
-    .map((s) => ({
-      heading: s.heading,
-      text: s.lines.join('\n').trim(),
-    }))
+    .map((s) => {
+      const body = s.lines.join('\n').trim();
+      const prefix = (s.ancestors ?? []).join('\n').trim();
+      const text = prefix ? `${prefix}\n${body}` : body;
+      return { heading: s.heading, text: text.trim() };
+    })
     .filter((s) => s.text.length > 0);
 }

@@ -21,8 +21,15 @@ export function inferKbSearchOptions(query) {
   if (/70%\s*rule|70 percent|seventy percent/i.test(low)) {
     return { ftsMode: 'or', dropStopwords: false, chapter: '16', requireChapter: true };
   }
-  if (/definition of business volume|business volume.*definition/i.test(low)) {
+  if (
+    /definition of business volume|business volume.*definition|manual definition of business volume/i.test(
+      low,
+    )
+  ) {
     return { ftsMode: 'or', dropStopwords: false, chapter: '25', requireChapter: true };
+  }
+  if (/\bpreferred customer\b/i.test(low) && /\b(ufo|unfranchise owner)\b/i.test(low)) {
+    return { ftsMode: 'or', dropStopwords: false, chapter: '22', requireChapter: true };
   }
   if (/social ads|social media.*advertising|advertising claims on social/i.test(low)) {
     return { ftsMode: 'or', dropStopwords: false, chapter: '19', requireChapter: true };

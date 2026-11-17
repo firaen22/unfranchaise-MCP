@@ -1,7 +1,7 @@
 # Product knowledge RAG — phased plan (with reviewer gates)
 
-**Status:** **P0 PROCEED** (sol + grok, 2026-11-14) — nits optional; start 0.7a ingest code  
-**Artifacts:** [P0 sol](./product-kb-p0/sol/product-kb-p0-sol-out.txt) · [P0 grok](./product-kb-p0/grok/product-kb-p0-grok-out.txt) · [Intel](./PRODUCT-KB-INTEL.md) · [agy SHOP.COM](./agy-shopcom-2026-11-14/shopcom-research-out.txt)  
+**Status:** **P2 PROCEED** (sol + grok, 2026-11-17) — kb sidecar ship; Phase 3 scale optional  
+**Artifacts:** [P2 sol](./product-kb-p2/sol/product-kb-p2-sol-out.txt) · [P2 grok](./product-kb-p2/grok/product-kb-p2-grok-out.txt) · [P1 sol](./product-kb-p1/sol/product-kb-p1-sol-out.txt) · [P0 plan](./product-kb-p0/sol/product-kb-p0-sol-out.txt) · [Intel](./PRODUCT-KB-INTEL.md)  
 **Owner:** Angus  
 **Strategic track:** **Build own RAG** (local corpus + retrieval MCP). **NotebookLM optional** — benchmark / personal notebook only; **not** a runtime dependency for grok bot or production path.  
 **Why not NLM-primary:** Per-notebook **source caps** (Google docs: **50** Standard, up to **~300 Pro / 500+ Ultra** — [plan limits](https://support.google.com/notebooklm/) vary by tier) plus **daily chat quotas**. Operator notebook **Market Hong Kong Official** already has **466** sources [verified: MCP `notebook_list` 2026-11-14] — little room for manual chapters, per-SKU sheets, and X posts without **splitting notebooks** or **deleting training video**. Own RAG has no per-notebook slot math.

@@ -174,9 +174,11 @@ async function isolationFixture() {
       getOrder === null &&
       getMis === null &&
       policyHits.length >= 1,
+    a6_search_obsolete_abstain: obsoleteSearch.length === 0,
     pass_a6:
       getObs === null &&
       Boolean(getCur) &&
+      obsoleteSearch.length === 0 &&
       !obsoleteSearch.some((h) => h.chunk_id === 'obs_1') &&
       currentSearch.some((h) => h.chunk_id === 'cur_1'),
   };
@@ -230,6 +232,8 @@ async function main() {
       forbiddenSearchBlocked: oracle.forbiddenSearchBlocked,
       flattenedBvClassified: oracle.flattenedBvClassified,
       productionIndexExcludesForbidden: oracle.productionIndexExcludesForbidden,
+      independentOraclePass: oracle.independentOraclePass,
+      independentOracleFailures: oracle.independentOracleFailures,
     },
     retrieve_guard_fixture: isolation,
     pass:
@@ -237,6 +241,7 @@ async function main() {
       oracle.forbiddenGetBlocked &&
       oracle.forbiddenSearchBlocked &&
       oracle.commercialSearchEmpty &&
+      oracle.independentOraclePass &&
       production.active_forbidden_claim_class_count === 0,
   };
 
@@ -247,7 +252,9 @@ async function main() {
       kb_get_obsolete_null: isolation.a6_kb_get_obsolete_null,
       kb_get_current_ok: isolation.a6_kb_get_current_ok,
       search_obsolete: isolation.a6_search_obsolete_ids,
+      search_obsolete_abstain: isolation.a6_search_obsolete_abstain,
       search_current: isolation.a6_search_current_ids,
+      p1_020_dual_version_query: 'current shipping policy version two',
       pass: isolation.pass_a6,
     },
     note: 'Same temp corpus as A1 retrieve guard; obs_1 superseded_by stale_current in manifest',

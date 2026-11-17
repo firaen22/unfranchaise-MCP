@@ -6,7 +6,9 @@ export function chunkManualHtml(html, { docTitle = 'manual' } = {}) {
   const $ = cheerio.load(html);
   const chunks = [];
   $('p').each((i, el) => {
-    const text = $(el).text().replace(/\s+/g, ' ').trim();
+    let text = $(el).text().replace(/\s+/g, ' ').trim();
+    const href = $(el).find('a[href]').first().attr('href');
+    if (href) text = `${text} ${href}`.trim();
     if (!text) return;
     const claimClass = classifyChunkText(text, { defaultClass: 'policy' });
     chunks.push({

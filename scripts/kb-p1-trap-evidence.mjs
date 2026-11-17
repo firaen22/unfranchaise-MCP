@@ -104,6 +104,13 @@ async function main() {
       source: 'FINDINGS.md',
       excerpt: findingsExcerpt('UFO storefront / Shop Global', 'Captured **2026-11-14**'),
     },
+    p1_026: {
+      eval_id: 'p1-026',
+      source: 'PLAN §2 + abstain policy',
+      rule: 'category=abstain — exhaustive live catalog list not provable; trap MCP-only rule applies to category=trap',
+      excerpt:
+        'No MCP tool in repo returns full 2026 spring promo bundle SKU membership; row passes on clean abstain without KB numeric cites.',
+    },
   };
 
   const outPath = path.join(gate, 'eval-p1-week1-trap-mcp-traces.json');

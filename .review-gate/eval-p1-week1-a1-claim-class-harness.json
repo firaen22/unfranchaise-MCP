@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-15T01:23:41.737Z",
+  "generated_at": "2026-11-15T08:52:49.588Z",
   "production_freeze": {
     "manifest_rows": 10,
     "active_forbidden_claim_class_count": 0,
@@ -8,14 +8,16 @@
     "production_search_bv_probe_empty": true
   },
   "classifier_oracle": {
-    "forbiddenChunkCount": 2,
+    "forbiddenChunkCount": 9,
     "pitchRetrieved": true,
     "commercialSearchEmpty": true,
     "policyHtmlRetrieved": true,
     "forbiddenGetBlocked": true,
     "forbiddenSearchBlocked": true,
     "flattenedBvClassified": true,
-    "productionIndexExcludesForbidden": true
+    "productionIndexExcludesForbidden": true,
+    "independentOraclePass": true,
+    "independentOracleFailures": []
   },
   "retrieve_guard_fixture": {
     "indexed_eligible_only": 2,
@@ -31,13 +33,12 @@
     "harness_mislabel_search_empty": true,
     "a6_kb_get_obsolete_null": true,
     "a6_kb_get_current_ok": true,
-    "a6_search_obsolete_ids": [
-      "cur_1"
-    ],
+    "a6_search_obsolete_ids": [],
     "a6_search_current_ids": [
       "cur_1"
     ],
     "pass_a1": true,
+    "a6_search_obsolete_abstain": true,
     "pass_a6": true
   },
   "pass": true

@@ -45,8 +45,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }))
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const { name, arguments: args = {} } = req.params;
+  const operationalContext = process.env.UNF_KB_OP_CONTEXT ?? '';
   try {
-  const result = await handleKbTool(name, args);
+  const result = await handleKbTool(name, args, { operationalContext });
   return { content: [{ type: 'text', text: result.text }], isError: result.isError };
   } catch (err) {
     return {

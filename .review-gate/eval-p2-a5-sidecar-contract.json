@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-17T07:52:49.649Z",
+  "sidecar_tools": [
+    "kb_search",
+    "kb_get"
+  ],
+  "no_generate_tool": true,
+  "host_generation_boundary": "Host supplies UNF_KB_OP_CONTEXT on MCP stdio and generationMessages on embedded handleKbTool; fresh outbound LLM capture is host-owned (PLAN §4 dual plane).",
+  "artifacts": [
+    "eval-p2-host-wire.json",
+    "eval-p2-mcp-transport.json",
+    "eval-p1-week1-a5-generation-context.json",
+    "eval-p1-week1-a5-host-boundary.txt"
+  ]
+}

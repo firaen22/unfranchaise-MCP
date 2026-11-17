@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-11-15T01:23:12.068Z",
+  "captured_at": "2026-11-17T07:52:50.188Z",
   "cookie_file_present": true,
   "rows": {
     "p1_008": {
@@ -329,6 +329,12 @@
       "eval_id": "p1-029",
       "source": "FINDINGS.md",
       "excerpt": "UFO storefront / Shop Global | **事業 → 服務 → 網站管理** `portal.unfSummary` — per-region vanity URLs on account (example pattern `www.marketHongkong.com.hk/<slug>`, `www.shopglobal.com/<slug>`). Not the wholesale catalog (`shopping.unfOrdering`) |\n\n---\n\n## 資源 (Resources) — signed-in nav map\n\n"
+    },
+    "p1_026": {
+      "eval_id": "p1-026",
+      "source": "PLAN §2 + abstain policy",
+      "rule": "category=abstain — exhaustive live catalog list not provable; trap MCP-only rule applies to category=trap",
+      "excerpt": "No MCP tool in repo returns full 2026 spring promo bundle SKU membership; row passes on clean abstain without KB numeric cites."
     }
   }
 }

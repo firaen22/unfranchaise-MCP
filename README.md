@@ -1,6 +1,9 @@
 # unfranchaise-MCP
 
-stdio **MCP server** and **CLI** for [Market Hong Kong 超連鎖](https://hk.unfranchise.com) — **17 tools**, cookie session auth, dry-run by default.
+stdio **MCP servers** and **CLI** for [Market Hong Kong 超連鎖](https://hk.unfranchise.com):
+
+- **`unfranchaise-hk`** (`server.js`) — **17 tools**: live catalog/cart reads (cookie), local helpers (volume, Form 1000, URLs, checkout map), **dry-run cart** unless `confirm: true`.
+- **`unfranchaise-kb`** (`kb-server.js`) — **2 tools** (`kb_search`, `kb_get`): local policy corpus only; **no** cookie or cart APIs.
 
 | Area | What you get |
 |------|----------------|
@@ -42,16 +45,24 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 }
 ```
 
-**Product knowledge (P2 sidecar):** `unfranchaise-kb` MCP exposes **`kb_search`** and **`kb_get` only** over gitignored `corpus/` (no cookie, no cart tools). Start: `npm run mcp:kb` or add `kb-server.js` beside `server.js` in MCP config.
+**Product knowledge (KB sidecar):** gitignored `corpus/` — never commit it to GitHub. Start: `npm run mcp:kb` or add `kb-server.js` in MCP config (above).
 
 | Step | Command |
 |------|---------|
-| Build corpus (once) | `npm run kb:p1-prep` (Obsidian allowlist + six EN manual chapters → `corpus/`) |
+| **Copy corpus (fastest)** | Unzip a built archive from another machine so you have exactly `corpus/manifest.jsonl`, `corpus/chunks.jsonl`, and `corpus/index/` (FTS DB under `corpus/index/`). Then `npm run test:kb` or `npm run kb:ship-smoke`. |
+| **Build corpus here** | `export UNF_OBSIDIAN_VAULT_SHOPCOM=<path-to-SHOPCOM-vault>` (see [PRODUCT-KB.md](./PRODUCT-KB.md)); `npm run kb:p1-prep` (Obsidian `02-B2B/` + `Templates/` plus manual chapters 15, 16, 19, 20, 22, 25). |
 | Override corpus path | `export UNF_KB_CORPUS=/path/to/corpus` |
-| Ship smoke | `npm run kb:ship-smoke` (`test:kb` + MCP stdio + host wire + classifier oracle) |
+| Ship smoke | `npm run kb:ship-smoke` |
 | Quick search | `node kb/cli.js search "ch19 advertising"` |
 
-Routing: [PRODUCT-KB.md](./PRODUCT-KB.md) · [plan](./.review-gate/PLAN-product-kb-rag.md) (**P2 PROCEED** 2026-11-17).
+Operator routing: [PRODUCT-KB.md](./PRODUCT-KB.md).
+
+### Knowledge tools (2)
+
+| Tool | Network | Notes |
+|------|---------|--------|
+| `kb_search` | — | Local FTS; blocks commerce/trap queries |
+| `kb_get` | — | Fetch chunk by `chunk_id` |
 
 **CLI:** `node cli.js unf_volume_explain` · `node cli.js unf_search_products '{"keyword":"omega"}'`
 
@@ -121,6 +132,7 @@ See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product tot
 - [x] `form1000_draft`, cart update (dry-run tools)
 - [x] Form 1000 dry-run receipt optimiser (two receipts ≥ HKD 1,500) and quarter-window file
 - [x] Reports placement — URL helpers only (`unf_placement_forms_url`; no submit)
+- [x] Product KB MCP sidecar (`kb-server.js`, `kb_search` / `kb_get`, ship smoke)
 
 **Not in v0 (see [FINDINGS.md § Gaps](./FINDINGS.md)):** payment/submit/checkout POST MCP tools, live placement assign, live `orders.unfBillShipUpdate` / `unfOrderReview` / `unfPayment` (documented as unverified in [NETWORK.md](./NETWORK.md)). Add a redacted `fixtures/captured/xhr-log.json` only from a good signed-in `npm run capture:xhr` run — never from a login wall.
 

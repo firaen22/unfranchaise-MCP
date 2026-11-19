@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "stdio MCP + CLI for hk.unfranchise.com (17 tools): catalog/cart dry-run, Form 1000 optimiser, checkout map, placement URLs. Cookie auth.",
+  "description": "Two stdio MCP servers + CLI for hk.unfranchise.com: unf-hk (17 commerce tools — live reads, local helpers, dry-run cart; cookie for live access) and unf-kb (kb_search/kb_get on local corpus). FINDINGS-driven.",
   "bin": {
     "unfranchaise": "cli.js",
     "kb": "kb/cli.js"

@@ -12,7 +12,7 @@ stdio **MCP servers** and **CLI** for [Market Hong Kong 超連鎖](https://hk.un
 | Checkout research | Bill/ship field map ([CHECKOUT.md](./CHECKOUT.md)), XHR patterns + capture scripts ([NETWORK.md](./NETWORK.md)) |
 | Reports & placement | Report criteria URLs, placement form URLs (read-only; no submit) |
 
-Behavior and action names come from signed-in site research in [FINDINGS.md](./FINDINGS.md). This repo has **no** real account data. Checkout, payment, cart mutations, and Form 1000 assign/submit are blocked unless you explicitly opt in (`confirm: true` on the tools that support it).
+Behavior and action names come from signed-in site research in [FINDINGS.md](./FINDINGS.md). This repo has **no** real account data. **Live cart add/update** run only when `confirm: true` (JSON boolean) on those two tools. There are **no** MCP tools for checkout POST, payment, Form 1000 assign/submit, or placement assign (see **Not in v0** below).
 
 ## Quick start
 
@@ -50,7 +50,7 @@ export UNF_COOKIE_FILE=~/.secrets/unfranchaise.cookie
 | Step | Command |
 |------|---------|
 | **Copy corpus (fastest)** | Unzip a built archive from another machine so you have exactly `corpus/manifest.jsonl`, `corpus/chunks.jsonl`, and `corpus/index/` (FTS DB under `corpus/index/`). Then `npm run test:kb` or `npm run kb:ship-smoke`. |
-| **Build corpus here** | `export UNF_OBSIDIAN_VAULT_SHOPCOM=<path-to-SHOPCOM-vault>` (see [PRODUCT-KB.md](./PRODUCT-KB.md)); `npm run kb:p1-prep` (Obsidian `02-B2B/` + `Templates/` plus manual chapters 15, 16, 19, 20, 22, 25). |
+| **Build corpus here** | `export UNF_OBSIDIAN_VAULT_SHOPCOM=<path-to-SHOPCOM-vault>` (see [PRODUCT-KB.md](./PRODUCT-KB.md)); `npm run kb:p1-prep` — one command: consolidation + Obsidian `02-B2B/` + `Templates/` + manual chapters 15, 16, 19, 20, 22, 25 (PRODUCT-KB steps 0.8 + 0.4 orchestrated; `kb:ingest-manuals` is the manuals slice only). |
 | Override corpus path | `export UNF_KB_CORPUS=/path/to/corpus` |
 | Ship smoke | `npm run kb:ship-smoke` |
 | Quick search | `node kb/cli.js search "ch19 advertising"` |
@@ -112,7 +112,7 @@ See [FORM1000.md](./FORM1000.md). Two receipts of at least HKD 1,500 product tot
 
 ## Safety defaults
 
-- Live **cart add** only when `confirm === true` (JSON boolean, not `"true"`).
+- Live **cart add** and **cart update** only when `confirm === true` (JSON boolean, not `"true"`).
 - The Form 1000 receipt optimiser has no confirm path. It never assigns, submits, or places an order. `confirm` on that tool is ignored.
 - Cookie validated for CR/LF; errors redacted; redirects limited to `https://hk.unfranchise.com`.
 - FINDINGS and this repo contain **no** real account data.
